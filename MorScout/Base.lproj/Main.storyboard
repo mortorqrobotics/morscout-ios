@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AdE-xX-RAw">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="Exo2-ExtraLight.ttf">
+            <string>Exo2-ExtraLight</string>
+            <string>Exo2-ExtraLight</string>
+        </mutableArray>
+    </customFonts>
+    <scenes>
+        <!--Home-->
+        <scene sceneID="hNz-n2-bh7">
+            <objects>
+                <viewController id="9pv-A4-QxB" customClass="FirstViewController" customModule="MorScout" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
+                        <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MorScout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1z-G3-77A">
+                                <rect key="frame" x="162" y="192" width="276.5" height="77"/>
+                                <fontDescription key="fontDescription" name="Exo2-ExtraLight" family="Exo 2" pointSize="64"/>
+                                <color key="textColor" red="1" green="0.6669729003" blue="0.20851476760000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to MorScout!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JcN-hz-fHA">
+                                <rect key="frame" x="214" y="270" width="172" height="20.5"/>
+                                <fontDescription key="fontDescription" name="Exo2-ExtraLight" family="Exo 2" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.6669729003" blue="0.20851476760000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="e1z-G3-77A" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="NYq-Tq-6nF"/>
+                            <constraint firstItem="JcN-hz-fHA" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="hCH-47-Wta"/>
+                            <constraint firstItem="JcN-hz-fHA" firstAttribute="top" secondItem="e1z-G3-77A" secondAttribute="bottom" constant="1.5" id="mzH-Sm-AhM">
+                                <variation key="widthClass=compact" constant="-0.5"/>
+                            </constraint>
+                            <constraint firstItem="e1z-G3-77A" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" constant="128" id="woU-3v-9KB">
+                                <variation key="widthClass=compact" constant="107"/>
+                            </constraint>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Home" id="fEV-Qw-Fhx"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1562" y="-320"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="THp-Zp-Tqj">
+            <objects>
+                <viewController id="wxX-bc-FuZ" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XlO-8p-wHR"/>
+                        <viewControllerLayoutGuide type="bottom" id="hkN-wx-sag"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IFj-kV-ChR">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yMT-9c-AQK">
+                                <rect key="frame" x="251.5" y="167" width="97" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="rbz-gi-f7B"/>
+                                    <constraint firstAttribute="width" constant="97" id="xCn-rO-wss"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cxh-Ma-yBl">
+                                <rect key="frame" x="251.5" y="205" width="97" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="97" id="Iu5-HV-cMF"/>
+                                    <constraint firstAttribute="height" constant="30" id="vWp-go-Jzp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F4U-Ec-rOp">
+                                <rect key="frame" x="281" y="243" width="38" height="30"/>
+                                <state key="normal" title="Login"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="cxh-Ma-yBl" firstAttribute="centerX" secondItem="IFj-kV-ChR" secondAttribute="centerX" id="5ym-8b-w0x"/>
+                            <constraint firstItem="yMT-9c-AQK" firstAttribute="top" secondItem="XlO-8p-wHR" secondAttribute="bottom" constant="147" id="6aS-Iy-fiW"/>
+                            <constraint firstItem="F4U-Ec-rOp" firstAttribute="centerX" secondItem="IFj-kV-ChR" secondAttribute="centerX" id="EhY-hm-lIq"/>
+                            <constraint firstItem="F4U-Ec-rOp" firstAttribute="top" secondItem="cxh-Ma-yBl" secondAttribute="bottom" constant="8" id="Ft9-rs-Bk8"/>
+                            <constraint firstItem="cxh-Ma-yBl" firstAttribute="top" secondItem="yMT-9c-AQK" secondAttribute="bottom" constant="8" id="Z8o-JW-22Y"/>
+                            <constraint firstItem="yMT-9c-AQK" firstAttribute="centerX" secondItem="IFj-kV-ChR" secondAttribute="centerX" id="yKS-Ew-UQ1"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KmU-Og-FAc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-36" y="-320"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="Yxl-Tx-61A">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="AdE-xX-RAw" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="first" id="acW-dT-cKf"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="tp2-c3-Yp0">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9pv-A4-QxB" kind="relationship" relationship="rootViewController" id="dal-ZT-oEl"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GR3-1f-hzc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="750" y="-320"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="first" width="30" height="30"/>
+    </resources>
+</document>
