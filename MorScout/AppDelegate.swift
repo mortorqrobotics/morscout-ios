@@ -21,6 +21,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor.blackColor()
         UINavigationBar.appearance().translucent = false
         
+        let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let revealVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("reveal")
+        let loginVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("login")
+        
+        if let _ = storage.stringForKey("connect.sid"){
+            //logged in
+            print("logged in")
+            self.window?.rootViewController = revealVC
+        }else{
+            //logged out
+            self.window?.rootViewController = loginVC
+        }
+
+        
         return true
     }
 
