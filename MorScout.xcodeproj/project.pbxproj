@@ -7,57 +7,62 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8E3352E41C4C332A00F2B879 /* MatchesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3352E31C4C332A00F2B879 /* MatchesVC.swift */; };
-		8E3352E61C4C338D00F2B879 /* TeamsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3352E51C4C338D00F2B879 /* TeamsVC.swift */; };
-		8E3352E81C4C5EED00F2B879 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3352E71C4C5EED00F2B879 /* SettingsVC.swift */; };
-		8E7AF0B91C40BE79007B8133 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7AF0B81C40BE79007B8133 /* AppDelegate.swift */; };
-		8E7AF0BB1C40BE79007B8133 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */; };
-		8E7AF0C01C40BE79007B8133 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0BE1C40BE79007B8133 /* Main.storyboard */; };
-		8E7AF0C21C40BE79007B8133 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0C11C40BE79007B8133 /* Assets.xcassets */; };
-		8E7AF0C51C40BE79007B8133 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0C31C40BE79007B8133 /* LaunchScreen.storyboard */; };
-		8E7AF0D61C40C176007B8133 /* Exo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0CD1C40C176007B8133 /* Exo2-SemiBold.ttf */; };
-		8E7AF0D71C40C176007B8133 /* Exo2-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0CE1C40C176007B8133 /* Exo2-ExtraLight.ttf */; };
-		8E7AF0D81C40C176007B8133 /* Exo2-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0CF1C40C176007B8133 /* Exo2-Light.ttf */; };
-		8E7AF0D91C40C176007B8133 /* Exo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0D01C40C176007B8133 /* Exo2-Regular.ttf */; };
-		8E7AF0DA1C40C176007B8133 /* Exo2-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0D11C40C176007B8133 /* Exo2-Thin.ttf */; };
-		8E7AF0DB1C40C176007B8133 /* TitilliumWeb-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0D21C40C176007B8133 /* TitilliumWeb-ExtraLight.ttf */; };
-		8E7AF0DC1C40C176007B8133 /* TitilliumWeb-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0D31C40C176007B8133 /* TitilliumWeb-Light.ttf */; };
-		8E7AF0DD1C40C176007B8133 /* TitilliumWeb-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0D41C40C176007B8133 /* TitilliumWeb-Regular.ttf */; };
-		8E7AF0DE1C40C176007B8133 /* TitilliumWeb-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0D51C40C176007B8133 /* TitilliumWeb-SemiBold.ttf */; };
-		8E7AF0E01C40C391007B8133 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7AF0DF1C40C391007B8133 /* Util.swift */; };
-		8E87A6851C4AB1A800FF7CF2 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E87A6841C4AB1A800FF7CF2 /* LoginVC.swift */; };
-		8E87A6871C4ABF2900FF7CF2 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E87A6861C4ABF2900FF7CF2 /* SwiftyJSON.swift */; };
-		8E87A68D1C4B0FA100FF7CF2 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E87A68C1C4B0FA100FF7CF2 /* SWRevealViewController.m */; };
-		8EB116281C4B5F6D00B4D3A6 /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB116271C4B5F6D00B4D3A6 /* MenuVC.swift */; };
+		36890409C0CA99E8B2BEFF02 /* Pods_MorScout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */; };
+		8E3357C11C4C8C9400F2B879 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357A21C4C8C9400F2B879 /* AppDelegate.swift */; };
+		8E3357C21C4C8C9400F2B879 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357A31C4C8C9400F2B879 /* Assets.xcassets */; };
+		8E3357C31C4C8C9400F2B879 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357A41C4C8C9400F2B879 /* LaunchScreen.storyboard */; };
+		8E3357C41C4C8C9400F2B879 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357A61C4C8C9400F2B879 /* Main.storyboard */; };
+		8E3357C51C4C8C9400F2B879 /* Exo2-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357A91C4C8C9400F2B879 /* Exo2-ExtraLight.ttf */; };
+		8E3357C61C4C8C9400F2B879 /* Exo2-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AA1C4C8C9400F2B879 /* Exo2-Light.ttf */; };
+		8E3357C71C4C8C9400F2B879 /* Exo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AB1C4C8C9400F2B879 /* Exo2-Regular.ttf */; };
+		8E3357C81C4C8C9400F2B879 /* Exo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AC1C4C8C9400F2B879 /* Exo2-SemiBold.ttf */; };
+		8E3357C91C4C8C9400F2B879 /* Exo2-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AD1C4C8C9400F2B879 /* Exo2-Thin.ttf */; };
+		8E3357CA1C4C8C9400F2B879 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AE1C4C8C9400F2B879 /* Info.plist */; };
+		8E3357CB1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AF1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf */; };
+		8E3357CC1C4C8C9400F2B879 /* TitilliumWeb-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B01C4C8C9400F2B879 /* TitilliumWeb-Light.ttf */; };
+		8E3357CD1C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B11C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf */; };
+		8E3357CE1C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B21C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf */; };
+		8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357B41C4C8C9400F2B879 /* SwiftyJSON.swift */; };
+		8E3357D01C4C8C9400F2B879 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357B81C4C8C9400F2B879 /* SWRevealViewController.m */; };
+		8E3357D11C4C8C9400F2B879 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357B91C4C8C9400F2B879 /* Util.swift */; };
+		8E3357D21C4C8C9400F2B879 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357BB1C4C8C9400F2B879 /* HomeVC.swift */; };
+		8E3357D31C4C8C9400F2B879 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357BC1C4C8C9400F2B879 /* LoginVC.swift */; };
+		8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357BD1C4C8C9400F2B879 /* MatchesVC.swift */; };
+		8E3357D51C4C8C9400F2B879 /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357BE1C4C8C9400F2B879 /* MenuVC.swift */; };
+		8E3357D61C4C8C9400F2B879 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357BF1C4C8C9400F2B879 /* SettingsVC.swift */; };
+		8E3357D71C4C8C9400F2B879 /* TeamsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357C01C4C8C9400F2B879 /* TeamsVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8E3352E31C4C332A00F2B879 /* MatchesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesVC.swift; sourceTree = "<group>"; };
-		8E3352E51C4C338D00F2B879 /* TeamsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsVC.swift; sourceTree = "<group>"; };
-		8E3352E71C4C5EED00F2B879 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		8E3357A21C4C8C9400F2B879 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8E3357A31C4C8C9400F2B879 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8E3357A51C4C8C9400F2B879 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8E3357A71C4C8C9400F2B879 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8E3357A91C4C8C9400F2B879 /* Exo2-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-ExtraLight.ttf"; sourceTree = "<group>"; };
+		8E3357AA1C4C8C9400F2B879 /* Exo2-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-Light.ttf"; sourceTree = "<group>"; };
+		8E3357AB1C4C8C9400F2B879 /* Exo2-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-Regular.ttf"; sourceTree = "<group>"; };
+		8E3357AC1C4C8C9400F2B879 /* Exo2-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-SemiBold.ttf"; sourceTree = "<group>"; };
+		8E3357AD1C4C8C9400F2B879 /* Exo2-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-Thin.ttf"; sourceTree = "<group>"; };
+		8E3357AE1C4C8C9400F2B879 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E3357AF1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-ExtraLight.ttf"; sourceTree = "<group>"; };
+		8E3357B01C4C8C9400F2B879 /* TitilliumWeb-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Light.ttf"; sourceTree = "<group>"; };
+		8E3357B11C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Regular.ttf"; sourceTree = "<group>"; };
+		8E3357B21C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-SemiBold.ttf"; sourceTree = "<group>"; };
+		8E3357B41C4C8C9400F2B879 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		8E3357B61C4C8C9400F2B879 /* MorScout-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MorScout-Bridging-Header.h"; sourceTree = "<group>"; };
+		8E3357B71C4C8C9400F2B879 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		8E3357B81C4C8C9400F2B879 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		8E3357B91C4C8C9400F2B879 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		8E3357BB1C4C8C9400F2B879 /* HomeVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		8E3357BC1C4C8C9400F2B879 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		8E3357BD1C4C8C9400F2B879 /* MatchesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesVC.swift; sourceTree = "<group>"; };
+		8E3357BE1C4C8C9400F2B879 /* MenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
+		8E3357BF1C4C8C9400F2B879 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		8E3357C01C4C8C9400F2B879 /* TeamsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsVC.swift; sourceTree = "<group>"; };
 		8E7AF0B51C40BE79007B8133 /* MorScout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorScout.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8E7AF0B81C40BE79007B8133 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
-		8E7AF0BF1C40BE79007B8133 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8E7AF0C11C40BE79007B8133 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8E7AF0C41C40BE79007B8133 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8E7AF0C61C40BE79007B8133 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8E7AF0CD1C40C176007B8133 /* Exo2-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-SemiBold.ttf"; sourceTree = "<group>"; };
-		8E7AF0CE1C40C176007B8133 /* Exo2-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-ExtraLight.ttf"; sourceTree = "<group>"; };
-		8E7AF0CF1C40C176007B8133 /* Exo2-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-Light.ttf"; sourceTree = "<group>"; };
-		8E7AF0D01C40C176007B8133 /* Exo2-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-Regular.ttf"; sourceTree = "<group>"; };
-		8E7AF0D11C40C176007B8133 /* Exo2-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Exo2-Thin.ttf"; sourceTree = "<group>"; };
-		8E7AF0D21C40C176007B8133 /* TitilliumWeb-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-ExtraLight.ttf"; sourceTree = "<group>"; };
-		8E7AF0D31C40C176007B8133 /* TitilliumWeb-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Light.ttf"; sourceTree = "<group>"; };
-		8E7AF0D41C40C176007B8133 /* TitilliumWeb-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Regular.ttf"; sourceTree = "<group>"; };
-		8E7AF0D51C40C176007B8133 /* TitilliumWeb-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-SemiBold.ttf"; sourceTree = "<group>"; };
-		8E7AF0DF1C40C391007B8133 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
-		8E87A6841C4AB1A800FF7CF2 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginVC.swift; path = ../LoginVC.swift; sourceTree = "<group>"; };
-		8E87A6861C4ABF2900FF7CF2 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
-		8E87A68A1C4B0FA000FF7CF2 /* MorScout-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MorScout-Bridging-Header.h"; sourceTree = "<group>"; };
-		8E87A68B1C4B0FA100FF7CF2 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
-		8E87A68C1C4B0FA100FF7CF2 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
-		8EB116271C4B5F6D00B4D3A6 /* MenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
+		C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
+		D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
+		E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MorScout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,16 +70,91 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36890409C0CA99E8B2BEFF02 /* Pods_MorScout.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E3357A11C4C8C9400F2B879 /* MorScout */ = {
+			isa = PBXGroup;
+			children = (
+				8E3357A41C4C8C9400F2B879 /* LaunchScreen.storyboard */,
+				8E3357A61C4C8C9400F2B879 /* Main.storyboard */,
+				8E3357A21C4C8C9400F2B879 /* AppDelegate.swift */,
+				8E3357BA1C4C8C9400F2B879 /* View Controllers */,
+				8E3357DA1C4C977000F2B879 /* Models */,
+				8E3357B31C4C8C9400F2B879 /* Supporting Files */,
+				8E3357A81C4C8C9400F2B879 /* Resources */,
+				8E3357A31C4C8C9400F2B879 /* Assets.xcassets */,
+			);
+			path = MorScout;
+			sourceTree = "<group>";
+		};
+		8E3357A81C4C8C9400F2B879 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8E3357A91C4C8C9400F2B879 /* Exo2-ExtraLight.ttf */,
+				8E3357AA1C4C8C9400F2B879 /* Exo2-Light.ttf */,
+				8E3357AB1C4C8C9400F2B879 /* Exo2-Regular.ttf */,
+				8E3357AC1C4C8C9400F2B879 /* Exo2-SemiBold.ttf */,
+				8E3357AD1C4C8C9400F2B879 /* Exo2-Thin.ttf */,
+				8E3357AE1C4C8C9400F2B879 /* Info.plist */,
+				8E3357AF1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf */,
+				8E3357B01C4C8C9400F2B879 /* TitilliumWeb-Light.ttf */,
+				8E3357B11C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf */,
+				8E3357B21C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8E3357B31C4C8C9400F2B879 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8E3357B51C4C8C9400F2B879 /* SWRevealViewController */,
+				8E3357B41C4C8C9400F2B879 /* SwiftyJSON.swift */,
+				8E3357B91C4C8C9400F2B879 /* Util.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8E3357B51C4C8C9400F2B879 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8E3357B61C4C8C9400F2B879 /* MorScout-Bridging-Header.h */,
+				8E3357B71C4C8C9400F2B879 /* SWRevealViewController.h */,
+				8E3357B81C4C8C9400F2B879 /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8E3357BA1C4C8C9400F2B879 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8E3357BB1C4C8C9400F2B879 /* HomeVC.swift */,
+				8E3357BC1C4C8C9400F2B879 /* LoginVC.swift */,
+				8E3357BD1C4C8C9400F2B879 /* MatchesVC.swift */,
+				8E3357BE1C4C8C9400F2B879 /* MenuVC.swift */,
+				8E3357BF1C4C8C9400F2B879 /* SettingsVC.swift */,
+				8E3357C01C4C8C9400F2B879 /* TeamsVC.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		8E3357DA1C4C977000F2B879 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		8E7AF0AC1C40BE79007B8133 = {
 			isa = PBXGroup;
 			children = (
-				8E7AF0B71C40BE79007B8133 /* MorScout */,
+				8E3357A11C4C8C9400F2B879 /* MorScout */,
+				BD81F900F382C0EF9A3B4DA5 /* Pods */,
+				FCFECB81817F678E6EDE2802 /* Frameworks */,
 				8E7AF0B61C40BE79007B8133 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,60 +167,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8E7AF0B71C40BE79007B8133 /* MorScout */ = {
+		BD81F900F382C0EF9A3B4DA5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8E7AF0B81C40BE79007B8133 /* AppDelegate.swift */,
-				8E7AF0BE1C40BE79007B8133 /* Main.storyboard */,
-				8EB116271C4B5F6D00B4D3A6 /* MenuVC.swift */,
-				8E87A6841C4AB1A800FF7CF2 /* LoginVC.swift */,
-				8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */,
-				8E3352E31C4C332A00F2B879 /* MatchesVC.swift */,
-				8E3352E51C4C338D00F2B879 /* TeamsVC.swift */,
-				8E3352E71C4C5EED00F2B879 /* SettingsVC.swift */,
-				8E7AF0CC1C40C162007B8133 /* Resources */,
-				8EB116291C4B5F8100B4D3A6 /* Helpers */,
-				8E7AF0C31C40BE79007B8133 /* LaunchScreen.storyboard */,
+				D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */,
+				C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */,
 			);
-			path = MorScout;
+			name = Pods;
 			sourceTree = "<group>";
 		};
-		8E7AF0CC1C40C162007B8133 /* Resources */ = {
+		FCFECB81817F678E6EDE2802 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8E7AF0C11C40BE79007B8133 /* Assets.xcassets */,
-				8E7AF0C61C40BE79007B8133 /* Info.plist */,
-				8E7AF0CD1C40C176007B8133 /* Exo2-SemiBold.ttf */,
-				8E7AF0CE1C40C176007B8133 /* Exo2-ExtraLight.ttf */,
-				8E7AF0CF1C40C176007B8133 /* Exo2-Light.ttf */,
-				8E7AF0D01C40C176007B8133 /* Exo2-Regular.ttf */,
-				8E7AF0D11C40C176007B8133 /* Exo2-Thin.ttf */,
-				8E7AF0D21C40C176007B8133 /* TitilliumWeb-ExtraLight.ttf */,
-				8E7AF0D31C40C176007B8133 /* TitilliumWeb-Light.ttf */,
-				8E7AF0D41C40C176007B8133 /* TitilliumWeb-Regular.ttf */,
-				8E7AF0D51C40C176007B8133 /* TitilliumWeb-SemiBold.ttf */,
+				E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */,
 			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		8E87A68E1C4B0FAA00FF7CF2 /* SWRevealViewController */ = {
-			isa = PBXGroup;
-			children = (
-				8E87A68B1C4B0FA100FF7CF2 /* SWRevealViewController.h */,
-				8E87A68C1C4B0FA100FF7CF2 /* SWRevealViewController.m */,
-				8E87A68A1C4B0FA000FF7CF2 /* MorScout-Bridging-Header.h */,
-			);
-			name = SWRevealViewController;
-			sourceTree = "<group>";
-		};
-		8EB116291C4B5F8100B4D3A6 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				8E87A68E1C4B0FAA00FF7CF2 /* SWRevealViewController */,
-				8E7AF0DF1C40C391007B8133 /* Util.swift */,
-				8E87A6861C4ABF2900FF7CF2 /* SwiftyJSON.swift */,
-			);
-			name = Helpers;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,9 +191,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8E7AF0C91C40BE79007B8133 /* Build configuration list for PBXNativeTarget "MorScout" */;
 			buildPhases = (
+				757FF3C22430DA869D0F2DB9 /* Check Pods Manifest.lock */,
 				8E7AF0B11C40BE79007B8133 /* Sources */,
 				8E7AF0B21C40BE79007B8133 /* Frameworks */,
 				8E7AF0B31C40BE79007B8133 /* Resources */,
+				62A767E3DD8608B60653579A /* Embed Pods Frameworks */,
+				CA75423786D4F4572434D3C1 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -202,58 +246,107 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E7AF0C51C40BE79007B8133 /* LaunchScreen.storyboard in Resources */,
-				8E7AF0DD1C40C176007B8133 /* TitilliumWeb-Regular.ttf in Resources */,
-				8E7AF0DB1C40C176007B8133 /* TitilliumWeb-ExtraLight.ttf in Resources */,
-				8E7AF0C21C40BE79007B8133 /* Assets.xcassets in Resources */,
-				8E7AF0DE1C40C176007B8133 /* TitilliumWeb-SemiBold.ttf in Resources */,
-				8E7AF0D71C40C176007B8133 /* Exo2-ExtraLight.ttf in Resources */,
-				8E7AF0C01C40BE79007B8133 /* Main.storyboard in Resources */,
-				8E7AF0D91C40C176007B8133 /* Exo2-Regular.ttf in Resources */,
-				8E7AF0D61C40C176007B8133 /* Exo2-SemiBold.ttf in Resources */,
-				8E7AF0D81C40C176007B8133 /* Exo2-Light.ttf in Resources */,
-				8E7AF0DC1C40C176007B8133 /* TitilliumWeb-Light.ttf in Resources */,
-				8E7AF0DA1C40C176007B8133 /* Exo2-Thin.ttf in Resources */,
+				8E3357C41C4C8C9400F2B879 /* Main.storyboard in Resources */,
+				8E3357CB1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf in Resources */,
+				8E3357C21C4C8C9400F2B879 /* Assets.xcassets in Resources */,
+				8E3357CA1C4C8C9400F2B879 /* Info.plist in Resources */,
+				8E3357C51C4C8C9400F2B879 /* Exo2-ExtraLight.ttf in Resources */,
+				8E3357C61C4C8C9400F2B879 /* Exo2-Light.ttf in Resources */,
+				8E3357CD1C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf in Resources */,
+				8E3357C31C4C8C9400F2B879 /* LaunchScreen.storyboard in Resources */,
+				8E3357C71C4C8C9400F2B879 /* Exo2-Regular.ttf in Resources */,
+				8E3357CC1C4C8C9400F2B879 /* TitilliumWeb-Light.ttf in Resources */,
+				8E3357C81C4C8C9400F2B879 /* Exo2-SemiBold.ttf in Resources */,
+				8E3357CE1C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf in Resources */,
+				8E3357C91C4C8C9400F2B879 /* Exo2-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		62A767E3DD8608B60653579A /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MorScout/Pods-MorScout-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		757FF3C22430DA869D0F2DB9 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		CA75423786D4F4572434D3C1 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MorScout/Pods-MorScout-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8E7AF0B11C40BE79007B8133 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E7AF0B91C40BE79007B8133 /* AppDelegate.swift in Sources */,
-				8E7AF0BB1C40BE79007B8133 /* HomeVC.swift in Sources */,
-				8E87A6851C4AB1A800FF7CF2 /* LoginVC.swift in Sources */,
-				8EB116281C4B5F6D00B4D3A6 /* MenuVC.swift in Sources */,
-				8E3352E61C4C338D00F2B879 /* TeamsVC.swift in Sources */,
-				8E87A6871C4ABF2900FF7CF2 /* SwiftyJSON.swift in Sources */,
-				8E3352E41C4C332A00F2B879 /* MatchesVC.swift in Sources */,
-				8E7AF0E01C40C391007B8133 /* Util.swift in Sources */,
-				8E87A68D1C4B0FA100FF7CF2 /* SWRevealViewController.m in Sources */,
-				8E3352E81C4C5EED00F2B879 /* SettingsVC.swift in Sources */,
+				8E3357C11C4C8C9400F2B879 /* AppDelegate.swift in Sources */,
+				8E3357D21C4C8C9400F2B879 /* HomeVC.swift in Sources */,
+				8E3357D31C4C8C9400F2B879 /* LoginVC.swift in Sources */,
+				8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */,
+				8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */,
+				8E3357D51C4C8C9400F2B879 /* MenuVC.swift in Sources */,
+				8E3357D01C4C8C9400F2B879 /* SWRevealViewController.m in Sources */,
+				8E3357D11C4C8C9400F2B879 /* Util.swift in Sources */,
+				8E3357D61C4C8C9400F2B879 /* SettingsVC.swift in Sources */,
+				8E3357D71C4C8C9400F2B879 /* TeamsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		8E7AF0BE1C40BE79007B8133 /* Main.storyboard */ = {
+		8E3357A41C4C8C9400F2B879 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8E7AF0BF1C40BE79007B8133 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		8E7AF0C31C40BE79007B8133 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8E7AF0C41C40BE79007B8133 /* Base */,
+				8E3357A51C4C8C9400F2B879 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		8E3357A61C4C8C9400F2B879 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8E3357A71C4C8C9400F2B879 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -344,28 +437,30 @@
 		};
 		8E7AF0CA1C40BE79007B8133 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = MorScout/Info.plist;
+				INFOPLIST_FILE = MorScout/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.MorTorq.MorScout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/MorScout-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		8E7AF0CB1C40BE79007B8133 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = MorScout/Info.plist;
+				INFOPLIST_FILE = MorScout/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.MorTorq.MorScout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/MorScout-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";
 			};
 			name = Release;
 		};

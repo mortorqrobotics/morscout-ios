@@ -8,14 +8,18 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 class MenuVC: UITableViewController {
     
     @IBOutlet weak var menuName: UILabel!
+    @IBOutlet weak var menuProfilePic: UIImageView!
     override func viewDidLoad() {
         if let firstName = storage.stringForKey("firstName"), lastName = storage.stringForKey("lastName") {
             dispatch_async(dispatch_get_main_queue(),{
                 self.menuName.text = "\(firstName) \(lastName)"
+                self.menuProfilePic.layer.cornerRadius = 17
+                self.menuProfilePic.clipsToBounds = true
             })
         }
     }
@@ -25,6 +29,9 @@ class MenuVC: UITableViewController {
             logout()
         }
     }
+    
+    
+    
     
     func logout() {
         httpRequest(baseURL+"/logout", type: "POST"){ responseText in
