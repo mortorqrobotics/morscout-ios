@@ -1,0 +1,49 @@
+//
+//  MenuVC.swift
+//  MorScout
+//
+//  Created by Farbod Rafezy on 1/16/16.
+//  Copyright © 2016 MorTorq. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+class MenuVC: UITableViewController {
+    
+    @IBOutlet weak var menuName: UILabel!
+    override func viewDidLoad() {
+        if let firstName = storage.stringForKey("firstName"), lastName = storage.stringForKey("lastName") {
+            dispatch_async(dispatch_get_main_queue(),{
+                self.menuName.text = "\(firstName) \(lastName)"
+            })
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == 5 {
+            logout()
+        }
+    }
+    
+    func logout() {
+        httpRequest(baseURL+"/logout", type: "POST"){ responseText in
+            
+            if responseText == "success" {
+                for key in storage.dictionaryRepresentation().keys {
+                    NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+                }
+                dispatch_async(dispatch_get_main_queue(),{
+                    let vc : UIViewController! = self.storyboard!.instantiateViewControllerWithIdentifier("login")
+                    self.presentViewController(vc, animated: true, completion: nil)
+                })
+            } else {
+                dispatch_async(dispatch_get_main_queue(),{
+                    let alert = UIAlertController(title: "Oops", message: responseText, preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                })
+            }
+        }
+    }
+}

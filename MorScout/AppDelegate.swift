@@ -28,7 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let _ = storage.stringForKey("connect.sid"){
             //logged in
-            print("logged in")
             self.window?.rootViewController = revealVC
         }else{
             //logged out

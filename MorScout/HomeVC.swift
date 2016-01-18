@@ -11,27 +11,9 @@ import UIKit
 class HomeVC: UIViewController {
 
     @IBOutlet weak var menuButton: UIBarButtonItem!
+    @IBOutlet weak var welcomeMessage: UILabel!
     
-    @IBAction func logoutButton(sender: UIBarButtonItem) {
-        httpRequest(baseURL+"/logout", type: "POST"){ responseText in
-            
-            if responseText == "success" {
-                for key in storage.dictionaryRepresentation().keys {
-                    NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
-                }
-                dispatch_async(dispatch_get_main_queue(),{
-                    let vc : UIViewController! = self.storyboard!.instantiateViewControllerWithIdentifier("login")
-                    self.presentViewController(vc, animated: true, completion: nil)
-                })
-            } else {
-                dispatch_async(dispatch_get_main_queue(),{
-                    let alert = UIAlertController(title: "Oops", message: responseText, preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
-                })
-            }
-        }
-    }
+    let welcomeMessages = ["Welcome to MorScout!", "OurScout is MorScout than YourScout", "Made With Fifty Shades of Orange", "LessWork, MorScout", "MorPower, MorTeamwork, MorIngenuity, MorScout"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +23,16 @@ class HomeVC: UIViewController {
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
-        
+    }
+    override func viewDidAppear(animated: Bool) {
+        let welcomeMessagesLength = UInt32(welcomeMessages.count)
+        let randomInt = Int(arc4random_uniform(welcomeMessagesLength))
+        welcomeMessage.text = welcomeMessages[randomInt]
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
 
 }

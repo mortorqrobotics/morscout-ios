@@ -63,7 +63,7 @@ class LoginVC: UIViewController {
                 
                 let user = parseJSON(responseText)
                 
-                let storedProperties = ["_id", "username", "firstname", "lastname", "admin", "teamCode", "teamName", "teamNumber"]
+                let storedProperties = ["_id", "username", "firstName", "lastName", "admin", "teamCode", "teamName", "teamNumber"]
                 
                 for (key, value):(String, JSON) in user {
                     if storedProperties.indexOf(key) > -1 {

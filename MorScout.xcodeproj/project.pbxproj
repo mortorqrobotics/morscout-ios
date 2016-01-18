@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E3352E41C4C332A00F2B879 /* MatchesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3352E31C4C332A00F2B879 /* MatchesVC.swift */; };
+		8E3352E61C4C338D00F2B879 /* TeamsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3352E51C4C338D00F2B879 /* TeamsVC.swift */; };
+		8E3352E81C4C5EED00F2B879 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3352E71C4C5EED00F2B879 /* SettingsVC.swift */; };
 		8E7AF0B91C40BE79007B8133 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7AF0B81C40BE79007B8133 /* AppDelegate.swift */; };
 		8E7AF0BB1C40BE79007B8133 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */; };
 		8E7AF0C01C40BE79007B8133 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E7AF0BE1C40BE79007B8133 /* Main.storyboard */; };
@@ -25,9 +28,13 @@
 		8E87A6851C4AB1A800FF7CF2 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E87A6841C4AB1A800FF7CF2 /* LoginVC.swift */; };
 		8E87A6871C4ABF2900FF7CF2 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E87A6861C4ABF2900FF7CF2 /* SwiftyJSON.swift */; };
 		8E87A68D1C4B0FA100FF7CF2 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E87A68C1C4B0FA100FF7CF2 /* SWRevealViewController.m */; };
+		8EB116281C4B5F6D00B4D3A6 /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB116271C4B5F6D00B4D3A6 /* MenuVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E3352E31C4C332A00F2B879 /* MatchesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchesVC.swift; sourceTree = "<group>"; };
+		8E3352E51C4C338D00F2B879 /* TeamsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsVC.swift; sourceTree = "<group>"; };
+		8E3352E71C4C5EED00F2B879 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		8E7AF0B51C40BE79007B8133 /* MorScout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorScout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E7AF0B81C40BE79007B8133 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
@@ -50,6 +57,7 @@
 		8E87A68A1C4B0FA000FF7CF2 /* MorScout-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MorScout-Bridging-Header.h"; sourceTree = "<group>"; };
 		8E87A68B1C4B0FA100FF7CF2 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		8E87A68C1C4B0FA100FF7CF2 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		8EB116271C4B5F6D00B4D3A6 /* MenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,17 +90,17 @@
 		8E7AF0B71C40BE79007B8133 /* MorScout */ = {
 			isa = PBXGroup;
 			children = (
-				8E87A6841C4AB1A800FF7CF2 /* LoginVC.swift */,
 				8E7AF0B81C40BE79007B8133 /* AppDelegate.swift */,
-				8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */,
 				8E7AF0BE1C40BE79007B8133 /* Main.storyboard */,
-				8E7AF0C11C40BE79007B8133 /* Assets.xcassets */,
+				8EB116271C4B5F6D00B4D3A6 /* MenuVC.swift */,
+				8E87A6841C4AB1A800FF7CF2 /* LoginVC.swift */,
+				8E7AF0BA1C40BE79007B8133 /* HomeVC.swift */,
+				8E3352E31C4C332A00F2B879 /* MatchesVC.swift */,
+				8E3352E51C4C338D00F2B879 /* TeamsVC.swift */,
+				8E3352E71C4C5EED00F2B879 /* SettingsVC.swift */,
 				8E7AF0CC1C40C162007B8133 /* Resources */,
+				8EB116291C4B5F8100B4D3A6 /* Helpers */,
 				8E7AF0C31C40BE79007B8133 /* LaunchScreen.storyboard */,
-				8E7AF0C61C40BE79007B8133 /* Info.plist */,
-				8E7AF0DF1C40C391007B8133 /* Util.swift */,
-				8E87A6861C4ABF2900FF7CF2 /* SwiftyJSON.swift */,
-				8E87A68E1C4B0FAA00FF7CF2 /* SWRevealViewController */,
 			);
 			path = MorScout;
 			sourceTree = "<group>";
@@ -100,6 +108,8 @@
 		8E7AF0CC1C40C162007B8133 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8E7AF0C11C40BE79007B8133 /* Assets.xcassets */,
+				8E7AF0C61C40BE79007B8133 /* Info.plist */,
 				8E7AF0CD1C40C176007B8133 /* Exo2-SemiBold.ttf */,
 				8E7AF0CE1C40C176007B8133 /* Exo2-ExtraLight.ttf */,
 				8E7AF0CF1C40C176007B8133 /* Exo2-Light.ttf */,
@@ -121,6 +131,16 @@
 				8E87A68A1C4B0FA000FF7CF2 /* MorScout-Bridging-Header.h */,
 			);
 			name = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8EB116291C4B5F8100B4D3A6 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8E87A68E1C4B0FAA00FF7CF2 /* SWRevealViewController */,
+				8E7AF0DF1C40C391007B8133 /* Util.swift */,
+				8E87A6861C4ABF2900FF7CF2 /* SwiftyJSON.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,9 +227,13 @@
 				8E7AF0B91C40BE79007B8133 /* AppDelegate.swift in Sources */,
 				8E7AF0BB1C40BE79007B8133 /* HomeVC.swift in Sources */,
 				8E87A6851C4AB1A800FF7CF2 /* LoginVC.swift in Sources */,
+				8EB116281C4B5F6D00B4D3A6 /* MenuVC.swift in Sources */,
+				8E3352E61C4C338D00F2B879 /* TeamsVC.swift in Sources */,
 				8E87A6871C4ABF2900FF7CF2 /* SwiftyJSON.swift in Sources */,
+				8E3352E41C4C332A00F2B879 /* MatchesVC.swift in Sources */,
 				8E7AF0E01C40C391007B8133 /* Util.swift in Sources */,
 				8E87A68D1C4B0FA100FF7CF2 /* SWRevealViewController.m in Sources */,
+				8E3352E81C4C5EED00F2B879 /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
