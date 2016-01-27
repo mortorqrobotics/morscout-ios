@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="Exo2-ExtraLight.ttf">
@@ -92,21 +93,45 @@
         <scene sceneID="mfM-3Z-y3i">
             <objects>
                 <viewController id="vGW-ui-Xlk" customClass="MatchesVC" customModule="MorScout" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="MYw-yo-Jkh"/>
-                        <viewControllerLayoutGuide type="bottom" id="I1M-M7-bYw"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hr4-a4-ZMi">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="56" sectionHeaderHeight="28" sectionFooterHeight="28" id="Tgl-rp-EM4">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                    </view>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="matchCell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="matchCell" rowHeight="56" id="NOo-e9-mDf" customClass="MatchCell" customModule="MorScout" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="600" height="56"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NOo-e9-mDf" id="fKM-6B-Ne2">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="55.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Match 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fP2-jj-OPl">
+                                            <rect key="frame" x="8" y="8" width="584" height="39.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="fP2-jj-OPl" secondAttribute="bottom" id="FeM-H3-HmJ"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="fP2-jj-OPl" secondAttribute="trailing" id="ZDc-Np-tPg"/>
+                                        <constraint firstAttribute="leadingMargin" secondItem="fP2-jj-OPl" secondAttribute="leading" id="jN4-Uz-aHH"/>
+                                        <constraint firstAttribute="topMargin" secondItem="fP2-jj-OPl" secondAttribute="top" id="vn0-06-fLV"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="label" destination="fP2-jj-OPl" id="eju-38-YL2"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Matches" id="gEY-MM-Pb3">
                         <barButtonItem key="leftBarButtonItem" image="menu" id="vdf-hc-Mde"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="matchesTableView" destination="Tgl-rp-EM4" id="rM9-RB-4Ah"/>
                         <outlet property="menuButton" destination="vdf-hc-Mde" id="pLB-m5-qKU"/>
                     </connections>
                 </viewController>
@@ -408,15 +433,6 @@
         <scene sceneID="8eN-ze-vyd">
             <objects>
                 <viewController id="sms-xV-2D1" customClass="SettingsVC" customModule="MorScout" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="slu-gj-kin"/>
-                        <viewControllerLayoutGuide type="bottom" id="xxB-rI-mAU"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="yzB-T6-Gil">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                    </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Settings" id="Hv3-tk-ta5">
                         <barButtonItem key="leftBarButtonItem" image="menu" id="yG3-Xu-pRH"/>
