@@ -9,13 +9,25 @@
 import Foundation
 import UIKit
 
-class SettingsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
+    
+    @IBOutlet weak var regionalPicker: UIPickerView!
+    @IBOutlet weak var regionalYear: UITextField!
     @IBOutlet weak var menuButton: UIBarButtonItem!
-    @IBOutlet var settingsTable: UITableView!
     
+    var regionals = ["Ventura Regional", "Las Vegas Regional"]
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        regionalPicker.dataSource = self
+        regionalPicker.delegate = self
+        
+        let date = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+ 
+        regionalYear.text = "\(components.year)"
         
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
@@ -23,23 +35,24 @@ class SettingsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        settingsTable.delegate = self
-        settingsTable.dataSource = self
-        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //temp
-        return 2
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return regionals.count
+    }
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return regionals[row]
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //temp
-        return settingsTable.dequeueReusableCellWithIdentifier("settingsCell", forIndexPath: indexPath)
-    }
+//    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//       
+//    }
     
 }

@@ -9,19 +9,16 @@
 import Foundation
 import UIKit
 
-class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MatchesVC: UIViewController {
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
-    @IBOutlet var matchesTableView: UITableView!
     
     var matches = [Match]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        matchesTableView.delegate = self
-        matchesTableView.dataSource = self
-
+       
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
@@ -47,16 +44,6 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return matches.count
-    }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let index = indexPath.row
-        let cell = matchesTableView.dequeueReusableCellWithIdentifier("matchCell", forIndexPath: indexPath) as! MatchCell
-        cell.label.text = "Match \(matches[index].number)"
-        return cell
     }
     
 }
