@@ -444,7 +444,7 @@
                                                     <rect key="frame" x="543" y="6" width="51" height="31"/>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share data with other teams" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rMD-Gq-cZP">
-                                                    <rect key="frame" x="8" y="11" width="216" height="21"/>
+                                                    <rect key="frame" x="12" y="11" width="215.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -457,7 +457,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <constraints>
-                                            <constraint firstItem="rMD-Gq-cZP" firstAttribute="leading" secondItem="zax-Fa-DEN" secondAttribute="leading" constant="8" id="YfK-BT-6fX"/>
+                                            <constraint firstItem="rMD-Gq-cZP" firstAttribute="leading" secondItem="zax-Fa-DEN" secondAttribute="leading" constant="12" id="YfK-BT-6fX"/>
                                             <constraint firstItem="rMD-Gq-cZP" firstAttribute="top" secondItem="zax-Fa-DEN" secondAttribute="top" constant="11" id="lcV-Gr-6KJ"/>
                                             <constraint firstAttribute="bottom" secondItem="rMD-Gq-cZP" secondAttribute="bottom" constant="12" id="mp8-CT-QPj"/>
                                         </constraints>

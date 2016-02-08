@@ -160,3 +160,11 @@ func parseJSON(string: String) -> JSON {
     let data = string.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
     return JSON(data: data!)
 }
+
+func alert(title title: String, message: String, buttonText: String, viewController: UIViewController) {
+    dispatch_async(dispatch_get_main_queue(),{
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.Default, handler: nil))
+        viewController.presentViewController(alert, animated: true, completion: nil)
+    })
+}

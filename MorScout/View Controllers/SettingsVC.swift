@@ -32,6 +32,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     func setup() {
         regionalPicker.dataSource = self
         regionalPicker.delegate = self
+        regionalYear.addTarget(self, action: "textFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
@@ -40,10 +41,13 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     }
 
     func getAndSetCurrentYear() -> String {
+        //get date at this moment in time
         let date = NSDate()
         let calendar = NSCalendar.currentCalendar()
+        //split date to day, month and year
         let components = calendar.components([.Day , .Month , .Year], fromDate: date)
         regionalYear.text = "\(components.year)"
+        //store year in storage
         storage.setValue("\(components.year)", forKey: "currentRegionalYear")
         return String(components.year)
     }
@@ -51,25 +55,27 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     func loadRegionalsForYear(year: String) {
         httpRequest(baseURL+"/getRegionalsForTeam", type: "POST", data:[
             "year": year
-            ]){ responseText in
-                if responseText != "fail" {
-                    let regionals = parseJSON(responseText)
-                    for (i, subJson):(String, JSON) in regionals {
-                        let key = String(subJson["name"])
-                        let name = String(subJson["name"])
-                        let year = String(subJson["name"])
-                        let regional = Regional(key: key, name: name, year: year)
-                        self.regionals.append(regional)
-                        if Int(i) == 0 {
-                            //storage.setValue(regional.key, forKey: "currentRegional")
-                            self.chooseRegional(regional.key)
-                        }
-                    }
-                    dispatch_async(dispatch_get_main_queue(),{
-                        self.regionalPicker.reloadAllComponents()
-                    })
-                    
+        ]){ responseText in
+            if responseText != "fail" {
+                let regionals = parseJSON(responseText)
+                if regionals.count == 0 {
+                    alert(title: "Ivalid Year", message: "No competitions were found for the selected year", buttonText: "OK", viewController: self)
                 }
+                self.regionals = []
+                for (i, subJson):(String, JSON) in regionals {
+                    let key = String(subJson["name"])
+                    let name = String(subJson["name"])
+                    let year = String(subJson["name"])
+                    let regional = Regional(key: key, name: name, year: year)
+                    self.regionals.append(regional)
+                    if Int(i) == 0 {
+                        //self.chooseRegional(regional.key)
+                    }
+                }
+                dispatch_async(dispatch_get_main_queue(),{
+                    self.regionalPicker.reloadAllComponents()
+                })
+            }
         }
     }
     
@@ -80,8 +86,15 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             ]) { responseText in
                 if responseText == "success" {
                     storage.setValue(key, forKey: "currentRegional")
+                    print("set regional to \(key)")
                 }
             }
+        }
+    }
+    
+    func textFieldDidChange(textField: UITextField) {
+        if regionalYear.text!.characters.count == 4 {
+            loadRegionalsForYear(regionalYear.text!)
         }
     }
     
