@@ -34,6 +34,7 @@
 		8E3357E01C50545500F2B879 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357DF1C50545500F2B879 /* MatchCell.swift */; };
 		8E3357E21C508F2A00F2B879 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357E11C508F2A00F2B879 /* Match.swift */; };
 		8E3357E41C5090F400F2B879 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357E31C5090F400F2B879 /* Team.swift */; };
+		8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4CFC41C68639E00D3AB22 /* Regional.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		8E3357E11C508F2A00F2B879 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		8E3357E31C5090F400F2B879 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		8E7AF0B51C40BE79007B8133 /* MorScout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorScout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EC4CFC41C68639E00D3AB22 /* Regional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regional.swift; sourceTree = "<group>"; };
 		C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
 		D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
 		E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MorScout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +156,7 @@
 				8E3357DF1C50545500F2B879 /* MatchCell.swift */,
 				8E3357E11C508F2A00F2B879 /* Match.swift */,
 				8E3357E31C5090F400F2B879 /* Team.swift */,
+				8EC4CFC41C68639E00D3AB22 /* Regional.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */,
 				8E3357D51C4C8C9400F2B879 /* MenuVC.swift in Sources */,
 				8E3357D01C4C8C9400F2B879 /* SWRevealViewController.m in Sources */,
+				8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */,
 				8E3357D11C4C8C9400F2B879 /* Util.swift in Sources */,
 				8E3357E01C50545500F2B879 /* MatchCell.swift in Sources */,
 				8E3357D61C4C8C9400F2B879 /* SettingsVC.swift in Sources */,
