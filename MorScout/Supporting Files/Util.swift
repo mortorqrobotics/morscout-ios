@@ -168,3 +168,13 @@ func alert(title title: String, message: String, buttonText: String, viewControl
         viewController.presentViewController(alert, animated: true, completion: nil)
     })
 }
+
+func getCurrentYear() -> String {
+    //get date at this moment in time
+    let date = NSDate()
+    let calendar = NSCalendar.currentCalendar()
+    //split date to day, month and year
+    let components = calendar.components([.Day , .Month , .Year], fromDate: date)
+    //store year in storage
+    return String(components.year)
+}

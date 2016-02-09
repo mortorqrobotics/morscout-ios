@@ -34,7 +34,17 @@ class MatchesVC: UIViewController {
                 let matches = parseJSON(responseText)
                 
                 for (_, subJson):(String, JSON) in matches {
+                    let match_number = subJson["match_number"]
+                    let time = subJson["time"]
+                    
                     print(subJson)
+                    print("##########")
+                    
+                    if let match_num = match_number.rawString(), let match_time = time.rawString() {
+                        self.matches.append(Match(number: Int(match_num)!, time: NSDate(timeIntervalSince1970: Double(match_time)!), scouted: 0, redTeams: [], blueTeams: []))
+                        
+                    }
+                    
                 }
             }else{
                 print("fail")
