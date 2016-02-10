@@ -178,3 +178,9 @@ func getCurrentYear() -> String {
     //store year in storage
     return String(components.year)
 }
+
+func timeFromNSDate(date: NSDate) -> String {
+    let calendar = NSCalendar.currentCalendar()
+    let components = calendar.components([.Hour, .Minute], fromDate: date)
+    return String(components.hour) + ":" + String(components.minute)
+}

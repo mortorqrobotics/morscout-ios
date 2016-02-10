@@ -9,5 +9,12 @@
 import Foundation
 
 class MatchCell: UITableViewCell {
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var matchNum: UILabel!
+    @IBOutlet weak var matchTime: UILabel!
+    @IBOutlet weak var redTeam1: UILabel!
+    @IBOutlet weak var redTeam2: UILabel!
+    @IBOutlet weak var redTeam3: UILabel!
+    @IBOutlet weak var blueTeam1: UILabel!
+    @IBOutlet weak var blueTeam2: UILabel!
+    @IBOutlet weak var blueTeam3: UILabel!
 }
