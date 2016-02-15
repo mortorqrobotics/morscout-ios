@@ -90,7 +90,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.blueTeam2.text = matches[indexPath.row].blueTeams[1]
         cell.blueTeam3.text = matches[indexPath.row].blueTeams[2]
         
-        cell.backgroundColor = UIColorFromHex("333333")
+        cell.backgroundColor = UIColorFromHex("f9f9f9")
         
         return cell
     }

@@ -11,9 +11,11 @@ import Foundation
 class Team {
     let number: Int
     let name: String
+    let rank: Int?
     
-    init(number: Int, name: String){
+    init(number: Int, name: String, rank: Int?){
         self.number = number
         self.name = name
+        self.rank = rank
     }
 }

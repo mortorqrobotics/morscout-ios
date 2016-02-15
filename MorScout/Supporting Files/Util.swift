@@ -12,6 +12,7 @@ import UIKit
 let storage = NSUserDefaults.standardUserDefaults()
 let baseURL = "http://127.0.0.1:8080"
 
+
 func UIColorFromHex(var hex: String) -> UIColor {
     
     
@@ -182,7 +183,19 @@ func getCurrentYear() -> String {
 func timeFromNSDate(date: NSDate) -> String {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Hour, .Minute], fromDate: date)
-    return String(components.hour) + ":" + String(components.minute)
+    var minutes = String(components.minute)
+    let hours = String((components.hour - 1) % 12 + 1)
+    let suffix: String
+    if components.hour > 11 {
+        suffix = "PM"
+    }else{
+        suffix = "AM"
+    }
+    (components.hour - 1) % 12 + 1
+    if minutes.characters.count == 1 {
+        minutes = "0" + minutes
+    }
+    return "\(hours):\(minutes) \(suffix)"
 }
 
 extension String {

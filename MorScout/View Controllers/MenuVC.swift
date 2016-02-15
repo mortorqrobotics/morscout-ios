@@ -14,6 +14,7 @@ class MenuVC: UITableViewController {
     
     @IBOutlet weak var menuName: UILabel!
     @IBOutlet weak var menuProfilePic: UIImageView!
+    @IBOutlet var menuTable: UITableView!
     override func viewDidLoad() {
         if let firstName = storage.stringForKey("firstName"), lastName = storage.stringForKey("lastName") {
             dispatch_async(dispatch_get_main_queue(),{
@@ -29,9 +30,6 @@ class MenuVC: UITableViewController {
             logout()
         }
     }
-    
-    
-    
     
     func logout() {
         httpRequest(baseURL+"/logout", type: "POST"){ responseText in
@@ -52,5 +50,12 @@ class MenuVC: UITableViewController {
                 })
             }
         }
+    }
+    
+    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.selectionStyle = .Default
+        let bgColorView: UIView = UIView()
+        bgColorView.backgroundColor = UIColorFromHex("FFA500")
+        cell.selectedBackgroundView = bgColorView
     }
 }

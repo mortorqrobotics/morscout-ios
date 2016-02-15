@@ -49,7 +49,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             
             let regionalInfo = parseJSON(responseText)
             let currentRegionalYear = String(regionalInfo["year"])
-            let currentRegionalName = String(regionalInfo["name"])
+            let currentRegionalName = String(regionalInfo["short_name"])
             if (!regionalInfo["Errors"]){
                 dispatch_async(dispatch_get_main_queue(),{
                     self.regionalYear.text = currentRegionalYear
@@ -98,7 +98,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
                 self.regionals = []
                 for (_, subJson):(String, JSON) in regionals {
                     let key = String(subJson["key"])
-                    let name = String(subJson["name"])
+                    let name = String(subJson["short_name"])
                     let year = String(subJson["year"])
                     let regional = Regional(key: key, name: name, year: year)
                     self.regionals.append(regional)
