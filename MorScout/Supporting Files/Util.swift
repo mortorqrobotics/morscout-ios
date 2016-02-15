@@ -180,7 +180,7 @@ func getCurrentYear() -> String {
     return String(components.year)
 }
 
-func timeFromNSDate(date: NSDate) -> String {
+func timeFromNSDate(date: NSDate) -> String? {
     let calendar = NSCalendar.currentCalendar()
     let components = calendar.components([.Hour, .Minute], fromDate: date)
     var minutes = String(components.minute)

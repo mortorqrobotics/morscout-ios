@@ -54,7 +54,13 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     }
                     
                     if let match_num = match_number.rawString(), let match_time = time.rawString() {
-                        self.matches.append(Match(number: Int(match_num)!, time: NSDate(timeIntervalSince1970: Double(match_time)!), scouted: 0, redTeams: redTeams, blueTeams: blueTeams))
+                        if let match_time = Double(match_time) {
+                            self.matches.append(Match(number: Int(match_num)!, time: NSDate(timeIntervalSince1970: match_time), scouted: 0, redTeams: redTeams, blueTeams: blueTeams))
+                        }else{
+                            self.matches.append(Match(number: Int(match_num)!, time: nil, scouted: 0, redTeams: redTeams, blueTeams: blueTeams))
+                        }
+                        
+                        
                         
                     }
                     
@@ -80,9 +86,16 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = matchesTable.dequeueReusableCellWithIdentifier("matchCell") as! MatchCell
-        let time = timeFromNSDate(matches[indexPath.row].time)
+        var displayedTime = ""
+        if let time = matches[indexPath.row].time {
+            if let readableTime = timeFromNSDate(time) {
+                displayedTime = readableTime
+            }
+        }else{
+            displayedTime = "N/A"
+        }
         cell.matchNum.text = "Match " + String(matches[indexPath.row].number)
-        cell.matchTime.text = time
+        cell.matchTime.text = displayedTime
         cell.redTeam1.text = matches[indexPath.row].redTeams[0]
         cell.redTeam2.text = matches[indexPath.row].redTeams[1]
         cell.redTeam3.text = matches[indexPath.row].redTeams[2]

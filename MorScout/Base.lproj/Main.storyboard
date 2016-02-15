@@ -532,15 +532,15 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lag-3i-0gh">
-                                            <rect key="frame" x="109" y="16" width="420" height="19.5"/>
+                                            <rect key="frame" x="109" y="16" width="415" height="19.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rank ##" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Flf-3K-3wG">
-                                            <rect key="frame" x="537" y="17" width="55" height="17"/>
+                                            <rect key="frame" x="532" y="17" width="60" height="17"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="55" id="L3Y-x6-ufM"/>
+                                                <constraint firstAttribute="width" constant="60" id="L3Y-x6-ufM"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
