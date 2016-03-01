@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MatchVC: UIViewController, UITextViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
+class MatchVC: UIViewController {
     
     var matchNumber: Int = 0
     var redTeams = [String]()
@@ -30,7 +30,9 @@ class MatchVC: UIViewController, UITextViewDelegate, UIPickerViewDataSource, UIP
     var container = UIView()
     var topMargin: CGFloat = 5
     
-    var picker: UIPickerView = UIPickerView()
+    var picker: DropdownPicker = DropdownPicker()
+    
+    var pickerLists = [String: Array<String>]()
     
     override func viewDidLoad() {
         matchTitle.title = "Match \(matchNumber)"
@@ -96,8 +98,7 @@ class MatchVC: UIViewController, UITextViewDelegate, UIPickerViewDataSource, UIP
             clearContainer()
             loadViewForm()
         case 2:
-            print(Mirror(reflecting: self.picker).subjectType)
-            //clearContainer()
+            clearContainer()
         default:
             clearContainer()
         }
@@ -162,20 +163,25 @@ class MatchVC: UIViewController, UITextViewDelegate, UIPickerViewDataSource, UIP
             textbox.autocorrectionType = UITextAutocorrectionType.No
             textbox.keyboardType = UIKeyboardType.Default
             textbox.returnKeyType = UIReturnKeyType.Done
-            textbox.delegate = self
             self.container.addSubview(textbox)
             self.topMargin += textbox.frame.height + 10
             
         }else if type == "dropdown" {
-//            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
-//            label.text = String(json["name"])
-//            self.container.addSubview(label)
-//            self.topMargin += label.frame.height + 10
-            let textField = UITextField(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
-            textField.placeholder = "pick"
+            
+            var options: [String] = []
+            for (_, subJson):(String, JSON) in json["options"] {
+                options.append(String(subJson))
+            }
+            
+            self.pickerLists[String(json["name"])] = options
+            
+            let textField = DropdownTextField(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
+            textField.dropdown = String(json["name"])
+            textField.placeholder = String(json["name"])
+            textField.delegate = self
             self.container.addSubview(textField)
             self.topMargin += textField.frame.height + 10
-            textField.inputView = self.picker
+            
         }else if type == "radio" {
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
             label.text = String(json["name"])
@@ -194,15 +200,52 @@ class MatchVC: UIViewController, UITextViewDelegate, UIPickerViewDataSource, UIP
         }
     }
     
-    func numberOfComponentsInPickerView(colorPicker: UIPickerView) -> Int {
+}
+
+extension MatchVC: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 5
+        let pickerView = pickerView as! DropdownPicker
+        return self.pickerLists[pickerView.dropdown!]!.count
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "Text"
+        let pickerView = pickerView as! DropdownPicker
+        return self.pickerLists[pickerView.dropdown!]![row]
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let pickerView = pickerView as! DropdownPicker
+        for view in self.container.subviews {
+            if String(Mirror(reflecting: view).subjectType) == "DropdownTextField" {
+                let textField = view as! DropdownTextField
+                if textField.dropdown == self.picker.dropdown {
+                    textField.text = self.pickerLists[pickerView.dropdown!]![row]
+                }
+            }
+        }
     }
 }
+
+extension MatchVC: UITextFieldDelegate {
+    func textFieldDidBeginEditing(textField: UITextField) {
+        let textField = textField as! DropdownTextField
+        textField.inputView = self.picker
+        self.picker.dropdown = textField.dropdown
+        self.picker.reloadAllComponents()
+    }
+    
+//    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+//
+//    }
+    
+//    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+//
+//        return true
+//    }
+}
+
