@@ -103,7 +103,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.blueTeam2.text = matches[indexPath.row].blueTeams[1]
         cell.blueTeam3.text = matches[indexPath.row].blueTeams[2]
         
-        cell.backgroundColor = UIColorFromHex("f9f9f9")
+        cell.backgroundColor = UIColorFromHex("F3F3F3")
         
         return cell
     }
@@ -111,6 +111,15 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("showMatch", sender: indexPath)
         matchesTable.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "showMatch") {
+            let matchVC = segue.destinationViewController as! MatchVC
+            matchVC.matchNumber = matches[sender!.row].number
+            matchVC.redTeams = matches[sender!.row].redTeams
+            matchVC.blueTeams = matches[sender!.row].blueTeams
+        }
     }
     
 }

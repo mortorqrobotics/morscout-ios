@@ -35,6 +35,7 @@
 		8E3357E21C508F2A00F2B879 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357E11C508F2A00F2B879 /* Match.swift */; };
 		8E3357E41C5090F400F2B879 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357E31C5090F400F2B879 /* Team.swift */; };
 		8EBC63091C712C00000DBE6A /* TeamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC63081C712C00000DBE6A /* TeamCell.swift */; };
+		8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC630A1C77F88F000DBE6A /* MatchVC.swift */; };
 		8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4CFC41C68639E00D3AB22 /* Regional.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		8E3357E31C5090F400F2B879 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		8E7AF0B51C40BE79007B8133 /* MorScout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorScout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EBC63081C712C00000DBE6A /* TeamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCell.swift; sourceTree = "<group>"; };
+		8EBC630A1C77F88F000DBE6A /* MatchVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchVC.swift; sourceTree = "<group>"; };
 		8EC4CFC41C68639E00D3AB22 /* Regional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regional.swift; sourceTree = "<group>"; };
 		C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
 		D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				8E3357C01C4C8C9400F2B879 /* TeamsVC.swift */,
 				8E3357BE1C4C8C9400F2B879 /* MenuVC.swift */,
 				8E3357BF1C4C8C9400F2B879 /* SettingsVC.swift */,
+				8EBC630A1C77F88F000DBE6A /* MatchVC.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 				8E3357E01C50545500F2B879 /* MatchCell.swift in Sources */,
 				8E3357D61C4C8C9400F2B879 /* SettingsVC.swift in Sources */,
 				8E3357D71C4C8C9400F2B879 /* TeamsVC.swift in Sources */,
+				8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */,
 				8E3357E21C508F2A00F2B879 /* Match.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

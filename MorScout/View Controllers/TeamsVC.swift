@@ -94,7 +94,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }else{
             cell.teamRank.text = "Rank N/A"
         }
-        cell.backgroundColor = UIColorFromHex("F9F9F9")
+        cell.backgroundColor = UIColorFromHex("F3F3F3")
         
         return cell
     }
