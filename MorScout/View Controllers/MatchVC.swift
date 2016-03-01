@@ -43,6 +43,7 @@ class MatchVC: UIViewController {
         blueTeam2.setTitle(blueTeams[1], forState: .Normal)
         blueTeam3.setTitle(blueTeams[2], forState: .Normal)
         
+        modeTabs.hidden = true
         modeTabs.selectedSegmentIndex = -1
         
         picker.delegate = self
@@ -67,26 +68,32 @@ class MatchVC: UIViewController {
     @IBAction func redTeam1Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        modeTabs.hidden = false
     }
     @IBAction func redTeam2Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        modeTabs.hidden = false
     }
     @IBAction func redTeam3Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        modeTabs.hidden = false
     }
     @IBAction func blueTeam1Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        modeTabs.hidden = false
     }
     @IBAction func blueTeam2Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        modeTabs.hidden = false
     }
     @IBAction func blueTeam3Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        modeTabs.hidden = false
     }
     
     @IBAction func changeModeTabs(sender: UISegmentedControl) {
@@ -126,9 +133,9 @@ class MatchVC: UIViewController {
     }
     
     func clearContainer() {
-        self.container.subviews.map({ subview in
-            subview.removeFromSuperview()
-        })
+        for view in self.container.subviews {
+            view.removeFromSuperview()
+        }
         topMargin = 5
     }
     
@@ -147,7 +154,7 @@ class MatchVC: UIViewController {
             let line = UIView(frame: CGRectMake(80, self.topMargin, self.view.frame.width-160, 1))
             line.backgroundColor = UIColor.lightGrayColor()
             self.container.addSubview(line)
-            self.topMargin += line.frame.height + 5
+            self.topMargin += line.frame.height + 10
             
         }else if type == "text" {
             
@@ -166,7 +173,7 @@ class MatchVC: UIViewController {
             self.container.addSubview(textbox)
             self.topMargin += textbox.frame.height + 10
             
-        }else if type == "dropdown" {
+        }else if type == "dropdown" || type == "radio" {
             
             var options: [String] = []
             for (_, subJson):(String, JSON) in json["options"] {
@@ -180,24 +187,36 @@ class MatchVC: UIViewController {
             textField.placeholder = String(json["name"])
             textField.delegate = self
             self.container.addSubview(textField)
-            self.topMargin += textField.frame.height + 10
-            
-        }else if type == "radio" {
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
-            label.text = String(json["name"])
-            self.container.addSubview(label)
-            self.topMargin += label.frame.height + 10
+            self.topMargin += textField.frame.height + 15
+
         }else if type == "number" {
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
-            label.text = String(json["name"])
+            
+            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 29))
+            let stepper = NumberStepper(frame: CGRectMake(self.view.frame.width - 105, self.topMargin, 0, 0))
+            let numberField = UITextField(frame: CGRectMake(200, self.topMargin, 40, 29))
+            stepper.numberField = numberField
+            stepper.numberField?.text = String(json["start"])
+            stepper.numberField?.keyboardType = .NumberPad
+            stepper.maximumValue = Double(String(json["max"]))!
+            stepper.minimumValue = Double(String(json["min"]))!
+            label.text = String(json["name"]) + ":"
+            stepper.addTarget(self, action: "stepperValueChanged:", forControlEvents: .ValueChanged)
             self.container.addSubview(label)
+            self.container.addSubview(stepper.numberField!)
+            self.container.addSubview(stepper)
             self.topMargin += label.frame.height + 10
+            
         }else if type == "checkbox" {
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
             label.text = String(json["name"])
             self.container.addSubview(label)
             self.topMargin += label.frame.height + 10
         }
+    }
+    
+    func stepperValueChanged(sender: UIStepper) {
+        let sender = sender as! NumberStepper
+        sender.numberField?.text = Int(sender.value).description
     }
     
 }
@@ -235,17 +254,24 @@ extension MatchVC: UITextFieldDelegate {
     func textFieldDidBeginEditing(textField: UITextField) {
         let textField = textField as! DropdownTextField
         textField.inputView = self.picker
+        
+        let toolBar = UIToolbar(frame: CGRectMake(0, self.view.frame.size.height/6, self.view.frame.size.width, 40.0))
+        toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil)
+        let doneButton = DoneButton(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: "clickedDoneButton:")
+        doneButton.textField = textField
+        toolBar.setItems([flexSpace, doneButton], animated: true)
+        textField.inputAccessoryView = toolBar
+        
         self.picker.dropdown = textField.dropdown
         self.picker.reloadAllComponents()
+        self.picker.selectRow(0, inComponent: 0, animated: false)
     }
     
-//    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-//
-//    }
-    
-//    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-//
-//        return true
-//    }
+    func clickedDoneButton(sender: UIBarButtonItem) {
+        let sender = sender as! DoneButton
+        sender.textField!.resignFirstResponder()
+    }
+
 }
 
