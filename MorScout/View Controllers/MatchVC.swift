@@ -226,10 +226,18 @@ class MatchVC: UIViewController {
             self.topMargin += label.frame.height + 10
             
         }else if type == "checkbox" {
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
+            
+            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 31))
             label.text = String(json["name"])
             self.container.addSubview(label)
+            
+            let check = UISwitch(frame: CGRectMake(self.view.frame.width-65, self.topMargin, 0, 0))
+            check.tintColor = UIColorFromHex("FF8900")
+            check.onTintColor = UIColorFromHex("FF8900")
+            self.container.addSubview(check)
+            
             self.topMargin += label.frame.height + 10
+            
         }
     }
     
