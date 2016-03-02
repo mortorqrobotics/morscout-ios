@@ -34,6 +34,12 @@
 		8E3357E01C50545500F2B879 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357DF1C50545500F2B879 /* MatchCell.swift */; };
 		8E3357E21C508F2A00F2B879 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357E11C508F2A00F2B879 /* Match.swift */; };
 		8E3357E41C5090F400F2B879 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357E31C5090F400F2B879 /* Team.swift */; };
+		8E9335F71C86BF590045140E /* DataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335F61C86BF590045140E /* DataPoint.swift */; };
+		8E9335F91C86BF730045140E /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335F81C86BF730045140E /* Label.swift */; };
+		8E9335FB1C86BFD80045140E /* TextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335FA1C86BFD80045140E /* TextBox.swift */; };
+		8E9335FD1C86C0830045140E /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335FC1C86C0830045140E /* Dropdown.swift */; };
+		8E9335FF1C86C18A0045140E /* NumberBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335FE1C86C18A0045140E /* NumberBox.swift */; };
+		8E9336011C86C2380045140E /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9336001C86C2380045140E /* Checkbox.swift */; };
 		8EBC63091C712C00000DBE6A /* TeamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC63081C712C00000DBE6A /* TeamCell.swift */; };
 		8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC630A1C77F88F000DBE6A /* MatchVC.swift */; };
 		8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4CFC41C68639E00D3AB22 /* Regional.swift */; };
@@ -74,6 +80,12 @@
 		8E3357E11C508F2A00F2B879 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		8E3357E31C5090F400F2B879 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		8E7AF0B51C40BE79007B8133 /* MorScout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorScout.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E9335F61C86BF590045140E /* DataPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPoint.swift; sourceTree = "<group>"; };
+		8E9335F81C86BF730045140E /* Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		8E9335FA1C86BFD80045140E /* TextBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextBox.swift; sourceTree = "<group>"; };
+		8E9335FC1C86C0830045140E /* Dropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dropdown.swift; sourceTree = "<group>"; };
+		8E9335FE1C86C18A0045140E /* NumberBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberBox.swift; sourceTree = "<group>"; };
+		8E9336001C86C2380045140E /* Checkbox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
 		8EBC63081C712C00000DBE6A /* TeamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCell.swift; sourceTree = "<group>"; };
 		8EBC630A1C77F88F000DBE6A /* MatchVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchVC.swift; sourceTree = "<group>"; };
 		8EC4CFC41C68639E00D3AB22 /* Regional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regional.swift; sourceTree = "<group>"; };
@@ -178,6 +190,12 @@
 				8EE543831C854D08009048F1 /* DropdownPicker.swift */,
 				8EE543851C85606F009048F1 /* DoneButton.swift */,
 				8EE543871C857135009048F1 /* NumberStepper.swift */,
+				8E9335F61C86BF590045140E /* DataPoint.swift */,
+				8E9335F81C86BF730045140E /* Label.swift */,
+				8E9335FA1C86BFD80045140E /* TextBox.swift */,
+				8E9335FC1C86C0830045140E /* Dropdown.swift */,
+				8E9335FE1C86C18A0045140E /* NumberBox.swift */,
+				8E9336001C86C2380045140E /* Checkbox.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -360,16 +378,22 @@
 				8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */,
 				8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */,
 				8E3357D51C4C8C9400F2B879 /* MenuVC.swift in Sources */,
+				8E9335FF1C86C18A0045140E /* NumberBox.swift in Sources */,
+				8E9336011C86C2380045140E /* Checkbox.swift in Sources */,
 				8EE543881C857135009048F1 /* NumberStepper.swift in Sources */,
+				8E9335F91C86BF730045140E /* Label.swift in Sources */,
 				8E3357D01C4C8C9400F2B879 /* SWRevealViewController.m in Sources */,
 				8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */,
 				8E3357D11C4C8C9400F2B879 /* Util.swift in Sources */,
 				8EE5438A1C86A62D009048F1 /* Reachability.swift in Sources */,
 				8EE543821C8548FD009048F1 /* DropdownTextField.swift in Sources */,
+				8E9335F71C86BF590045140E /* DataPoint.swift in Sources */,
 				8E3357E01C50545500F2B879 /* MatchCell.swift in Sources */,
 				8E3357D61C4C8C9400F2B879 /* SettingsVC.swift in Sources */,
 				8E3357D71C4C8C9400F2B879 /* TeamsVC.swift in Sources */,
 				8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */,
+				8E9335FB1C86BFD80045140E /* TextBox.swift in Sources */,
+				8E9335FD1C86C0830045140E /* Dropdown.swift in Sources */,
 				8E3357E21C508F2A00F2B879 /* Match.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -31,8 +31,9 @@ class MatchVC: UIViewController {
     var topMargin: CGFloat = 5
     
     var picker: DropdownPicker = DropdownPicker()
-    
     var pickerLists = [String: Array<String>]()
+    
+    var dataPoints = [DataPoint]()
     
     override func viewDidLoad() {
         matchTitle.title = "Match \(matchNumber)"
@@ -99,15 +100,27 @@ class MatchVC: UIViewController {
     @IBAction func changeModeTabs(sender: UISegmentedControl) {
         switch modeTabs.selectedSegmentIndex {
         case 0:
-            clearContainer()
-            loadScoutForm()
+            hideContainerElements()
+            if Reachability.isConnectedToNetwork() {
+                loadScoutForm()
+            }else{
+                if let dataPointsData = storage.objectForKey("dataPoints") {
+                    let cachedDataPoints = NSKeyedUnarchiver.unarchiveObjectWithData(dataPointsData as! NSData) as? [DataPoint]
+                    
+                    if cachedDataPoints!.count == 0 {
+                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                    }else{
+                        retrieveScoutFormFromCache()
+                    }
+                }else{
+                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }
+            }
         case 1:
-            clearContainer()
+            hideContainerElements()
             loadViewForm()
-        case 2:
-            clearContainer()
         default:
-            clearContainer()
+            hideContainerElements()
         }
     }
     
@@ -116,9 +129,24 @@ class MatchVC: UIViewController {
             let formData = parseJSON(responseText)
             dispatch_async(dispatch_get_main_queue(),{
                 
-                for(_, subJson):(String, JSON) in formData {
-                    self.createDataPoint(subJson)
+                for(i, subJson):(String, JSON) in formData {
+                    let type = String(subJson["type"])
+                    if type == "label" {
+                        self.dataPoints.append(Label(json: subJson))
+                    }else if type == "text" {
+                        self.dataPoints.append(TextBox(json: subJson))
+                    }else if type == "dropdown" || type == "radio" {
+                        self.dataPoints.append(Dropdown(json: subJson))
+                    }else if type == "number" {
+                        self.dataPoints.append(NumberBox(json: subJson))
+                    }else if type == "checkbox" {
+                        self.dataPoints.append(Checkbox(json: subJson))
+                    }
+                    self.createDataPoint(self.dataPoints[Int(i)!])
                 }
+                
+                let dataPointsData = NSKeyedArchiver.archivedDataWithRootObject(self.dataPoints)
+                storage.setObject(dataPointsData, forKey: "dataPoints")
                 
                 // I don't know why the x-distance is 4 but it works
                 self.container.frame = CGRectMake(4, 0, self.view.frame.width, self.topMargin)
@@ -128,24 +156,40 @@ class MatchVC: UIViewController {
         }
     }
     
+    func retrieveScoutFormFromCache() {
+        if let dataPointsData = storage.objectForKey("dataPoints") {
+            let cachedDataPoints = NSKeyedUnarchiver.unarchiveObjectWithData(dataPointsData as! NSData) as? [DataPoint]
+            
+            for cachedDataPoint in cachedDataPoints! {
+                self.createDataPoint(cachedDataPoint)
+            }
+            
+            self.container.frame = CGRectMake(4, 0, self.view.frame.width, self.topMargin)
+            self.scrollView.contentSize = self.container.bounds.size
+        }
+    }
+    
     func loadViewForm() {
         
     }
     
-    func clearContainer() {
+    func hideContainerElements() {
         for view in self.container.subviews {
-            view.removeFromSuperview()
+            view.hidden = true
         }
         topMargin = 5
     }
     
-    func createDataPoint(json: JSON) {
-        let type = String(json["type"])
+    func createDataPoint(dataPoint: DataPoint) {
+        //let type = String(json["type"])
         //let types = ["dropdown", "checkbox", "radio", "text", "number", "label"]
-        if type == "label" {
+        let type = String(Mirror(reflecting: dataPoint).subjectType)
+        
+        if type == "Label" {
+            let dataPoint = dataPoint as! Label
             
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 26))
-            label.text = String(json["name"])
+            label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 22.0)
             label.textAlignment = .Center
             self.container.addSubview(label)
@@ -156,10 +200,11 @@ class MatchVC: UIViewController {
             self.container.addSubview(line)
             self.topMargin += line.frame.height + 10
             
-        }else if type == "text" {
+        }else if type == "TextBox" {
+            let dataPoint = dataPoint as! TextBox
             
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
-            label.text = String(json["name"])
+            label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 17.0)
             label.textColor = UIColor.blackColor()
             self.container.addSubview(label)
@@ -180,38 +225,37 @@ class MatchVC: UIViewController {
             self.container.addSubview(textbox)
             self.topMargin += textbox.frame.height + 10
             
-        }else if type == "dropdown" || type == "radio" {
+        }else if type == "Dropdown" {
+            let dataPoint = dataPoint as! Dropdown
             
-            var options: [String] = []
-            for (_, subJson):(String, JSON) in json["options"] {
-                options.append(String(subJson))
-            }
+            let options = dataPoint.options
             
-            self.pickerLists[String(json["name"])] = options
+            self.pickerLists[dataPoint.name] = options
             
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
-            label.text = String(json["name"]) + ":"
+            label.text = dataPoint.name + ":"
             self.container.addSubview(label)
             
             let textField = DropdownTextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.topMargin, self.view.frame.width-20-label.intrinsicContentSize().width-15, 21))
-            textField.dropdown = String(json["name"])
+            textField.dropdown = dataPoint.name
             textField.placeholder = "Choose.."
             textField.delegate = self
             textField.inputView = self.picker
             self.container.addSubview(textField)
             self.topMargin += textField.frame.height + 15
 
-        }else if type == "number" {
+        }else if type == "NumberBox" {
+            let dataPoint = dataPoint as! NumberBox
             
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 29))
-            label.text = String(json["name"]) + ":"
+            label.text = dataPoint.name + ":"
             let stepper = NumberStepper(frame: CGRectMake(self.view.frame.width - 105, self.topMargin, 0, 0))
             let numberField = UITextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.topMargin, 40, 29))
             stepper.numberField = numberField
-            stepper.numberField?.text = String(json["start"])
+            stepper.numberField?.text = String(dataPoint.start)
             stepper.numberField?.keyboardType = .NumberPad
-            stepper.maximumValue = Double(String(json["max"]))!
-            stepper.minimumValue = Double(String(json["min"]))!
+            stepper.maximumValue = Double(dataPoint.max)
+            stepper.minimumValue = Double(dataPoint.min)
             stepper.addTarget(self, action: "stepperValueChanged:", forControlEvents: .ValueChanged)
             
             let toolbarAndButton = createToolbar()
@@ -225,10 +269,11 @@ class MatchVC: UIViewController {
             self.container.addSubview(stepper)
             self.topMargin += label.frame.height + 10
             
-        }else if type == "checkbox" {
+        }else if type == "Checkbox" {
+            let dataPoint = dataPoint as! Checkbox
             
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 31))
-            label.text = String(json["name"])
+            label.text = dataPoint.name
             self.container.addSubview(label)
             
             let check = UISwitch(frame: CGRectMake(self.view.frame.width-65, self.topMargin, 0, 0))
