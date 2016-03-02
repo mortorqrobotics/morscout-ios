@@ -27,10 +27,10 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
                 
                 if cachedMatches!.count == 0 {
-                    alert(title: "No Data Found1", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
                 }
             }else{
-                alert(title: "No Data Found2", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
             }
         }
     }

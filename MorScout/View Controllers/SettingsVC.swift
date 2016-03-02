@@ -23,8 +23,13 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         super.viewDidLoad()
         
         setup()
-        getCurrentRegionalInfo()
-        getShareDataStatus()
+        if Reachability.isConnectedToNetwork() {
+            getCurrentRegionalInfo()
+            getShareDataStatus()
+        }else{
+            alert(title: "No Connection", message: "Cannot edit settings without internet connection", buttonText: "OK", viewController: self)
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {

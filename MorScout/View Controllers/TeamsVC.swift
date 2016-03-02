@@ -28,7 +28,20 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        getTeams()
+        if Reachability.isConnectedToNetwork() {
+            getTeams()
+        }else{
+            if let teamsData = storage.objectForKey("teams") {
+                let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
+                
+                if cachedTeams!.count == 0 {
+                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }
+            }else{
+                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+            }
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -65,7 +78,8 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             
                         }
                         
-                        
+                        let teamsData = NSKeyedArchiver.archivedDataWithRootObject(self.teams)
+                        storage.setObject(teamsData, forKey: "teams")
                     
                         dispatch_async(dispatch_get_main_queue(),{
                             self.teamsTable.reloadData()
@@ -82,20 +96,29 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return teams.count
+        if let teamsData = storage.objectForKey("teams") {
+            let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
+            return cachedTeams!.count
+        }
+        return 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = teamsTable.dequeueReusableCellWithIdentifier("teamCell") as! TeamCell
-        cell.teamNum.text = "Team \(teams[indexPath.row].number)"
-        cell.teamName.text = teams[indexPath.row].name
-        if let rank = teams[indexPath.row].rank {
-            cell.teamRank.text = "Rank \(String(rank))"
-        }else{
-            cell.teamRank.text = "Rank N/A"
-        }
-        cell.backgroundColor = UIColorFromHex("F3F3F3")
         
+        if let teamsData = storage.objectForKey("teams") {
+            let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
+
+            cell.teamNum.text = "Team \(cachedTeams![indexPath.row].number)"
+            cell.teamName.text = cachedTeams![indexPath.row].name
+            if let rank = cachedTeams![indexPath.row].rank {
+                cell.teamRank.text = "Rank \(String(rank))"
+            }else{
+                cell.teamRank.text = "Rank N/A"
+            }
+        }
+        
+        cell.backgroundColor = UIColorFromHex("F3F3F3")
         return cell
     }
     
