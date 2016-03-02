@@ -8,19 +8,32 @@
 
 import Foundation
 
-class Match {
+class Match: NSObject, NSCoding {
     
     let number: Int
     let time: NSDate?
-    let scouted: UInt8
     var redTeams = [String]()
     var blueTeams = [String]()
     
-    init(number: Int, time: NSDate?, scouted: UInt8, redTeams: [String], blueTeams: [String]){
+    init(number: Int, time: NSDate?, redTeams: [String], blueTeams: [String]){
         self.number = number
         self.time = time
-        self.scouted = scouted
         self.redTeams = redTeams
         self.blueTeams = blueTeams
+    }
+    
+    required convenience init(coder aDecoder: NSCoder) {
+        let number = aDecoder.decodeIntegerForKey("number")
+        let time = aDecoder.decodeObjectForKey("time") as? NSDate
+        let redTeams = aDecoder.decodeObjectForKey("redTeams") as! [String]
+        let blueTeams = aDecoder.decodeObjectForKey("blueTeams") as! [String]
+        self.init(number: number, time: time, redTeams: redTeams, blueTeams: blueTeams)
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeInteger(number, forKey: "number")
+        aCoder.encodeObject(time, forKey: "time")
+        aCoder.encodeObject(redTeams, forKey: "redTeams")
+        aCoder.encodeObject(blueTeams, forKey: "blueTeams")
     }
 }

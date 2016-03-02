@@ -20,7 +20,19 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         setup()
-        getMatches()
+        if Reachability.isConnectedToNetwork() {
+            getMatches()
+        }else{
+            if let matchesData = storage.objectForKey("matches") {
+                let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+                
+                if cachedMatches!.count == 0 {
+                    alert(title: "No Data Found1", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }
+            }else{
+                alert(title: "No Data Found2", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+            }
+        }
     }
     
     func setup() {
@@ -55,9 +67,9 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     
                     if let match_num = match_number.rawString(), let match_time = time.rawString() {
                         if let match_time = Double(match_time) {
-                            self.matches.append(Match(number: Int(match_num)!, time: NSDate(timeIntervalSince1970: match_time), scouted: 0, redTeams: redTeams, blueTeams: blueTeams))
+                            self.matches.append(Match(number: Int(match_num)!, time: NSDate(timeIntervalSince1970: match_time), redTeams: redTeams, blueTeams: blueTeams))
                         }else{
-                            self.matches.append(Match(number: Int(match_num)!, time: nil, scouted: 0, redTeams: redTeams, blueTeams: blueTeams))
+                            self.matches.append(Match(number: Int(match_num)!, time: nil, redTeams: redTeams, blueTeams: blueTeams))
                         }
                         
                         
@@ -65,6 +77,9 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     }
                     
                 }
+                
+                let matchesData = NSKeyedArchiver.archivedDataWithRootObject(self.matches)
+                storage.setObject(matchesData, forKey: "matches")
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.matchesTable.reloadData()
@@ -81,30 +96,40 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return matches.count
+        if let matchesData = storage.objectForKey("matches") {
+            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+            return cachedMatches!.count
+        }
+        return 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = matchesTable.dequeueReusableCellWithIdentifier("matchCell") as! MatchCell
-        var displayedTime = ""
-        if let time = matches[indexPath.row].time {
-            if let readableTime = timeFromNSDate(time) {
-                displayedTime = readableTime
+        
+        if let matchesData = storage.objectForKey("matches") {
+            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+            
+            var displayedTime = ""
+            if let time = cachedMatches![indexPath.row].time {
+                if let readableTime = timeFromNSDate(time) {
+                    displayedTime = readableTime
+                }
+            }else{
+                displayedTime = "N/A"
             }
-        }else{
-            displayedTime = "N/A"
+            cell.matchNum.text = "Match " + String(cachedMatches![indexPath.row].number)
+            cell.matchTime.text = displayedTime
+            cell.redTeam1.text = cachedMatches![indexPath.row].redTeams[0]
+            cell.redTeam2.text = cachedMatches![indexPath.row].redTeams[1]
+            cell.redTeam3.text = cachedMatches![indexPath.row].redTeams[2]
+            cell.blueTeam1.text = cachedMatches![indexPath.row].blueTeams[0]
+            cell.blueTeam2.text = cachedMatches![indexPath.row].blueTeams[1]
+            cell.blueTeam3.text = cachedMatches![indexPath.row].blueTeams[2]
+
         }
-        cell.matchNum.text = "Match " + String(matches[indexPath.row].number)
-        cell.matchTime.text = displayedTime
-        cell.redTeam1.text = matches[indexPath.row].redTeams[0]
-        cell.redTeam2.text = matches[indexPath.row].redTeams[1]
-        cell.redTeam3.text = matches[indexPath.row].redTeams[2]
-        cell.blueTeam1.text = matches[indexPath.row].blueTeams[0]
-        cell.blueTeam2.text = matches[indexPath.row].blueTeams[1]
-        cell.blueTeam3.text = matches[indexPath.row].blueTeams[2]
         
         cell.backgroundColor = UIColorFromHex("F3F3F3")
-        
         return cell
     }
     
@@ -115,10 +140,13 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "showMatch") {
-            let matchVC = segue.destinationViewController as! MatchVC
-            matchVC.matchNumber = matches[sender!.row].number
-            matchVC.redTeams = matches[sender!.row].redTeams
-            matchVC.blueTeams = matches[sender!.row].blueTeams
+            if let matchesData = storage.objectForKey("matches") {
+                let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+                let matchVC = segue.destinationViewController as! MatchVC
+                matchVC.matchNumber = cachedMatches![sender!.row].number
+                matchVC.redTeams = cachedMatches![sender!.row].redTeams
+                matchVC.blueTeams = cachedMatches![sender!.row].blueTeams
+            }
         }
     }
     
