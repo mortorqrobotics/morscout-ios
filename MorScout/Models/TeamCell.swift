@@ -9,7 +9,6 @@
 import Foundation
 
 class TeamCell: UITableViewCell {
-    
     @IBOutlet weak var teamNum: UILabel!
     @IBOutlet weak var teamName: UILabel!
     @IBOutlet weak var teamRank: UILabel!

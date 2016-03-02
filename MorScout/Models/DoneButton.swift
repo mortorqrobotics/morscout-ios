@@ -9,5 +9,7 @@
 import Foundation
 
 class DoneButton: UIBarButtonItem {
+    //the text field or text view that the done button is supposed to dismiss
     var textField: UITextField?
+    var textView: UITextView?
 }

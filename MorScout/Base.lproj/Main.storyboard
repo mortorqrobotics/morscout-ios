@@ -334,11 +334,10 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zJK-2Z-kXF">
-                                <rect key="frame" x="172" y="176" width="257" height="29"/>
+                                <rect key="frame" x="250" y="176" width="101" height="29"/>
                                 <segments>
                                     <segment title="Scout"/>
                                     <segment title="View"/>
-                                    <segment title="All Matches"/>
                                 </segments>
                                 <connections>
                                     <action selector="changeModeTabs:" destination="3vc-MC-1vF" eventType="valueChanged" id="Nvl-cI-cwy"/>

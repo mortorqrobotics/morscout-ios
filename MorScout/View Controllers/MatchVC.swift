@@ -170,6 +170,13 @@ class MatchVC: UIViewController {
             textbox.autocorrectionType = UITextAutocorrectionType.No
             textbox.keyboardType = UIKeyboardType.Default
             textbox.returnKeyType = UIReturnKeyType.Done
+            
+            let toolbarAndButton = createToolbar()
+            let doneButton = toolbarAndButton.1
+            let toolbar = toolbarAndButton.0
+            doneButton.textView = textbox
+            textbox.inputAccessoryView = toolbar
+            
             self.container.addSubview(textbox)
             self.topMargin += textbox.frame.height + 10
             
@@ -182,25 +189,37 @@ class MatchVC: UIViewController {
             
             self.pickerLists[String(json["name"])] = options
             
-            let textField = DropdownTextField(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
+            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
+            label.text = String(json["name"]) + ":"
+            self.container.addSubview(label)
+            
+            let textField = DropdownTextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.topMargin, self.view.frame.width-20-label.intrinsicContentSize().width-15, 21))
             textField.dropdown = String(json["name"])
-            textField.placeholder = String(json["name"])
+            textField.placeholder = "Choose.."
             textField.delegate = self
+            textField.inputView = self.picker
             self.container.addSubview(textField)
             self.topMargin += textField.frame.height + 15
 
         }else if type == "number" {
             
             let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 29))
+            label.text = String(json["name"]) + ":"
             let stepper = NumberStepper(frame: CGRectMake(self.view.frame.width - 105, self.topMargin, 0, 0))
-            let numberField = UITextField(frame: CGRectMake(200, self.topMargin, 40, 29))
+            let numberField = UITextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.topMargin, 40, 29))
             stepper.numberField = numberField
             stepper.numberField?.text = String(json["start"])
             stepper.numberField?.keyboardType = .NumberPad
             stepper.maximumValue = Double(String(json["max"]))!
             stepper.minimumValue = Double(String(json["min"]))!
-            label.text = String(json["name"]) + ":"
             stepper.addTarget(self, action: "stepperValueChanged:", forControlEvents: .ValueChanged)
+            
+            let toolbarAndButton = createToolbar()
+            let doneButton = toolbarAndButton.1
+            let toolbar = toolbarAndButton.0
+            doneButton.textField = stepper.numberField
+            stepper.numberField!.inputAccessoryView = toolbar
+            
             self.container.addSubview(label)
             self.container.addSubview(stepper.numberField!)
             self.container.addSubview(stepper)
@@ -217,6 +236,27 @@ class MatchVC: UIViewController {
     func stepperValueChanged(sender: UIStepper) {
         let sender = sender as! NumberStepper
         sender.numberField?.text = Int(sender.value).description
+    }
+    
+    func createToolbar() -> (UIToolbar, DoneButton) {
+        let toolBar = UIToolbar(frame: CGRectMake(0, self.view.frame.size.height/6, self.view.frame.size.width, 40.0))
+        toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil)
+        let doneButton = DoneButton(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: "clickedDoneButton:")
+        toolBar.setItems([flexSpace, doneButton], animated: true)
+        return (toolBar, doneButton)
+    }
+    
+    func clickedDoneButton(sender: UIBarButtonItem) {
+        let sender = sender as! DoneButton
+        
+        if let textField = sender.textField {
+            textField.resignFirstResponder()
+        }
+        
+        if let textView = sender.textView {
+            textView.resignFirstResponder()
+        }
     }
     
 }
@@ -248,30 +288,25 @@ extension MatchVC: UIPickerViewDelegate, UIPickerViewDataSource {
             }
         }
     }
+    
 }
 
 extension MatchVC: UITextFieldDelegate {
+    
     func textFieldDidBeginEditing(textField: UITextField) {
         let textField = textField as! DropdownTextField
-        textField.inputView = self.picker
         
-        let toolBar = UIToolbar(frame: CGRectMake(0, self.view.frame.size.height/6, self.view.frame.size.width, 40.0))
-        toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil)
-        let doneButton = DoneButton(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: "clickedDoneButton:")
+        let toolbarAndDoneButton = createToolbar()
+        let toolbar = toolbarAndDoneButton.0
+        let doneButton = toolbarAndDoneButton.1
+
         doneButton.textField = textField
-        toolBar.setItems([flexSpace, doneButton], animated: true)
-        textField.inputAccessoryView = toolBar
+        textField.inputAccessoryView = toolbar
         
         self.picker.dropdown = textField.dropdown
         self.picker.reloadAllComponents()
         self.picker.selectRow(0, inComponent: 0, animated: false)
     }
     
-    func clickedDoneButton(sender: UIBarButtonItem) {
-        let sender = sender as! DoneButton
-        sender.textField!.resignFirstResponder()
-    }
-
 }
 
