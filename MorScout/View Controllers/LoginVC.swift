@@ -24,7 +24,7 @@ class LoginVC: UIViewController {
     
     func setup() {
         
-        self.view.backgroundColor = UIColor.blackColor()
+//        self.view.backgroundColor = UIColor.blackColor()
         
         loginButton.backgroundColor = UIColorFromHex("#FFA500")
         

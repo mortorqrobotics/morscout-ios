@@ -28,12 +28,19 @@ class MatchVC: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     
     var container = UIView()
-    var topMargin: CGFloat = 5
+    var scoutTopMargin: CGFloat = 5
+    var viewTopMargin: CGFloat = 5
     
     var picker: DropdownPicker = DropdownPicker()
     var pickerLists = [String: Array<String>]()
     
     var dataPoints = [DataPoint]()
+    
+    var scoutFormIsVisible = false
+    var viewFormIsVisible = false
+    
+    var scoutFormDataIsLoaded = false
+    var viewFormDataIsLoaded = false
     
     override func viewDidLoad() {
         matchTitle.title = "Match \(matchNumber)"
@@ -69,38 +76,63 @@ class MatchVC: UIViewController {
     @IBAction func redTeam1Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        storage.setInteger(Int((redTeam1.titleLabel?.text)!)!, forKey: "selectedTeam")
         modeTabs.hidden = false
     }
     @IBAction func redTeam2Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        storage.setInteger(Int((redTeam2.titleLabel?.text)!)!, forKey: "selectedTeam")
         modeTabs.hidden = false
     }
     @IBAction func redTeam3Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        storage.setInteger(Int((redTeam3.titleLabel?.text)!)!, forKey: "selectedTeam")
         modeTabs.hidden = false
     }
     @IBAction func blueTeam1Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        storage.setInteger(Int((blueTeam1.titleLabel?.text)!)!, forKey: "selectedTeam")
         modeTabs.hidden = false
     }
     @IBAction func blueTeam2Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        storage.setInteger(Int((blueTeam2.titleLabel?.text)!)!, forKey: "selectedTeam")
         modeTabs.hidden = false
     }
     @IBAction func blueTeam3Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        storage.setInteger(Int((blueTeam3.titleLabel?.text)!)!, forKey: "selectedTeam")
         modeTabs.hidden = false
     }
     
     @IBAction func changeModeTabs(sender: UISegmentedControl) {
         switch modeTabs.selectedSegmentIndex {
         case 0:
-            hideContainerElements()
+            hideViewFormElements()
+            showScoutForm()
+        case 1:
+            hideScoutFormElements()
+            showViewForm()
+        default:
+            break
+        }
+    }
+    
+    func showScoutForm() {
+        if scoutFormDataIsLoaded {
+            if !scoutFormIsVisible {
+                for view in container.subviews {
+                    if view.tag == 0 {
+                        view.hidden = false
+                    }
+                }
+            }
+        }else{
             if Reachability.isConnectedToNetwork() {
                 loadScoutForm()
             }else{
@@ -116,11 +148,6 @@ class MatchVC: UIViewController {
                     alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
                 }
             }
-        case 1:
-            hideContainerElements()
-            loadViewForm()
-        default:
-            hideContainerElements()
         }
     }
     
@@ -148,8 +175,11 @@ class MatchVC: UIViewController {
                 let dataPointsData = NSKeyedArchiver.archivedDataWithRootObject(self.dataPoints)
                 storage.setObject(dataPointsData, forKey: "dataPoints")
                 
+                self.scoutFormDataIsLoaded = true
+                self.scoutFormIsVisible = true
+                
                 // I don't know why the x-distance is 4 but it works
-                self.container.frame = CGRectMake(4, 0, self.view.frame.width, self.topMargin)
+                self.container.frame = CGRectMake(4, 0, self.view.frame.width, self.scoutTopMargin)
                 self.scrollView.contentSize = self.container.bounds.size
 
             })
@@ -164,53 +194,109 @@ class MatchVC: UIViewController {
                 self.createDataPoint(cachedDataPoint)
             }
             
-            self.container.frame = CGRectMake(4, 0, self.view.frame.width, self.topMargin)
+            scoutFormDataIsLoaded = true
+            scoutFormIsVisible = true
+            
+            self.container.frame = CGRectMake(4, 0, self.view.frame.width, self.scoutTopMargin)
             self.scrollView.contentSize = self.container.bounds.size
         }
     }
     
+    func showViewForm() {
+        if viewFormDataIsLoaded {
+            if !viewFormIsVisible {
+                for view in container.subviews {
+                    if view.tag == 1 {
+                        view.hidden = false
+                    }
+                }
+            }
+        }else{
+            if Reachability.isConnectedToNetwork() {
+                loadViewForm()
+            }else{
+                if let viewData = storage.objectForKey("viewData") {
+                    let cachedViewPoints = NSKeyedUnarchiver.unarchiveObjectWithData(viewData as! NSData) as? [ViewPoint]
+                    
+                    if cachedViewPoints!.count == 0 {
+                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                    }else{
+                        retrieveViewDataFromCache()
+                    }
+                }else{
+                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }
+            }
+        }
+    }
+    
     func loadViewForm() {
+        httpRequest(baseURL+"/getMatchReports", type: "POST", data:[
+            "match": String(matchNumber),
+            "team": String(storage.integerForKey("selectedTeam"))
+            ]){responseText in
+            print(responseText)
+        }
+    }
+    
+    func retrieveViewDataFromCache() {
         
     }
     
-    func hideContainerElements() {
+    func hideScoutFormElements() {
         for view in self.container.subviews {
-            view.hidden = true
+            if view.hidden == false {
+                view.hidden = true
+            }
         }
-        topMargin = 5
+        scoutTopMargin = 5
+        scoutFormIsVisible = false
+    }
+    func hideViewFormElements() {
+        for view in self.container.subviews {
+            if view.hidden == false {
+                view.hidden = true
+            }
+        }
+        viewTopMargin = 5
+        viewFormIsVisible = false
     }
     
     func createDataPoint(dataPoint: DataPoint) {
-        //let type = String(json["type"])
-        //let types = ["dropdown", "checkbox", "radio", "text", "number", "label"]
+        
+        //the tags for scout form elements are being set to 0
+        
         let type = String(Mirror(reflecting: dataPoint).subjectType)
         
         if type == "Label" {
             let dataPoint = dataPoint as! Label
             
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 26))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 26))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 22.0)
             label.textAlignment = .Center
+            label.tag = 0
             self.container.addSubview(label)
-            self.topMargin += label.frame.height + 5
+            self.scoutTopMargin += label.frame.height + 5
             
-            let line = UIView(frame: CGRectMake(80, self.topMargin, self.view.frame.width-160, 1))
+            let line = UIView(frame: CGRectMake(80, self.scoutTopMargin, self.view.frame.width-160, 1))
             line.backgroundColor = UIColor.lightGrayColor()
+            line.tag = 0
             self.container.addSubview(line)
-            self.topMargin += line.frame.height + 10
+            self.scoutTopMargin += line.frame.height + 10
             
         }else if type == "TextBox" {
             let dataPoint = dataPoint as! TextBox
             
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 21))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 17.0)
             label.textColor = UIColor.blackColor()
+            label.tag = 0
             self.container.addSubview(label)
-            self.topMargin += label.frame.height + 5
+            self.scoutTopMargin += label.frame.height + 5
             
-            let textbox = UITextView(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 90))
+            let textbox = UITextView(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 90))
             textbox.font = UIFont.systemFontOfSize(15)
             textbox.autocorrectionType = UITextAutocorrectionType.No
             textbox.keyboardType = UIKeyboardType.Default
@@ -222,8 +308,9 @@ class MatchVC: UIViewController {
             doneButton.textView = textbox
             textbox.inputAccessoryView = toolbar
             
+            textbox.tag = 0
             self.container.addSubview(textbox)
-            self.topMargin += textbox.frame.height + 10
+            self.scoutTopMargin += textbox.frame.height + 10
             
         }else if type == "Dropdown" {
             let dataPoint = dataPoint as! Dropdown
@@ -232,25 +319,27 @@ class MatchVC: UIViewController {
             
             self.pickerLists[dataPoint.name] = options
             
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 21))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 21))
             label.text = dataPoint.name + ":"
+            label.tag = 0
             self.container.addSubview(label)
             
-            let textField = DropdownTextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.topMargin, self.view.frame.width-20-label.intrinsicContentSize().width-15, 21))
+            let textField = DropdownTextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.scoutTopMargin, self.view.frame.width-20-label.intrinsicContentSize().width-15, 21))
             textField.dropdown = dataPoint.name
             textField.placeholder = "Choose.."
             textField.delegate = self
             textField.inputView = self.picker
+            textField.tag = 0
             self.container.addSubview(textField)
-            self.topMargin += textField.frame.height + 15
+            self.scoutTopMargin += textField.frame.height + 15
 
         }else if type == "NumberBox" {
             let dataPoint = dataPoint as! NumberBox
             
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 29))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 29))
             label.text = dataPoint.name + ":"
-            let stepper = NumberStepper(frame: CGRectMake(self.view.frame.width - 105, self.topMargin, 0, 0))
-            let numberField = UITextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.topMargin, 40, 29))
+            let stepper = NumberStepper(frame: CGRectMake(self.view.frame.width - 105, self.scoutTopMargin, 0, 0))
+            let numberField = UITextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.scoutTopMargin, 40, 29))
             stepper.numberField = numberField
             stepper.numberField?.text = String(dataPoint.start)
             stepper.numberField?.keyboardType = .NumberPad
@@ -264,24 +353,29 @@ class MatchVC: UIViewController {
             doneButton.textField = stepper.numberField
             stepper.numberField!.inputAccessoryView = toolbar
             
+            label.tag = 0
+            stepper.tag = 0
+            stepper.numberField?.tag = 0
             self.container.addSubview(label)
             self.container.addSubview(stepper.numberField!)
             self.container.addSubview(stepper)
-            self.topMargin += label.frame.height + 10
+            self.scoutTopMargin += label.frame.height + 10
             
         }else if type == "Checkbox" {
             let dataPoint = dataPoint as! Checkbox
             
-            let label = UILabel(frame: CGRectMake(10, self.topMargin, self.view.frame.width-20, 31))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 31))
             label.text = dataPoint.name
+            label.tag = 0
             self.container.addSubview(label)
             
-            let check = UISwitch(frame: CGRectMake(self.view.frame.width-65, self.topMargin, 0, 0))
+            let check = UISwitch(frame: CGRectMake(self.view.frame.width-65, self.scoutTopMargin, 0, 0))
             check.tintColor = UIColorFromHex("FF8900")
             check.onTintColor = UIColorFromHex("FF8900")
+            check.tag = 0
             self.container.addSubview(check)
             
-            self.topMargin += label.frame.height + 10
+            self.scoutTopMargin += label.frame.height + 10
             
         }
     }
