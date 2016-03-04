@@ -73,6 +73,7 @@ func httpRequest(url: String, type: String, data: [String: String], cb: (respons
     postData = String(postData.characters.dropLast())
     
     request.HTTPBody = postData.dataUsingEncoding(NSUTF8StringEncoding)
+    request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
     
     if let sid = storage.stringForKey("connect.sid"){
         request.addValue("connect.sid=\(sid)", forHTTPHeaderField: "Cookie")

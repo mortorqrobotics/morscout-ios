@@ -42,6 +42,8 @@ class MatchVC: UIViewController {
     var scoutFormDataIsLoaded = false
     var viewFormDataIsLoaded = false
     
+    var selectedTeam = 0
+    
     override func viewDidLoad() {
         matchTitle.title = "Match \(matchNumber)"
         redTeam1.setTitle(redTeams[0], forState: .Normal)
@@ -76,37 +78,37 @@ class MatchVC: UIViewController {
     @IBAction func redTeam1Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        storage.setInteger(Int((redTeam1.titleLabel?.text)!)!, forKey: "selectedTeam")
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
         modeTabs.hidden = false
     }
     @IBAction func redTeam2Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        storage.setInteger(Int((redTeam2.titleLabel?.text)!)!, forKey: "selectedTeam")
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
         modeTabs.hidden = false
     }
     @IBAction func redTeam3Click(sender: UIButton) {
         restoreAllButtonColors()
         redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        storage.setInteger(Int((redTeam3.titleLabel?.text)!)!, forKey: "selectedTeam")
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
         modeTabs.hidden = false
     }
     @IBAction func blueTeam1Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        storage.setInteger(Int((blueTeam1.titleLabel?.text)!)!, forKey: "selectedTeam")
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
         modeTabs.hidden = false
     }
     @IBAction func blueTeam2Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        storage.setInteger(Int((blueTeam2.titleLabel?.text)!)!, forKey: "selectedTeam")
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
         modeTabs.hidden = false
     }
     @IBAction func blueTeam3Click(sender: UIButton) {
         restoreAllButtonColors()
         blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        storage.setInteger(Int((blueTeam3.titleLabel?.text)!)!, forKey: "selectedTeam")
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
         modeTabs.hidden = false
     }
     
@@ -172,6 +174,8 @@ class MatchVC: UIViewController {
                     self.createDataPoint(self.dataPoints[Int(i)!])
                 }
                 
+                self.createSubmitButton()
+                
                 let dataPointsData = NSKeyedArchiver.archivedDataWithRootObject(self.dataPoints)
                 storage.setObject(dataPointsData, forKey: "dataPoints")
                 
@@ -193,6 +197,8 @@ class MatchVC: UIViewController {
             for cachedDataPoint in cachedDataPoints! {
                 self.createDataPoint(cachedDataPoint)
             }
+            
+            createSubmitButton()
             
             scoutFormDataIsLoaded = true
             scoutFormIsVisible = true
@@ -233,7 +239,7 @@ class MatchVC: UIViewController {
     func loadViewForm() {
         httpRequest(baseURL+"/getMatchReports", type: "POST", data:[
             "match": String(matchNumber),
-            "team": String(storage.integerForKey("selectedTeam"))
+            "team": String(selectedTeam)
             ]){responseText in
             print(responseText)
         }
@@ -249,7 +255,6 @@ class MatchVC: UIViewController {
                 view.hidden = true
             }
         }
-        scoutTopMargin = 5
         scoutFormIsVisible = false
     }
     func hideViewFormElements() {
@@ -258,7 +263,6 @@ class MatchVC: UIViewController {
                 view.hidden = true
             }
         }
-        viewTopMargin = 5
         viewFormIsVisible = false
     }
     
@@ -392,6 +396,52 @@ class MatchVC: UIViewController {
         let doneButton = DoneButton(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: "clickedDoneButton:")
         toolBar.setItems([flexSpace, doneButton], animated: true)
         return (toolBar, doneButton)
+    }
+    
+    func createSubmitButton() {
+        self.scoutTopMargin += 10
+        let button = UIButton(frame: CGRectMake(100, self.scoutTopMargin, self.view.frame.width-200, 30))
+        button.setTitle("Submit", forState: .Normal)
+        button.backgroundColor = UIColor.orangeColor()
+        button.addTarget(self, action: "submitForm:", forControlEvents: .TouchUpInside)
+        self.scoutTopMargin += button.frame.height + 5
+        self.container.addSubview(button)
+    }
+    
+    func submitForm(sender: UIButton) {
+        //alert(title: "hello", message: "yo", buttonText: "yo dawg", viewController: self)
+        if scoutFormIsVisible {
+            var jsonStringDataArray = "["
+            for (var i = 0; i < self.container.subviews.count; i++) {
+                let views = self.container.subviews
+                let type = String(Mirror(reflecting: views[i]).subjectType)
+                if type == "UILabel" && String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
+                    let label = views[i] as! UILabel
+                    jsonStringDataArray += "{\"name\": \"\(label.text!)\"},"
+                }else if type == "UITextView" {
+                    let textViewLabel = views[i-1] as! UILabel
+                    let textView = views[i] as! UITextView
+                    jsonStringDataArray += "{\"name\": \"\(textViewLabel.text!)\", \"value\": \"\(textView.text!)\"},"
+                }else if type == "DropdownTextField" {
+                    let textField = views[i] as! DropdownTextField
+                    jsonStringDataArray += "{\"name\": \"\(textField.dropdown!)\", \"value\": \"\(textField.text!)\"},"
+                }else if type == "NumberStepper" {
+                    let stepperLabel = views[i-2] as! UILabel
+                    let stepperTextField = views[i-1] as! UITextField
+                    jsonStringDataArray += "{\"name\": \"\(String(stepperLabel.text!.characters.dropLast()))\", \"value\": \"\(stepperTextField.text!)\"},"
+                }else if type == "UISwitch" {
+                    let checkLabel = views[i-1] as! UILabel
+                    let check = views[i] as! UISwitch
+                    jsonStringDataArray += "{\"name\": \"\(checkLabel.text!)\", \"value\": \"\(check.on)\"},"
+                }
+            }
+            jsonStringDataArray = String(jsonStringDataArray.characters.dropLast())
+            jsonStringDataArray += "]"
+            
+            httpRequest(baseURL+"/submitReport", type: "POST", data: ["data": jsonStringDataArray, "team": String(selectedTeam), "context": "match", "match": String(matchNumber)]) { responseText in
+                print(responseText)
+            }
+        }
     }
     
     func clickedDoneButton(sender: UIBarButtonItem) {
