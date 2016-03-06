@@ -22,6 +22,8 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         teamsTable.delegate = self
         teamsTable.dataSource = self
         
+        checkConnectionAndSync()
+        
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"

@@ -209,6 +209,32 @@ func heightForView(text:String, width:CGFloat) -> CGFloat{
     return label.frame.height
 }
 
+func checkConnectionAndSync() {
+    if Reachability.isConnectedToNetwork() {
+        if let savedReports = storage.arrayForKey("savedReports") {
+            for report in savedReports {
+                let data = report as! [String: String]
+                sendSubmissionSilently(data)
+            }
+        }
+    }
+}
+
+func sendSubmissionSilently(data: [String: String]) {
+    httpRequest(baseURL+"/submitReport", type: "POST", data: data) { responseText in
+        if responseText != "fail" {
+            if let savedReports = storage.arrayForKey("savedReports"){
+                if let i = savedReports.indexOf({$0 as! [String : String] == data}) {
+                    var newSavedReports = savedReports
+                    newSavedReports.removeAtIndex(i)
+                    storage.setObject(newSavedReports, forKey: "savedReports")
+                }
+            }
+        }
+    }
+}
+
+
 extension String {
     
     subscript (i: Int) -> Character {

@@ -38,6 +38,8 @@ class TeamVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        checkConnectionAndSync()
+        
         teamTitle.title = "Team \(teamNumber)"
         teamNameLabel.text = teamName
         
@@ -556,7 +558,14 @@ class TeamVC: UIViewController {
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
             }else{
-                storage.setObject(data, forKey: "teamReport-\(teamNumber)")
+                if let savedReports = storage.arrayForKey("savedReports") {
+                    var newSavedReports = savedReports
+                    newSavedReports.append(data)
+                    storage.setObject(newSavedReports, forKey: "savedReports")
+                }else{
+                    let newSavedReports = [data]
+                    storage.setObject(newSavedReports, forKey: "savedReports")
+                }
                 alert(title: "Submission saved ", message: "You are currently not connected to the internet so we saved your submission locally. It will be sent to the server once an internet connection is established.", buttonText: "OK", viewController: self)
             }
             

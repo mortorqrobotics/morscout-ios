@@ -20,6 +20,9 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         setup()
+        
+        checkConnectionAndSync()
+        
         if Reachability.isConnectedToNetwork() {
             getMatches()
         }else{

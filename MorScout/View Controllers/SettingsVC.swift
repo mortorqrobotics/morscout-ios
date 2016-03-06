@@ -23,11 +23,20 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         super.viewDidLoad()
         
         setup()
+        
+        checkConnectionAndSync()
+        
         if Reachability.isConnectedToNetwork() {
             getCurrentRegionalInfo()
             getShareDataStatus()
         }else{
             alert(title: "No Connection", message: "Cannot edit settings without internet connection", buttonText: "OK", viewController: self)
+        }
+        
+        if let savedReports = storage.arrayForKey("savedReports") {
+            print(savedReports)
+        }else{
+            print("no saved reports")
         }
         
     }

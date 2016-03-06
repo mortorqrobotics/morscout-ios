@@ -47,6 +47,10 @@ class MatchVC: UIViewController {
     var selectedTeam = 0
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        checkConnectionAndSync()
+        
         matchTitle.title = "Match \(matchNumber)"
         redTeam1.setTitle(redTeams[0], forState: .Normal)
         redTeam2.setTitle(redTeams[1], forState: .Normal)
@@ -173,6 +177,7 @@ class MatchVC: UIViewController {
                 }
             }
         }
+        scoutFormIsVisible = true
     }
     
     func loadScoutForm() {
@@ -202,7 +207,6 @@ class MatchVC: UIViewController {
                 storage.setObject(dataPointsData, forKey: "matchDataPoints")
                 
                 self.scoutFormDataIsLoaded = true
-                self.scoutFormIsVisible = true
                 
                 self.resizeContainer(self.scoutTopMargin)
                 
@@ -222,7 +226,6 @@ class MatchVC: UIViewController {
             createSubmitButton()
             
             scoutFormDataIsLoaded = true
-            scoutFormIsVisible = true
             
             resizeContainer(self.scoutTopMargin)
         }
@@ -267,6 +270,7 @@ class MatchVC: UIViewController {
 //                }
             }
         }
+        self.viewFormIsVisible = true
     }
     
     func loadViewForm() {
@@ -301,7 +305,6 @@ class MatchVC: UIViewController {
             
             
             self.viewFormDataIsLoaded[String(self.selectedTeam)] = true
-            self.viewFormIsVisible = true
 
                 
             dispatch_async(dispatch_get_main_queue(),{
@@ -620,7 +623,6 @@ class MatchVC: UIViewController {
     }
     
     func submitFormClick(sender: UIButton) {
-        //alert(title: "hello", message: "yo", buttonText: "yo dawg", viewController: self)
         if scoutFormIsVisible {
             var jsonStringDataArray = "["
             for (var i = 0; i < self.container.subviews.count; i++) {
@@ -654,7 +656,14 @@ class MatchVC: UIViewController {
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
             }else{
-                storage.setObject(data, forKey: "matchReport-\(matchNumber)-\(selectedTeam)")
+                if let savedReports = storage.arrayForKey("savedReports") {
+                    var newSavedReports = savedReports
+                    newSavedReports.append(data)
+                    storage.setObject(newSavedReports, forKey: "savedReports")
+                }else{
+                    let newSavedReports = [data]
+                    storage.setObject(newSavedReports, forKey: "savedReports")
+                }
                 alert(title: "Submission saved ", message: "You are currently not connected to the internet so we saved your submission locally. It will be sent to the server once an internet connection is established.", buttonText: "OK", viewController: self)
             }
             
@@ -683,6 +692,8 @@ class MatchVC: UIViewController {
             textView.resignFirstResponder()
         }
     }
+    
+
     
 }
 
