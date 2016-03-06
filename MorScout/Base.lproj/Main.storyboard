@@ -693,11 +693,30 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem style="plain" id="2EC-F6-Cl9">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="5Br-xW-8co">
+                                <rect key="frame" x="20" y="7" width="127" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Number"/>
+                                    <segment title="Rank"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeModeTabs:" destination="AZJ-hJ-u8i" eventType="valueChanged" id="8hO-3O-mSx"/>
+                                    <action selector="changeModeTabs:" destination="3vc-MC-1vF" eventType="valueChanged" id="tj7-2E-CCw"/>
+                                    <action selector="changedSort:" destination="Kfh-Ha-AOh" eventType="valueChanged" id="jES-2b-8EN"/>
+                                </connections>
+                            </segmentedControl>
+                        </barButtonItem>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Teams" id="TZF-io-j6m">
                         <barButtonItem key="leftBarButtonItem" image="menu" id="blj-Vd-fwT"/>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="menuButton" destination="blj-Vd-fwT" id="OKC-lw-bEC"/>
+                        <outlet property="sortTabs" destination="5Br-xW-8co" id="DWg-Jp-SRD"/>
                         <outlet property="teamsTable" destination="QUr-zB-yYs" id="KPW-c6-bHJ"/>
                         <segue destination="AZJ-hJ-u8i" kind="show" identifier="showTeam" id="4bY-3S-NcM"/>
                     </connections>

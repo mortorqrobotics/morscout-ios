@@ -13,6 +13,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var teamsTable: UITableView!
+    @IBOutlet weak var sortTabs: UISegmentedControl!
     
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -60,6 +61,13 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidAppear(animated: Bool) {
         self.searchController.searchBar.hidden = false
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.setToolbarHidden(false, animated: true)
+    }
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.setToolbarHidden(true, animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -159,6 +167,20 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         teamsTable.reloadData()
+    }
+    
+    @IBAction func changedSort(sender: UISegmentedControl) {
+        switch sortTabs.selectedSegmentIndex {
+        case 0:
+           self.teams.sortInPlace { $0.number < $1.number }
+            self.teamsTable.reloadData()
+        case 1:
+            self.teams.sortInPlace { $0.rank < $1.rank }
+            self.teamsTable.reloadData()
+        default:
+            break
+        }
+
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
