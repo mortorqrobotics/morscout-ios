@@ -14,12 +14,23 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var matchesTable: UITableView!
     
+    let searchController = UISearchController(searchResultsController: nil)
+    
     var matches = [Match]()
+    var filteredMatches = [Match]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setup()
+        
+        
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = false
+        matchesTable.tableHeaderView = searchController.searchBar
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.searchBar.placeholder = "Search Teams in Matches"
         
         checkConnectionAndSync()
         
@@ -31,11 +42,17 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 
                 if cachedMatches!.count == 0 {
                     alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }else{
+                    self.matches = cachedMatches!
                 }
             }else{
                 alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
             }
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.searchController.searchBar.hidden = false
     }
     
     func setup() {
@@ -101,38 +118,41 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let matchesData = storage.objectForKey("matches") {
-            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
-            return cachedMatches!.count
+        if searchController.active && searchController.searchBar.text != "" {
+            return filteredMatches.count
+        }else{
+            return matches.count
         }
-        return 0
+        
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = matchesTable.dequeueReusableCellWithIdentifier("matchCell") as! MatchCell
         
-        if let matchesData = storage.objectForKey("matches") {
-            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
-            
-            var displayedTime = ""
-            if let time = cachedMatches![indexPath.row].time {
-                if let readableTime = timeFromNSDate(time) {
-                    displayedTime = readableTime
-                }
-            }else{
-                displayedTime = "N/A"
-            }
-            cell.matchNum.text = "Match " + String(cachedMatches![indexPath.row].number)
-            cell.matchTime.text = displayedTime
-            cell.redTeam1.text = cachedMatches![indexPath.row].redTeams[0]
-            cell.redTeam2.text = cachedMatches![indexPath.row].redTeams[1]
-            cell.redTeam3.text = cachedMatches![indexPath.row].redTeams[2]
-            cell.blueTeam1.text = cachedMatches![indexPath.row].blueTeams[0]
-            cell.blueTeam2.text = cachedMatches![indexPath.row].blueTeams[1]
-            cell.blueTeam3.text = cachedMatches![indexPath.row].blueTeams[2]
-
+        let match: Match
+        if searchController.active && searchController.searchBar.text != "" {
+            match = filteredMatches[indexPath.row]
+        }else{
+            match = matches[indexPath.row]
         }
+        
+        var displayedTime = ""
+        if let time = match.time {
+            if let readableTime = timeFromNSDate(time) {
+                displayedTime = readableTime
+            }
+        }else{
+            displayedTime = "N/A"
+        }
+        cell.matchNum.text = "Match " + String(match.number)
+        cell.matchTime.text = displayedTime
+        cell.redTeam1.text = match.redTeams[0]
+        cell.redTeam2.text = match.redTeams[1]
+        cell.redTeam3.text = match.redTeams[2]
+        cell.blueTeam1.text = match.blueTeams[0]
+        cell.blueTeam2.text = match.blueTeams[1]
+        cell.blueTeam3.text = match.blueTeams[2]
         
         cell.backgroundColor = UIColorFromHex("F3F3F3")
         return cell
@@ -141,6 +161,21 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("showMatch", sender: indexPath)
         matchesTable.deselectRowAtIndexPath(indexPath, animated: true)
+        self.searchController.searchBar.hidden = true
+    }
+    
+    func filterContentForSearchText(searchText: String) {
+        filteredMatches = matches.filter { match in
+            let containsRed1 = String(match.redTeams[0]).lowercaseString.containsString(searchText.lowercaseString)
+            let containsRed2 = String(match.redTeams[1]).lowercaseString.containsString(searchText.lowercaseString)
+            let containsRed3 = String(match.redTeams[2]).lowercaseString.containsString(searchText.lowercaseString)
+            let containsBlue1 = String(match.blueTeams[0]).lowercaseString.containsString(searchText.lowercaseString)
+            let containsBlue2 = String(match.blueTeams[1]).lowercaseString.containsString(searchText.lowercaseString)
+            let containsBlue3 = String(match.blueTeams[2]).lowercaseString.containsString(searchText.lowercaseString)
+            return containsRed1 || containsRed2 || containsRed3 || containsBlue1 || containsBlue2 || containsBlue3
+        }
+        
+        matchesTable.reloadData()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -155,4 +190,10 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+}
+
+extension MatchesVC: UISearchResultsUpdating {
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
+    }
 }

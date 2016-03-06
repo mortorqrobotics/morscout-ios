@@ -14,13 +14,23 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet var teamsTable: UITableView!
     
+    let searchController = UISearchController(searchResultsController: nil)
+    
     var teams = [Team]()
+    var filteredTeams = [Team]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         teamsTable.delegate = self
         teamsTable.dataSource = self
+        
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = false
+        teamsTable.tableHeaderView = searchController.searchBar
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.searchBar.placeholder = "Search Teams"
         
         checkConnectionAndSync()
         
@@ -38,12 +48,18 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 
                 if cachedTeams!.count == 0 {
                     alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }else{
+                    self.teams = cachedTeams!
                 }
             }else{
                 alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
             }
         }
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.searchController.searchBar.hidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -100,26 +116,29 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let teamsData = storage.objectForKey("teams") {
-            let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
-            return cachedTeams!.count
+        if searchController.active && searchController.searchBar.text != "" {
+            return filteredTeams.count
+        }else{
+            return teams.count
         }
-        return 0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = teamsTable.dequeueReusableCellWithIdentifier("teamCell") as! TeamCell
         
-        if let teamsData = storage.objectForKey("teams") {
-            let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
-
-            cell.teamNum.text = "Team \(cachedTeams![indexPath.row].number)"
-            cell.teamName.text = cachedTeams![indexPath.row].name
-            if let rank = cachedTeams![indexPath.row].rank {
-                cell.teamRank.text = "Rank \(String(rank))"
-            }else{
-                cell.teamRank.text = "Rank N/A"
-            }
+        let team: Team
+        if searchController.active && searchController.searchBar.text != "" {
+            team = filteredTeams[indexPath.row]
+        }else{
+            team = teams[indexPath.row]
+        }
+        
+        cell.teamNum.text = "Team \(team.number)"
+        cell.teamName.text = team.name
+        if let rank = team.rank {
+            cell.teamRank.text = "Rank \(String(rank))"
+        }else{
+            cell.teamRank.text = "Rank N/A"
         }
         
         cell.backgroundColor = UIColorFromHex("F3F3F3")
@@ -129,6 +148,17 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("showTeam", sender: indexPath)
         teamsTable.deselectRowAtIndexPath(indexPath, animated: true)
+        self.searchController.searchBar.hidden = true
+    }
+    
+    func filterContentForSearchText(searchText: String) {
+        filteredTeams = teams.filter { team in
+            let containsName = team.name.lowercaseString.containsString(searchText.lowercaseString)
+            let containsNumber = String(team.number).lowercaseString.containsString(searchText.lowercaseString)
+            return containsName || containsNumber
+        }
+        
+        teamsTable.reloadData()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -141,5 +171,11 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 teamVC.teamName = cachedTeams![sender!.row].name
             }
         }
+    }
+}
+
+extension TeamsVC: UISearchResultsUpdating {
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
     }
 }
