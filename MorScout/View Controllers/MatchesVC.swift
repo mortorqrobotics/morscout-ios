@@ -34,20 +34,20 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         checkConnectionAndSync()
         
+        if let matchesData = storage.objectForKey("matches") {
+            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+            
+            if cachedMatches!.count == 0 {
+                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+            }else{
+                self.matches = cachedMatches!
+            }
+        }else{
+            alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+        }
+
         if Reachability.isConnectedToNetwork() {
             getMatches()
-        }else{
-            if let matchesData = storage.objectForKey("matches") {
-                let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
-                
-                if cachedMatches!.count == 0 {
-                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-                }else{
-                    self.matches = cachedMatches!
-                }
-            }else{
-                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-            }
         }
     }
     
@@ -69,7 +69,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         httpRequest(baseURL+"/getMatchesForCurrentRegional", type: "POST") {responseText in
             if responseText != "fail" {
                 let matches = parseJSON(responseText)
-                
+                self.matches = []
                 for (_, subJson):(String, JSON) in matches {
                     let match_number = subJson["match_number"]
                     let time = subJson["time"]

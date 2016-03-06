@@ -41,20 +41,20 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+        if let teamsData = storage.objectForKey("teams") {
+            let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
+            
+            if cachedTeams!.count == 0 {
+                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+            }else{
+                self.teams = cachedTeams!
+            }
+        }else{
+            alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+        }
+        
         if Reachability.isConnectedToNetwork() {
             getTeams()
-        }else{
-            if let teamsData = storage.objectForKey("teams") {
-                let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
-                
-                if cachedTeams!.count == 0 {
-                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-                }else{
-                    self.teams = cachedTeams!
-                }
-            }else{
-                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-            }
         }
         
     }
@@ -90,6 +90,9 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                 }
                             }
                         }
+                        
+                        self.teams = []
+                        
                         for (_, subJson):(String, JSON) in teams {
                             
                             let team_number = subJson["team_number"]
