@@ -80,6 +80,8 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             
                         }
                         
+                        self.teams.sortInPlace { $0.number < $1.number }
+                        
                         let teamsData = NSKeyedArchiver.archivedDataWithRootObject(self.teams)
                         storage.setObject(teamsData, forKey: "teams")
                     

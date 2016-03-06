@@ -81,6 +81,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     
                 }
                 
+                self.matches.sortInPlace { $0.time!.compare($1.time!) == .OrderedAscending }
+                
                 let matchesData = NSKeyedArchiver.archivedDataWithRootObject(self.matches)
                 storage.setObject(matchesData, forKey: "matches")
                 

@@ -551,7 +551,7 @@ class TeamVC: UIViewController {
             jsonStringDataArray = String(jsonStringDataArray.characters.dropLast())
             jsonStringDataArray += "]"
             
-            let data = ["data": jsonStringDataArray, "team": String(teamNumber), "context": "team"]
+            let data = ["data": jsonStringDataArray, "team": String(teamNumber), "context": "pit", "regional": storage.stringForKey("currentRegional")!]
             
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
