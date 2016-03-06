@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 let storage = NSUserDefaults.standardUserDefaults()
-let baseURL = "http://192.168.0.7:8080"
+let baseURL = "http://127.0.0.1:8080"
 
 
 func UIColorFromHex(var hex: String) -> UIColor {
@@ -197,6 +197,16 @@ func timeFromNSDate(date: NSDate) -> String? {
         minutes = "0" + minutes
     }
     return "\(hours):\(minutes) \(suffix)"
+}
+
+func heightForView(text:String, width:CGFloat) -> CGFloat{
+    let label:UILabel = UILabel(frame: CGRectMake(0, 0, width, CGFloat.max))
+    label.numberOfLines = 0
+    label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+    label.text = text
+    
+    label.sizeToFit()
+    return label.frame.height
 }
 
 extension String {

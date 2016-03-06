@@ -1,29 +1,22 @@
 //
-//  MatchVC.swift
+//  TeamVC.swift
 //  MorScout
 //
-//  Created by Farbod Rafezy on 2/19/16.
+//  Created by Farbod Rafezy on 3/3/16.
 //  Copyright © 2016 MorTorq. All rights reserved.
 //
 
 import Foundation
 
-class MatchVC: UIViewController {
+class TeamVC: UIViewController {
     
-    var matchNumber: Int = 0
-    var redTeams = [String]()
-    var blueTeams = [String]()
+    var teamNumber = 0
+    var teamName = ""
     
-    @IBOutlet weak var matchTitle: UINavigationItem!
-    
-    @IBOutlet weak var redTeam1: UIButton!
-    @IBOutlet weak var redTeam2: UIButton!
-    @IBOutlet weak var redTeam3: UIButton!
-    
-    @IBOutlet weak var blueTeam1: UIButton!
-    @IBOutlet weak var blueTeam2: UIButton!
-    @IBOutlet weak var blueTeam3: UIButton!
-    
+    @IBOutlet weak var teamTitle: UINavigationItem!
+    @IBOutlet weak var teamNameLabel: UILabel!
+    @IBOutlet weak var teamWebLink: UITextView!
+    @IBOutlet weak var teamLocation: UILabel!
     @IBOutlet weak var modeTabs: UISegmentedControl!
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -35,116 +28,53 @@ class MatchVC: UIViewController {
     var pickerLists = [String: Array<String>]()
     
     var dataPoints = [DataPoint]()
-    var viewPoints = [String: [ViewPoint]]()
-    var viewData = [String: JSON]()
     
     var scoutFormIsVisible = false
     var viewFormIsVisible = false
     
     var scoutFormDataIsLoaded = false
-    var viewFormDataIsLoaded = [String: Bool]()
-    
-    var selectedTeam = 0
+    var viewFormDataIsLoaded = false
     
     override func viewDidLoad() {
-        matchTitle.title = "Match \(matchNumber)"
-        redTeam1.setTitle(redTeams[0], forState: .Normal)
-        redTeam2.setTitle(redTeams[1], forState: .Normal)
-        redTeam3.setTitle(redTeams[2], forState: .Normal)
-        blueTeam1.setTitle(blueTeams[0], forState: .Normal)
-        blueTeam2.setTitle(blueTeams[1], forState: .Normal)
-        blueTeam3.setTitle(blueTeams[2], forState: .Normal)
+        super.viewDidLoad()
         
-        for(var i = 0; i < 3; i++){
-            viewFormDataIsLoaded[redTeams[i]] = false
-            viewFormDataIsLoaded[blueTeams[i]] = false
+        teamTitle.title = "Team \(teamNumber)"
+        teamNameLabel.text = teamName
+        
+        if Reachability.isConnectedToNetwork() {
+            httpRequest(baseURL+"/getTeamInfo", type: "POST", data: ["teamNumber": String(teamNumber)]){responseText in
+                let teamInfo = parseJSON(responseText)
+                dispatch_async(dispatch_get_main_queue(),{
+                    self.teamWebLink.text = String(teamInfo["website"])
+                    self.teamLocation.text = String(teamInfo["location"])
+                })
+            }
         }
-        
-        modeTabs.hidden = true
         modeTabs.selectedSegmentIndex = -1
         
         picker.delegate = self
         picker.dataSource = self
         
         self.scrollView.addSubview(self.container)
-    }
-    
-    override func didReceiveMemoryWarning() {
         
     }
-    
-    func restoreAllButtonColors() {
-        redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 0.55)
-        redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 0.55)
-        redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 0.55)
-        blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 0.6)
-        blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 0.6)
-        blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 0.6)
-    }
-    
-    @IBAction func redTeam1Click(sender: UIButton) {
-        restoreAllButtonColors()
-        redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
-        modeTabs.hidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func redTeam2Click(sender: UIButton) {
-        restoreAllButtonColors()
-        redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        selectedTeam = Int((redTeam2.titleLabel?.text)!)!
-        modeTabs.hidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func redTeam3Click(sender: UIButton) {
-        restoreAllButtonColors()
-        redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        selectedTeam = Int((redTeam3.titleLabel?.text)!)!
-        modeTabs.hidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func blueTeam1Click(sender: UIButton) {
-        restoreAllButtonColors()
-        blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        selectedTeam = Int((blueTeam1.titleLabel?.text)!)!
-        modeTabs.hidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func blueTeam2Click(sender: UIButton) {
-        restoreAllButtonColors()
-        blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        selectedTeam = Int((blueTeam2.titleLabel?.text)!)!
-        modeTabs.hidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func blueTeam3Click(sender: UIButton) {
-        restoreAllButtonColors()
-        blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        selectedTeam = Int((blueTeam3.titleLabel?.text)!)!
-        modeTabs.hidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
     }
     
     @IBAction func changeModeTabs(sender: UISegmentedControl) {
         switch modeTabs.selectedSegmentIndex {
         case 0:
-            hideViewForm()
+            hideViewFormElements()
             showScoutForm()
         case 1:
-            hideScoutForm()
+            hideScoutFormElements()
             showViewForm()
         default:
             break
         }
     }
-    
-    // MARK: - Scout Form Generation
     
     func showScoutForm() {
         if scoutFormDataIsLoaded {
@@ -160,7 +90,7 @@ class MatchVC: UIViewController {
             if Reachability.isConnectedToNetwork() {
                 loadScoutForm()
             }else{
-                if let dataPointsData = storage.objectForKey("matchDataPoints") {
+                if let dataPointsData = storage.objectForKey("teamDataPoints") {
                     let cachedDataPoints = NSKeyedUnarchiver.unarchiveObjectWithData(dataPointsData as! NSData) as? [DataPoint]
                     
                     if cachedDataPoints!.count == 0 {
@@ -173,10 +103,11 @@ class MatchVC: UIViewController {
                 }
             }
         }
+        
     }
     
     func loadScoutForm() {
-        httpRequest(baseURL+"/getScoutForm", type: "POST", data: ["context": "match"]) {responseText in
+        httpRequest(baseURL+"/getScoutForm", type: "POST", data: ["context": "pit"]) {responseText in
             let formData = parseJSON(responseText)
             dispatch_async(dispatch_get_main_queue(),{
                 
@@ -199,20 +130,19 @@ class MatchVC: UIViewController {
                 self.createSubmitButton()
                 
                 let dataPointsData = NSKeyedArchiver.archivedDataWithRootObject(self.dataPoints)
-                storage.setObject(dataPointsData, forKey: "matchDataPoints")
+                storage.setObject(dataPointsData, forKey: "teamDataPoints")
                 
                 self.scoutFormDataIsLoaded = true
                 self.scoutFormIsVisible = true
                 
                 self.resizeContainer(self.scoutTopMargin)
                 
-
             })
         }
     }
     
     func retrieveScoutFormFromCache() {
-        if let dataPointsData = storage.objectForKey("matchDataPoints") {
+        if let dataPointsData = storage.objectForKey("teamDataPoints") {
             let cachedDataPoints = NSKeyedUnarchiver.unarchiveObjectWithData(dataPointsData as! NSData) as? [DataPoint]
             
             for cachedDataPoint in cachedDataPoints! {
@@ -224,11 +154,12 @@ class MatchVC: UIViewController {
             scoutFormDataIsLoaded = true
             scoutFormIsVisible = true
             
-            resizeContainer(self.scoutTopMargin)
+            self.resizeContainer(self.scoutTopMargin)
+
         }
     }
     
-    func hideScoutForm() {
+    func hideScoutFormElements() {
         for view in self.container.subviews {
             if view.tag == 0 {
                 view.hidden = true
@@ -237,25 +168,24 @@ class MatchVC: UIViewController {
         scoutFormIsVisible = false
     }
     
-    // MARK: - View Form Generation
-    
     func showViewForm() {
-        if viewFormDataIsLoaded[String(selectedTeam)] == true {
+        if viewFormDataIsLoaded {
             if !viewFormIsVisible {
                 for view in container.subviews {
-                    if view.tag == self.selectedTeam {
+                    if view.tag == teamNumber {
                         view.hidden = false
                     }
                 }
-                resizeContainer(self.viewTopMargin)
             }
+            self.resizeContainer(self.viewTopMargin)
         }else{
             if Reachability.isConnectedToNetwork() {
                 loadViewForm()
             }else{
                 alert(title: "Cannot load scouted reports", message: "Unfortunately you need to be connected to the internet to view previous reports", buttonText: "OK", viewController: self)
-//                if let matchViewPoints = storage.objectForKey("matchViewPoints") {
-//                    let cachedViewPoints = NSKeyedUnarchiver.unarchiveObjectWithData(matchViewPoints as! NSData) as? [ViewPoint]
+                
+//                if let teamViewData = storage.objectForKey("teamViewData") {
+//                    let cachedViewPoints = NSKeyedUnarchiver.unarchiveObjectWithData(teamViewData as! NSData) as? [ViewPoint]
 //                    
 //                    if cachedViewPoints!.count == 0 {
 //                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
@@ -267,43 +197,18 @@ class MatchVC: UIViewController {
 //                }
             }
         }
+        
     }
     
     func loadViewForm() {
-        httpRequest(baseURL+"/getMatchReports", type: "POST", data:[
-            "match": String(matchNumber),
-            "team": String(selectedTeam)
-        ]){ responseText in
-                
+        httpRequest(baseURL+"/getTeamReports", type: "POST", data: ["reportContext": "pit", "teamNumber": String(teamNumber)]) { responseText in
+            
             let data = parseJSON(responseText)
             
-//            var yourTeamReports = [Report]()
-//            var otherTeamsReports = [Report]()
-//            
-//            for(_, subJson):(String, JSON) in data["yourTeam"]{
-//                yourTeamReports.append(Report(json: subJson))
-//            }
-//        
-//            for(_, subJson):(String, JSON) in data["otherTeams"]{
-//                otherTeamsReports.append(Report(json: subJson))
-//            }
-//            
-//            if let currentRegional = storage.stringForKey("currentRegional") {
-//            
-//                MatchDataStorage.sharedInstance.data[currentRegional] = ["\(self.matchNumber)": ["\(self.selectedTeam)": ["yourTeam": yourTeamReports]]]
-//                
-//                MatchDataStorage.sharedInstance.data[currentRegional] = ["\(self.matchNumber)": ["\(self.selectedTeam)": ["otherTeams": otherTeamsReports]]]
-//                
-//            }
-//            
-//            print("ON LOAD MATCH DATA:")
-//            print(MatchDataStorage.sharedInstance.data)
-            
-            
-            self.viewFormDataIsLoaded[String(self.selectedTeam)] = true
+            self.viewFormDataIsLoaded = true
             self.viewFormIsVisible = true
-
-                
+            
+            
             dispatch_async(dispatch_get_main_queue(),{
                 
                 self.viewTopMargin = 5
@@ -314,23 +219,23 @@ class MatchVC: UIViewController {
                     label.text = "No Reports"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .Center
-                    label.tag = self.selectedTeam
+                    label.tag = self.teamNumber
                     self.container.addSubview(label)
                     self.viewTopMargin += label.frame.height + 5
                 }
-    
+                
                 if data["yourTeam"].count != 0 {
                     let label = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
                     label.text = "Your Team"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .Center
-                    label.tag = self.selectedTeam
+                    label.tag = self.teamNumber
                     self.container.addSubview(label)
                     self.viewTopMargin += label.frame.height + 5
                     
                     let line = UIView(frame: CGRectMake(40, self.viewTopMargin, self.view.frame.width-80, 1))
                     line.backgroundColor = UIColor.lightGrayColor()
-                    line.tag = self.selectedTeam
+                    line.tag = self.teamNumber
                     self.container.addSubview(line)
                     self.viewTopMargin += line.frame.height + 10
                     
@@ -340,13 +245,13 @@ class MatchVC: UIViewController {
                         label.text = "Report \(reportNumber)"
                         label.font = UIFont(name: "Helvetica-Light", size: 21.0)
                         label.textAlignment = .Center
-                        label.tag = self.selectedTeam
+                        label.tag = self.teamNumber
                         self.container.addSubview(label)
                         self.viewTopMargin += label.frame.height + 5
                         
                         let line = UIView(frame: CGRectMake(60, self.viewTopMargin, self.view.frame.width-120, 1))
                         line.backgroundColor = UIColor.lightGrayColor()
-                        line.tag = self.selectedTeam
+                        line.tag = self.teamNumber
                         self.container.addSubview(line)
                         self.viewTopMargin += line.frame.height + 10
                         
@@ -356,25 +261,25 @@ class MatchVC: UIViewController {
                                 label.text = String(subJson["name"])
                                 label.font = UIFont(name: "Helvetica-Light", size: 20.0)
                                 label.textAlignment = .Center
-                                label.tag = self.selectedTeam
+                                label.tag = self.teamNumber
                                 self.container.addSubview(label)
                                 self.viewTopMargin += label.frame.height + 5
                                 
                                 let line = UIView(frame: CGRectMake(80, self.viewTopMargin, self.view.frame.width-160, 1))
                                 line.backgroundColor = UIColor.lightGrayColor()
-                                line.tag = self.selectedTeam
+                                line.tag = self.teamNumber
                                 self.container.addSubview(line)
                                 self.viewTopMargin += line.frame.height + 10
                             }else{
                                 let key = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
                                 key.text = String(subJson["name"])
-                                key.tag = self.selectedTeam
+                                key.tag = self.teamNumber
                                 self.container.addSubview(key)
                                 
-                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 , heightForView(String(subJson["value"]), width: 140)))
+                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 ,heightForView(String(subJson["value"]), width: 140)))
                                 value.numberOfLines = 0
                                 value.text = String(subJson["value"])
-                                value.tag = self.selectedTeam
+                                value.tag = self.teamNumber
                                 self.container.addSubview(value)
                                 
                                 self.viewTopMargin += value.frame.height + 5
@@ -382,20 +287,20 @@ class MatchVC: UIViewController {
                         }
                     }
                 }
-                    
+                
                 if data["otherTeams"].count != 0 {
                     
                     let label = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
                     label.text = "Other Teams"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .Center
-                    label.tag = self.selectedTeam
+                    label.tag = self.teamNumber
                     self.container.addSubview(label)
                     self.viewTopMargin += label.frame.height + 5
                     
                     let line = UIView(frame: CGRectMake(40, self.viewTopMargin, self.view.frame.width-80, 1))
                     line.backgroundColor = UIColor.lightGrayColor()
-                    line.tag = self.selectedTeam
+                    line.tag = self.teamNumber
                     self.container.addSubview(line)
                     self.viewTopMargin += line.frame.height + 10
                     
@@ -406,13 +311,13 @@ class MatchVC: UIViewController {
                         label.text = "Report \(reportNumber)"
                         label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                         label.textAlignment = .Center
-                        label.tag = self.selectedTeam
+                        label.tag = self.teamNumber
                         self.container.addSubview(label)
                         self.viewTopMargin += label.frame.height + 5
                         
                         let line = UIView(frame: CGRectMake(60, self.viewTopMargin, self.view.frame.width-120, 1))
                         line.backgroundColor = UIColor.lightGrayColor()
-                        line.tag = self.selectedTeam
+                        line.tag = self.teamNumber
                         self.container.addSubview(line)
                         self.viewTopMargin += line.frame.height + 10
                         
@@ -422,25 +327,25 @@ class MatchVC: UIViewController {
                                 label.text = String(subJson["name"])
                                 label.font = UIFont(name: "Helvetica-Light", size: 20.0)
                                 label.textAlignment = .Center
-                                label.tag = self.selectedTeam
+                                label.tag = self.teamNumber
                                 self.container.addSubview(label)
                                 self.viewTopMargin += label.frame.height + 5
                                 
                                 let line = UIView(frame: CGRectMake(80, self.viewTopMargin, self.view.frame.width-160, 1))
                                 line.backgroundColor = UIColor.lightGrayColor()
-                                line.tag = self.selectedTeam
+                                line.tag = self.teamNumber
                                 self.container.addSubview(line)
                                 self.viewTopMargin += line.frame.height + 10
                             }else{
                                 let key = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
                                 key.text = String(subJson["name"])
-                                key.tag = self.selectedTeam
+                                key.tag = self.teamNumber
                                 self.container.addSubview(key)
                                 
-                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 , heightForView(String(subJson["value"]), width: 140)))
+                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 ,heightForView(String(subJson["value"]), width: 140)))
                                 value.numberOfLines = 0
                                 value.text = String(subJson["value"])
-                                value.tag = self.selectedTeam
+                                value.tag = self.teamNumber
                                 self.container.addSubview(value)
                                 
                                 self.viewTopMargin += value.frame.height + 5
@@ -451,7 +356,6 @@ class MatchVC: UIViewController {
                 
                 self.resizeContainer(self.viewTopMargin)
                 
-                
             })
         }
     }
@@ -460,7 +364,7 @@ class MatchVC: UIViewController {
         
     }
     
-    func hideViewForm() {
+    func hideViewFormElements() {
         for view in self.container.subviews {
             if view.tag != 0 {
                 view.hidden = true
@@ -468,8 +372,6 @@ class MatchVC: UIViewController {
         }
         viewFormIsVisible = false
     }
-    
-    // MARK: - Misc
     
     func createDataPoint(dataPoint: DataPoint) {
         
@@ -541,7 +443,7 @@ class MatchVC: UIViewController {
             textField.tag = 0
             self.container.addSubview(textField)
             self.scoutTopMargin += textField.frame.height + 15
-
+            
         }else if type == "NumberBox" {
             let dataPoint = dataPoint as! NumberBox
             
@@ -649,12 +551,12 @@ class MatchVC: UIViewController {
             jsonStringDataArray = String(jsonStringDataArray.characters.dropLast())
             jsonStringDataArray += "]"
             
-            let data = ["data": jsonStringDataArray, "team": String(selectedTeam), "context": "match", "match": String(matchNumber)]
+            let data = ["data": jsonStringDataArray, "team": String(teamNumber), "context": "team"]
             
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
             }else{
-                storage.setObject(data, forKey: "matchReport-\(matchNumber)-\(selectedTeam)")
+                storage.setObject(data, forKey: "teamReport-\(teamNumber)")
                 alert(title: "Submission saved ", message: "You are currently not connected to the internet so we saved your submission locally. It will be sent to the server once an internet connection is established.", buttonText: "OK", viewController: self)
             }
             
@@ -686,8 +588,7 @@ class MatchVC: UIViewController {
     
 }
 
-extension MatchVC: UIPickerViewDelegate, UIPickerViewDataSource {
-    
+extension TeamVC: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -713,10 +614,9 @@ extension MatchVC: UIPickerViewDelegate, UIPickerViewDataSource {
             }
         }
     }
-    
 }
 
-extension MatchVC: UITextFieldDelegate {
+extension TeamVC: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(textField: UITextField) {
         let textField = textField as! DropdownTextField
@@ -724,7 +624,7 @@ extension MatchVC: UITextFieldDelegate {
         let toolbarAndDoneButton = createToolbar()
         let toolbar = toolbarAndDoneButton.0
         let doneButton = toolbarAndDoneButton.1
-
+        
         doneButton.textField = textField
         textField.inputAccessoryView = toolbar
         
@@ -734,4 +634,3 @@ extension MatchVC: UITextFieldDelegate {
     }
     
 }
-

@@ -122,4 +122,20 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        performSegueWithIdentifier("showTeam", sender: indexPath)
+        teamsTable.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "showTeam") {
+            if let teamsData = storage.objectForKey("teams") {
+                let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
+
+                let teamVC = segue.destinationViewController as! TeamVC
+                teamVC.teamNumber = cachedTeams![sender!.row].number
+                teamVC.teamName = cachedTeams![sender!.row].name
+            }
+        }
+    }
 }

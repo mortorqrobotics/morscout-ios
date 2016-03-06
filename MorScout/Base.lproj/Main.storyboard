@@ -237,7 +237,7 @@
             </objects>
             <point key="canvasLocation" x="1562" y="416"/>
         </scene>
-        <!--MatchVC-->
+        <!--Match ##-->
         <scene sceneID="AFV-Mp-ZIj">
             <objects>
                 <viewController id="3vc-MC-1vF" customClass="MatchVC" customModule="MorScout" customModuleProvider="target" sceneMemberID="viewController">
@@ -373,9 +373,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="2vR-ge-Xec">
-                        <nil key="title"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Match ##" id="2vR-ge-Xec"/>
                     <connections>
                         <outlet property="blueTeam1" destination="iv0-F8-oZF" id="QaS-Z4-9T3"/>
                         <outlet property="blueTeam2" destination="pzx-TK-6rF" id="neQ-w3-8Ms"/>
@@ -700,11 +698,94 @@
                     <connections>
                         <outlet property="menuButton" destination="blj-Vd-fwT" id="OKC-lw-bEC"/>
                         <outlet property="teamsTable" destination="QUr-zB-yYs" id="KPW-c6-bHJ"/>
+                        <segue destination="AZJ-hJ-u8i" kind="show" identifier="showTeam" id="4bY-3S-NcM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Clu-cR-Jry" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1570" y="1152"/>
+            <point key="canvasLocation" x="1562" y="1152"/>
+        </scene>
+        <!--Team ####-->
+        <scene sceneID="k5O-fW-Bdr">
+            <objects>
+                <viewController id="AZJ-hJ-u8i" customClass="TeamVC" customModule="MorScout" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8xE-T5-MK8"/>
+                        <viewControllerLayoutGuide type="bottom" id="mDq-2p-dML"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rdC-Fc-nos">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a3H-zF-3jR">
+                                <rect key="frame" x="234" y="88" width="133" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Scout or View a Team" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Tyq-5G-Hwi">
+                                <rect key="frame" x="20" y="121" width="560" height="31"/>
+                                <color key="backgroundColor" red="0.9137254901960784" green="0.9137254901960784" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31" id="sbP-EP-8RF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JjY-co-K8W">
+                                <rect key="frame" x="20" y="152" width="560" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rlb-Eb-pS9">
+                                <rect key="frame" x="250" y="188" width="101" height="29"/>
+                                <segments>
+                                    <segment title="Scout"/>
+                                    <segment title="View"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeModeTabs:" destination="3vc-MC-1vF" eventType="valueChanged" id="DnJ-m7-qLf"/>
+                                    <action selector="changeModeTabs:" destination="AZJ-hJ-u8i" eventType="valueChanged" id="rQY-MS-EZM"/>
+                                </connections>
+                            </segmentedControl>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hlg-6B-Mxf">
+                                <rect key="frame" x="0.0" y="237" width="600" height="363"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.9137254901960784" green="0.9137254901960784" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="leadingMargin" secondItem="Tyq-5G-Hwi" secondAttribute="leading" id="Gvc-mD-1M9"/>
+                            <constraint firstItem="mDq-2p-dML" firstAttribute="top" secondItem="Hlg-6B-Mxf" secondAttribute="bottom" id="I9g-JX-aOB"/>
+                            <constraint firstItem="a3H-zF-3jR" firstAttribute="top" secondItem="8xE-T5-MK8" secondAttribute="bottom" constant="24" id="M9M-VQ-XXB"/>
+                            <constraint firstItem="Tyq-5G-Hwi" firstAttribute="top" secondItem="a3H-zF-3jR" secondAttribute="bottom" constant="3" id="QbK-DZ-lKC"/>
+                            <constraint firstItem="rlb-Eb-pS9" firstAttribute="centerX" secondItem="rdC-Fc-nos" secondAttribute="centerX" id="Sxg-Yf-U0e"/>
+                            <constraint firstItem="Hlg-6B-Mxf" firstAttribute="width" secondItem="rdC-Fc-nos" secondAttribute="width" id="Y0X-ev-q5g"/>
+                            <constraint firstItem="Hlg-6B-Mxf" firstAttribute="top" secondItem="rlb-Eb-pS9" secondAttribute="bottom" constant="21" id="c3I-Be-qjt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="JjY-co-K8W" secondAttribute="trailing" id="cjV-zS-Qnx"/>
+                            <constraint firstItem="Tyq-5G-Hwi" firstAttribute="centerX" secondItem="rdC-Fc-nos" secondAttribute="centerX" id="h4q-jY-DLq"/>
+                            <constraint firstItem="rlb-Eb-pS9" firstAttribute="top" secondItem="JjY-co-K8W" secondAttribute="bottom" constant="19" id="j0k-Af-XhC"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="JjY-co-K8W" secondAttribute="leading" id="q4T-EH-6Je"/>
+                            <constraint firstItem="Hlg-6B-Mxf" firstAttribute="centerX" secondItem="rdC-Fc-nos" secondAttribute="centerX" id="rLe-6U-qfC"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Tyq-5G-Hwi" secondAttribute="trailing" id="rqP-PU-VlD"/>
+                            <constraint firstItem="a3H-zF-3jR" firstAttribute="centerX" secondItem="rdC-Fc-nos" secondAttribute="centerX" id="s32-g1-F4e"/>
+                            <constraint firstItem="JjY-co-K8W" firstAttribute="top" secondItem="Tyq-5G-Hwi" secondAttribute="bottom" id="xfg-j6-iGg"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Team ####" id="kZv-uK-lwI"/>
+                    <connections>
+                        <outlet property="modeTabs" destination="rlb-Eb-pS9" id="XxF-KD-Wt1"/>
+                        <outlet property="scrollView" destination="Hlg-6B-Mxf" id="K9J-w4-ehY"/>
+                        <outlet property="teamLocation" destination="JjY-co-K8W" id="TlN-Ss-n8l"/>
+                        <outlet property="teamNameLabel" destination="a3H-zF-3jR" id="NNg-Ag-BYn"/>
+                        <outlet property="teamTitle" destination="kZv-uK-lwI" id="WQh-sM-VsU"/>
+                        <outlet property="teamWebLink" destination="Tyq-5G-Hwi" id="C2K-gX-5Ov"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wpM-xJ-rgf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2270" y="1152"/>
         </scene>
         <!--Settings-->
         <scene sceneID="gQc-g9-WHh">

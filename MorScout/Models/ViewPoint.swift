@@ -11,3 +11,8 @@ import Foundation
 class ViewPoint: NSObject {
     
 }
+
+enum ViewPointSectionType {
+    case YourTeam
+    case OtherTeams
+}
