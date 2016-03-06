@@ -105,6 +105,7 @@ class TeamVC: UIViewController {
                 }
             }
         }
+        self.scoutFormIsVisible = true
         
     }
     
@@ -135,7 +136,6 @@ class TeamVC: UIViewController {
                 storage.setObject(dataPointsData, forKey: "teamDataPoints")
                 
                 self.scoutFormDataIsLoaded = true
-                self.scoutFormIsVisible = true
                 
                 self.resizeContainer(self.scoutTopMargin)
                 
@@ -154,7 +154,6 @@ class TeamVC: UIViewController {
             createSubmitButton()
             
             scoutFormDataIsLoaded = true
-            scoutFormIsVisible = true
             
             self.resizeContainer(self.scoutTopMargin)
 
@@ -199,6 +198,7 @@ class TeamVC: UIViewController {
 //                }
             }
         }
+        self.viewFormIsVisible = true
         
     }
     
@@ -208,8 +208,6 @@ class TeamVC: UIViewController {
             let data = parseJSON(responseText)
             
             self.viewFormDataIsLoaded = true
-            self.viewFormIsVisible = true
-            
             
             dispatch_async(dispatch_get_main_queue(),{
                 
