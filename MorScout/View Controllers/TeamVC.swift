@@ -506,8 +506,7 @@ class TeamVC: UIViewController {
     }
     
     func resizeContainer(margin: CGFloat) {
-        // I don't know why the x-distance is 4 but it works
-        self.container.frame = CGRectMake(4, 0, self.view.frame.width, margin)
+        self.container.frame = CGRectMake(0, 0, self.view.frame.width, margin)
         self.scrollView.contentSize = self.container.bounds.size
     }
     
@@ -522,7 +521,6 @@ class TeamVC: UIViewController {
     }
     
     func submitFormClick(sender: UIButton) {
-        //alert(title: "hello", message: "yo", buttonText: "yo dawg", viewController: self)
         if scoutFormIsVisible {
             var jsonStringDataArray = "["
             for (var i = 0; i < self.container.subviews.count; i++) {

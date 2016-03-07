@@ -178,13 +178,16 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "showMatch") {
-            if let matchesData = storage.objectForKey("matches") {
-                let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
-                let matchVC = segue.destinationViewController as! MatchVC
-                matchVC.matchNumber = cachedMatches![sender!.row].number
-                matchVC.redTeams = cachedMatches![sender!.row].redTeams
-                matchVC.blueTeams = cachedMatches![sender!.row].blueTeams
+            let match: Match
+            if searchController.active && searchController.searchBar.text != "" {
+                match = filteredMatches[sender!.row]
+            }else{
+                match = matches[sender!.row]
             }
+            let matchVC = segue.destinationViewController as! MatchVC
+            matchVC.matchNumber = match.number
+            matchVC.redTeams = match.redTeams
+            matchVC.blueTeams = match.blueTeams
         }
     }
     

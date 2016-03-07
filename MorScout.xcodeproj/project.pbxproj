@@ -538,7 +538,7 @@
 				INFOPLIST_FILE = MorScout/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.MorTorq.MorScout2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mortorq1515.morscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";
@@ -557,7 +557,7 @@
 				INFOPLIST_FILE = MorScout/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.MorTorq.MorScout2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mortorq1515.morscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";

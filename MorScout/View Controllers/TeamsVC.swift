@@ -186,13 +186,17 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "showTeam") {
-            if let teamsData = storage.objectForKey("teams") {
-                let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
-
-                let teamVC = segue.destinationViewController as! TeamVC
-                teamVC.teamNumber = cachedTeams![sender!.row].number
-                teamVC.teamName = cachedTeams![sender!.row].name
+            let team: Team
+            if searchController.active && searchController.searchBar.text != "" {
+                team = filteredTeams[sender!.row]
+            }else{
+                team = teams[sender!.row]
             }
+
+            let teamVC = segue.destinationViewController as! TeamVC
+            teamVC.teamNumber = team.number
+            teamVC.teamName = team.name
+            
         }
     }
 }
