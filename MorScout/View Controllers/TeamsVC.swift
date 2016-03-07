@@ -49,8 +49,6 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }else{
                 self.teams = cachedTeams!
             }
-        }else{
-            alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
         }
         
         if Reachability.isConnectedToNetwork() {

@@ -63,13 +63,29 @@ class LoginVC: UIViewController {
                 
                 let user = parseJSON(responseText)
                 
-                let storedProperties = ["_id", "username", "firstName", "lastName", "admin", "teamCode", "teamName", "teamNumber"]
+                let storedUserProperties = ["username", "firstname", "lastname", "_id", "phone", "email", "teams", "profpicpath"]
                 
                 for (key, value):(String, JSON) in user {
-                    if storedProperties.indexOf(key) > -1 {
+                    if storedUserProperties.indexOf(key) > -1 {
                         storage.setObject(String(value), forKey: key)
                     }
                 }
+                
+                if user["teams"].isExists() && user["teams"].count > 0 {
+                    if user["current_team"].isExists() {
+                        storage.setObject(String(user["current_team"]["id"]), forKey: "c_team")
+                        storage.setObject(String(user["current_team"]["position"]), forKey: "c_team_position")
+                    }
+                }
+
+                
+//                let storedProperties = ["_id", "username", "firstName", "lastName", "admin", "teamCode", "teamName", "teamNumber"]
+//                
+//                for (key, value):(String, JSON) in user {
+//                    if storedProperties.indexOf(key) > -1 {
+//                        storage.setObject(String(value), forKey: key)
+//                    }
+//                }
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     let vc : AnyObject! = self.storyboard!.instantiateViewControllerWithIdentifier("reveal")

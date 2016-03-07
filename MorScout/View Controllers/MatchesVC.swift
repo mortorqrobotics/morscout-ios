@@ -42,8 +42,6 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }else{
                 self.matches = cachedMatches!
             }
-        }else{
-            alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
         }
 
         if Reachability.isConnectedToNetwork() {

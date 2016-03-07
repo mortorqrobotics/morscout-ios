@@ -16,7 +16,7 @@ class MenuVC: UITableViewController {
     @IBOutlet weak var menuProfilePic: UIImageView!
     @IBOutlet var menuTable: UITableView!
     override func viewDidLoad() {
-        if let firstName = storage.stringForKey("firstName"), lastName = storage.stringForKey("lastName") {
+        if let firstName = storage.stringForKey("firstname"), lastName = storage.stringForKey("lastname") {
             dispatch_async(dispatch_get_main_queue(),{
                 self.menuName.text = "\(firstName) \(lastName)"
                 self.menuProfilePic.layer.cornerRadius = 17
