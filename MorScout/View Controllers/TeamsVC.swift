@@ -62,10 +62,10 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.setToolbarHidden(false, animated: true)
+        self.navigationController?.setToolbarHidden(false, animated: false)
     }
     override func viewWillDisappear(animated: Bool) {
-        self.navigationController?.setToolbarHidden(true, animated: true)
+        self.navigationController?.setToolbarHidden(true, animated: false)
     }
     
     override func didReceiveMemoryWarning() {

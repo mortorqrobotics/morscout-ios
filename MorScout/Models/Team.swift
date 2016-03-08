@@ -13,7 +13,7 @@ class Team: NSObject, NSCoding {
     let name: String
     let rank: Int?
     
-    init(number: Int, name: String, rank: Int?){
+    init(number: Int, name: String, rank: Int?) {
         self.number = number
         self.name = name
         self.rank = rank

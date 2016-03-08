@@ -30,6 +30,7 @@ class MatchVC: UIViewController {
     var container = UIView()
     var scoutTopMargin: CGFloat = 5
     var viewTopMargin: CGFloat = 5
+    let strategyBoxHeight: CGFloat = 100
     
     var picker: DropdownPicker = DropdownPicker()
     var pickerLists = [String: Array<String>]()
@@ -40,9 +41,11 @@ class MatchVC: UIViewController {
     
     var scoutFormIsVisible = false
     var viewFormIsVisible = false
+    var strategyFormIsVisible = false
     
     var scoutFormDataIsLoaded = false
     var viewFormDataIsLoaded = [String: Bool]()
+    var strategyIsLoaded = false
     
     var selectedTeam = 0
     
@@ -71,6 +74,12 @@ class MatchVC: UIViewController {
         picker.dataSource = self
         
         self.scrollView.addSubview(self.container)
+        
+        if let currentTeamNumber = storage.stringForKey("currentTeamNumber") {
+            if redTeams.contains(currentTeamNumber) || blueTeams.contains(currentTeamNumber) {
+                modeTabs.insertSegmentWithTitle("Strategy", atIndex: 2, animated: false)
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -139,10 +148,16 @@ class MatchVC: UIViewController {
         switch modeTabs.selectedSegmentIndex {
         case 0:
             hideViewForm()
+            hideStrategyForm()
             showScoutForm()
         case 1:
             hideScoutForm()
+            hideStrategyForm()
             showViewForm()
+        case 2:
+            hideScoutForm()
+            hideViewForm()
+            showStrategyForm()
         default:
             break
         }
@@ -470,6 +485,67 @@ class MatchVC: UIViewController {
             }
         }
         viewFormIsVisible = false
+    }
+    
+    // MARK: - Strategy
+    
+    func showStrategyForm() {
+        if strategyIsLoaded {
+            if !strategyFormIsVisible {
+                for view in container.subviews {
+                    if view.tag == -1  {
+                        view.hidden = false
+                    }
+                }
+                resizeContainer(strategyBoxHeight + 10)
+            }
+        }else{
+            if Reachability.isConnectedToNetwork() {
+                loadStrategy()
+            }else{
+                if let strategies = storage.objectForKey("strategies") {
+                    let strategies = strategies as! [String: [String: String]]
+                    if let currentRegional = storage.stringForKey("currentRegional") {
+                        if let strategyText = strategies[currentRegional]![String(matchNumber)] {
+                            let textView = UITextView(frame: CGRectMake(10, 5, self.view.frame.width-20, strategyBoxHeight))
+                            textView.text = strategyText
+                            textView.tag = -1
+                            self.container.addSubview(textView)
+                            resizeContainer(strategyBoxHeight + 10)
+                            strategyIsLoaded = true
+                        }
+                    }
+                }else{
+                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                }
+            }
+        }
+        scoutFormIsVisible = true
+    }
+    
+    func loadStrategy() {
+        httpRequest(baseURL+"/getMatchStrategy", type: "POST", data: ["match": String(matchNumber)]) {responseText in
+            let strategy = parseJSON(responseText)
+            let strategyText = String(strategy["strategy"])
+            
+            dispatch_async(dispatch_get_main_queue(),{
+                let textView = UITextView(frame: CGRectMake(10, 5, self.view.frame.width-20, self.strategyBoxHeight))
+                textView.text = strategyText
+                textView.tag = -1
+                self.container.addSubview(textView)
+                self.resizeContainer(self.strategyBoxHeight + 10)
+                self.strategyIsLoaded = true
+            })
+        }
+    }
+    
+    func hideStrategyForm() {
+        for view in self.container.subviews {
+            if view.tag == -1 {
+                view.hidden = true
+            }
+        }
+        strategyFormIsVisible = false
     }
     
     // MARK: - Misc

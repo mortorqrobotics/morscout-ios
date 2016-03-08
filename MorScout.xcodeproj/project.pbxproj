@@ -54,6 +54,7 @@
 		8EE543861C85606F009048F1 /* DoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543851C85606F009048F1 /* DoneButton.swift */; };
 		8EE543881C857135009048F1 /* NumberStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543871C857135009048F1 /* NumberStepper.swift */; };
 		8EE5438A1C86A62D009048F1 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543891C86A62D009048F1 /* Reachability.swift */; };
+		8EFFA5A31C8E6BD20020A1AE /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +107,7 @@
 		8EE543851C85606F009048F1 /* DoneButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoneButton.swift; sourceTree = "<group>"; };
 		8EE543871C857135009048F1 /* NumberStepper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberStepper.swift; sourceTree = "<group>"; };
 		8EE543891C86A62D009048F1 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
 		D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
 		E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MorScout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +189,7 @@
 				8E3357BF1C4C8C9400F2B879 /* SettingsVC.swift */,
 				8EBC630A1C77F88F000DBE6A /* MatchVC.swift */,
 				8E9336041C896CE50045140E /* TeamVC.swift */,
+				8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -416,6 +419,7 @@
 				8E3357D71C4C8C9400F2B879 /* TeamsVC.swift in Sources */,
 				8E9336031C87E4370045140E /* ViewPoint.swift in Sources */,
 				8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */,
+				8EFFA5A31C8E6BD20020A1AE /* ProfileVC.swift in Sources */,
 				8E9335FB1C86BFD80045140E /* TextBox.swift in Sources */,
 				8E9335FD1C86C0830045140E /* Dropdown.swift in Sources */,
 				8E3357E21C508F2A00F2B879 /* Match.swift in Sources */,
