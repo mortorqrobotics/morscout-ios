@@ -54,6 +54,8 @@
 		8EE543861C85606F009048F1 /* DoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543851C85606F009048F1 /* DoneButton.swift */; };
 		8EE543881C857135009048F1 /* NumberStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543871C857135009048F1 /* NumberStepper.swift */; };
 		8EE5438A1C86A62D009048F1 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543891C86A62D009048F1 /* Reachability.swift */; };
+		8EF4B7AD1C937CAB00107E90 /* JoinTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4B7AC1C937CAB00107E90 /* JoinTeamVC.swift */; };
+		8EF4B7AF1C937CB700107E90 /* CreateTeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EF4B7AE1C937CB700107E90 /* CreateTeamVC.swift */; };
 		8EFFA5A31C8E6BD20020A1AE /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */; };
 /* End PBXBuildFile section */
 
@@ -107,6 +109,8 @@
 		8EE543851C85606F009048F1 /* DoneButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoneButton.swift; sourceTree = "<group>"; };
 		8EE543871C857135009048F1 /* NumberStepper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberStepper.swift; sourceTree = "<group>"; };
 		8EE543891C86A62D009048F1 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		8EF4B7AC1C937CAB00107E90 /* JoinTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinTeamVC.swift; sourceTree = "<group>"; };
+		8EF4B7AE1C937CB700107E90 /* CreateTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTeamVC.swift; sourceTree = "<group>"; };
 		8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
 		D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
@@ -190,6 +194,8 @@
 				8EBC630A1C77F88F000DBE6A /* MatchVC.swift */,
 				8E9336041C896CE50045140E /* TeamVC.swift */,
 				8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */,
+				8EF4B7AC1C937CAB00107E90 /* JoinTeamVC.swift */,
+				8EF4B7AE1C937CB700107E90 /* CreateTeamVC.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -398,11 +404,13 @@
 				8EE543841C854D08009048F1 /* DropdownPicker.swift in Sources */,
 				8E3357D31C4C8C9400F2B879 /* LoginVC.swift in Sources */,
 				8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */,
+				8EF4B7AF1C937CB700107E90 /* CreateTeamVC.swift in Sources */,
 				8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */,
 				8E3357D51C4C8C9400F2B879 /* MenuVC.swift in Sources */,
 				8E93360D1C8BC8DD0045140E /* Report.swift in Sources */,
 				8E9335FF1C86C18A0045140E /* NumberBox.swift in Sources */,
 				8E9336011C86C2380045140E /* Checkbox.swift in Sources */,
+				8EF4B7AD1C937CAB00107E90 /* JoinTeamVC.swift in Sources */,
 				8E93360B1C8BC6350045140E /* MatchDataStorage.swift in Sources */,
 				8EE543881C857135009048F1 /* NumberStepper.swift in Sources */,
 				8E9336051C896CE50045140E /* TeamVC.swift in Sources */,

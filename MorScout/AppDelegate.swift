@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +25,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor.blackColor()
         UINavigationBar.appearance().translucent = false
         
+        
+        KingfisherManager.sharedManager.downloader.requestModifier = {
+            (request: NSMutableURLRequest) in
+            
+            request.addValue("connect.sid=\(storage.stringForKey("connect.sid")!)", forHTTPHeaderField: "Cookie")
+        }
+        
+        
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         
         let revealVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("reveal")
@@ -31,7 +40,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let _ = storage.stringForKey("connect.sid"){
             //logged in
-            self.window?.rootViewController = revealVC
+            if storage.boolForKey("noTeam") {
+                storage.removeObjectForKey("connect.sid")
+                self.window?.rootViewController = loginVC
+            }else{
+                self.window?.rootViewController = revealVC
+            }
         }else{
             //logged out
             self.window?.rootViewController = loginVC

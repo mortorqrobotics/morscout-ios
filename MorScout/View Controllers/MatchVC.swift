@@ -624,10 +624,16 @@ class MatchVC: UIViewController {
         }else if type == "NumberBox" {
             let dataPoint = dataPoint as! NumberBox
             
-            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 29))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-94-45, 29))
             label.text = dataPoint.name + ":"
             let stepper = NumberStepper(frame: CGRectMake(self.view.frame.width - 105, self.scoutTopMargin, 0, 0))
-            let numberField = UITextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.scoutTopMargin, 40, 29))
+            let numberField: UITextField
+            if label.intrinsicContentSize().width > (self.view.frame.width-94-50) {
+                numberField = UITextField(frame: CGRectMake(self.view.frame.width-94-35, self.scoutTopMargin, 40, 29))
+            }else{
+                numberField = UITextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.scoutTopMargin, 40, 29))
+            }
+            
             stepper.numberField = numberField
             stepper.numberField?.text = String(dataPoint.start)
             stepper.numberField?.keyboardType = .NumberPad
@@ -652,7 +658,7 @@ class MatchVC: UIViewController {
         }else if type == "Checkbox" {
             let dataPoint = dataPoint as! Checkbox
             
-            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-20, 31))
+            let label = UILabel(frame: CGRectMake(10, self.scoutTopMargin, self.view.frame.width-54-20, 31))
             label.text = dataPoint.name
             label.tag = 0
             self.container.addSubview(label)

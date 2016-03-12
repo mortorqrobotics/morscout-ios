@@ -25,6 +25,7 @@ class HomeVC: UIViewController {
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
+
     }
     override func viewDidAppear(animated: Bool) {
         let welcomeMessagesLength = UInt32(welcomeMessages.count)

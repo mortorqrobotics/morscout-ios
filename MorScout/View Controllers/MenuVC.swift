@@ -12,10 +12,14 @@ import Kingfisher
 
 class MenuVC: UITableViewController {
     
+    @IBOutlet weak var logoutCell: UITableViewCell!
     @IBOutlet weak var menuName: UILabel!
     @IBOutlet weak var menuProfilePic: UIImageView!
     @IBOutlet var menuTable: UITableView!
+    @IBOutlet weak var settingsCell: UITableViewCell!
+    
     override func viewDidLoad() {
+        
         if let firstName = storage.stringForKey("firstname"), lastName = storage.stringForKey("lastname") {
             dispatch_async(dispatch_get_main_queue(),{
                 self.menuName.text = "\(firstName) \(lastName)"
@@ -23,6 +27,9 @@ class MenuVC: UITableViewController {
                 self.menuProfilePic.clipsToBounds = true
             })
         }
+        
+        menuProfilePic.kf_setImageWithURL(NSURL(string: "http://www.morteam.com/pp/" + storage.stringForKey("username")! + "-60")!)
+        
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -32,7 +39,7 @@ class MenuVC: UITableViewController {
     }
     
     func logout() {
-        httpRequest(baseURL+"/logout", type: "POST"){ responseText in
+        httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
             
             if responseText == "success" {
                 for key in storage.dictionaryRepresentation().keys {

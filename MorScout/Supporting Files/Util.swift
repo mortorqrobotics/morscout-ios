@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 let storage = NSUserDefaults.standardUserDefaults()
-let baseURL = "http://127.0.0.1:8080"
+let baseURL = "http://www.scout.morteam.com"
+let morTeamURL = "http://www.morteam.com"
 
 
 func UIColorFromHex(var hex: String) -> UIColor {
