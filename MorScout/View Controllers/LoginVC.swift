@@ -96,6 +96,8 @@ class LoginVC: UIViewController {
                         self.showViewController(vc as! UIViewController, sender: vc)
                     })
 
+                }else{
+                    storage.setBool(false, forKey: "noTeam")
                 }
 
                 

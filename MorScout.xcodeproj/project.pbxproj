@@ -40,10 +40,7 @@
 		8E9335FD1C86C0830045140E /* Dropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335FC1C86C0830045140E /* Dropdown.swift */; };
 		8E9335FF1C86C18A0045140E /* NumberBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9335FE1C86C18A0045140E /* NumberBox.swift */; };
 		8E9336011C86C2380045140E /* Checkbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9336001C86C2380045140E /* Checkbox.swift */; };
-		8E9336031C87E4370045140E /* ViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9336021C87E4370045140E /* ViewPoint.swift */; };
 		8E9336051C896CE50045140E /* TeamVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9336041C896CE50045140E /* TeamVC.swift */; };
-		8E9336071C8AAB170045140E /* TitleViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9336061C8AAB170045140E /* TitleViewPoint.swift */; };
-		8E9336091C8AAB250045140E /* DataViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9336081C8AAB250045140E /* DataViewPoint.swift */; };
 		8E93360B1C8BC6350045140E /* MatchDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E93360A1C8BC6350045140E /* MatchDataStorage.swift */; };
 		8E93360D1C8BC8DD0045140E /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E93360C1C8BC8DD0045140E /* Report.swift */; };
 		8EBC63091C712C00000DBE6A /* TeamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC63081C712C00000DBE6A /* TeamCell.swift */; };
@@ -95,10 +92,7 @@
 		8E9335FC1C86C0830045140E /* Dropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dropdown.swift; sourceTree = "<group>"; };
 		8E9335FE1C86C18A0045140E /* NumberBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberBox.swift; sourceTree = "<group>"; };
 		8E9336001C86C2380045140E /* Checkbox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkbox.swift; sourceTree = "<group>"; };
-		8E9336021C87E4370045140E /* ViewPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPoint.swift; sourceTree = "<group>"; };
 		8E9336041C896CE50045140E /* TeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamVC.swift; sourceTree = "<group>"; };
-		8E9336061C8AAB170045140E /* TitleViewPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleViewPoint.swift; sourceTree = "<group>"; };
-		8E9336081C8AAB250045140E /* DataViewPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataViewPoint.swift; sourceTree = "<group>"; };
 		8E93360A1C8BC6350045140E /* MatchDataStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchDataStorage.swift; sourceTree = "<group>"; };
 		8E93360C1C8BC8DD0045140E /* Report.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
 		8EBC63081C712C00000DBE6A /* TeamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCell.swift; sourceTree = "<group>"; };
@@ -218,9 +212,6 @@
 				8E9335FC1C86C0830045140E /* Dropdown.swift */,
 				8E9335FE1C86C18A0045140E /* NumberBox.swift */,
 				8E9336001C86C2380045140E /* Checkbox.swift */,
-				8E9336021C87E4370045140E /* ViewPoint.swift */,
-				8E9336061C8AAB170045140E /* TitleViewPoint.swift */,
-				8E9336081C8AAB250045140E /* DataViewPoint.swift */,
 				8E93360A1C8BC6350045140E /* MatchDataStorage.swift */,
 				8E93360C1C8BC8DD0045140E /* Report.swift */,
 			);
@@ -398,7 +389,6 @@
 				8E3357C11C4C8C9400F2B879 /* AppDelegate.swift in Sources */,
 				8E3357D21C4C8C9400F2B879 /* HomeVC.swift in Sources */,
 				8EBC63091C712C00000DBE6A /* TeamCell.swift in Sources */,
-				8E9336091C8AAB250045140E /* DataViewPoint.swift in Sources */,
 				8EE543861C85606F009048F1 /* DoneButton.swift in Sources */,
 				8E3357E41C5090F400F2B879 /* Team.swift in Sources */,
 				8EE543841C854D08009048F1 /* DropdownPicker.swift in Sources */,
@@ -414,7 +404,6 @@
 				8E93360B1C8BC6350045140E /* MatchDataStorage.swift in Sources */,
 				8EE543881C857135009048F1 /* NumberStepper.swift in Sources */,
 				8E9336051C896CE50045140E /* TeamVC.swift in Sources */,
-				8E9336071C8AAB170045140E /* TitleViewPoint.swift in Sources */,
 				8E9335F91C86BF730045140E /* Label.swift in Sources */,
 				8E3357D01C4C8C9400F2B879 /* SWRevealViewController.m in Sources */,
 				8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */,
@@ -425,7 +414,6 @@
 				8E3357E01C50545500F2B879 /* MatchCell.swift in Sources */,
 				8E3357D61C4C8C9400F2B879 /* SettingsVC.swift in Sources */,
 				8E3357D71C4C8C9400F2B879 /* TeamsVC.swift in Sources */,
-				8E9336031C87E4370045140E /* ViewPoint.swift in Sources */,
 				8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */,
 				8EFFA5A31C8E6BD20020A1AE /* ProfileVC.swift in Sources */,
 				8E9335FB1C86BFD80045140E /* TextBox.swift in Sources */,

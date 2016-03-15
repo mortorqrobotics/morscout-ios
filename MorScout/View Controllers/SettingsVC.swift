@@ -87,15 +87,16 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     func getShareDataStatus() {
         httpRequest(baseURL+"/getDataStatus", type: "POST"){
             responseText in
+            print("status: " + responseText)
             
             if responseText != "fail" {
-                let isPublic: Bool
+                let isPrivate: Bool
                 if responseText == "true" {
-                    isPublic = false
+                    isPrivate = true
                 }else{
-                    isPublic = true
+                    isPrivate = false
                 }
-                self.shareData.setOn(isPublic, animated: false)
+                self.shareData.setOn(!isPrivate, animated: false)
             }
         }
     }
@@ -152,6 +153,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
                 "status": "public"
             ]){ responseText in
+                print(responseText)
                 if responseText == "fail" {
                     self.shareData.setOn(false, animated: true)
                     alert(title: "failed to switch", message: "Oops, there was an internal error when switching the status", buttonText: "OK", viewController: self)
@@ -161,6 +163,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
                 "status": "private"
             ]){ responseText in
+                print(responseText)
                 if responseText == "fail" {
                     self.shareData.setOn(true, animated: true)
                     alert(title: "failed to switch", message: "Oops, there was an internal error when switching the status", buttonText: "OK", viewController: self)

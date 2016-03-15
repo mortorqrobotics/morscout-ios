@@ -36,7 +36,6 @@ class MatchVC: UIViewController {
     var pickerLists = [String: Array<String>]()
     
     var dataPoints = [DataPoint]()
-    var viewPoints = [String: [ViewPoint]]()
     var viewData = [String: JSON]()
     
     var scoutFormIsVisible = false

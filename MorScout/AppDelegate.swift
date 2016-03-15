@@ -14,6 +14,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    func logoutSilently() {
+        httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
+            for key in storage.dictionaryRepresentation().keys {
+                NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+            }
+        }
+    }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -38,10 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let revealVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("reveal")
         let loginVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("login")
         
+        
         if let _ = storage.stringForKey("connect.sid"){
             //logged in
             if storage.boolForKey("noTeam") {
-                storage.removeObjectForKey("connect.sid")
+                logoutSilently()
                 self.window?.rootViewController = loginVC
             }else{
                 self.window?.rootViewController = revealVC
