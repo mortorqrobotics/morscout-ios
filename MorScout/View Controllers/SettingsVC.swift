@@ -49,7 +49,6 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         regionalPicker.dataSource = self
         regionalPicker.delegate = self
         regionalYear.addTarget(self, action: "textFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
-        shareData.addTarget(self, action: Selector("shareDataStateChanged:"), forControlEvents: UIControlEvents.ValueChanged)
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
@@ -87,7 +86,6 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     func getShareDataStatus() {
         httpRequest(baseURL+"/getDataStatus", type: "POST"){
             responseText in
-            print("status: " + responseText)
             
             if responseText != "fail" {
                 let isPrivate: Bool
@@ -96,7 +94,10 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
                 }else{
                     isPrivate = false
                 }
-                self.shareData.setOn(!isPrivate, animated: false)
+                dispatch_async(dispatch_get_main_queue(),{
+                    self.shareData.setOn(!isPrivate, animated: false)
+                })
+                self.shareData.addTarget(self, action: Selector("shareDataStateChanged:"), forControlEvents: UIControlEvents.ValueChanged)
             }
         }
     }
@@ -153,7 +154,6 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
                 "status": "public"
             ]){ responseText in
-                print(responseText)
                 if responseText == "fail" {
                     self.shareData.setOn(false, animated: true)
                     alert(title: "failed to switch", message: "Oops, there was an internal error when switching the status", buttonText: "OK", viewController: self)
@@ -163,7 +163,6 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
                 "status": "private"
             ]){ responseText in
-                print(responseText)
                 if responseText == "fail" {
                     self.shareData.setOn(true, animated: true)
                     alert(title: "failed to switch", message: "Oops, there was an internal error when switching the status", buttonText: "OK", viewController: self)
