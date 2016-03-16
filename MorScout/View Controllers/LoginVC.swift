@@ -41,7 +41,7 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func registerClick(sender: UIButton) {
-        if let url = NSURL(string: "http://www.morteam.com/signup") {
+        if let url = NSURL(string: "http://www.morteam.com/signup?mobileapp") {
             UIApplication.sharedApplication().openURL(url)
         }
     }
@@ -52,7 +52,7 @@ class LoginVC: UIViewController {
         ]) { responseText in
             if responseText == "inc/username" || responseText == "inc/password"{
                 dispatch_async(dispatch_get_main_queue(),{
-                    let alert = UIAlertController(title: "Wrong Username/Password", message: "This Username/Password combination does not exist.", preferredStyle: UIAlertControllerStyle.Alert)
+                    let alert = UIAlertController(title: "Incorrect Username/Password", message: "This Username/Password combination does not exist.", preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
                     self.presentViewController(alert, animated: true, completion: nil)
                 })

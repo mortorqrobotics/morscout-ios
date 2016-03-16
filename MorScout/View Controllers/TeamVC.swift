@@ -271,14 +271,22 @@ class TeamVC: UIViewController {
                                 self.container.addSubview(line)
                                 self.viewTopMargin += line.frame.height + 10
                             }else{
-                                let key = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
+                                let key = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 160, 21))
                                 key.text = String(subJson["name"])
                                 key.tag = self.teamNumber
                                 self.container.addSubview(key)
-                                
-                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 ,heightForView(String(subJson["value"]), width: 140)))
+                                var height = heightForView(String(subJson["value"]), width: 140)
+                                if height == 0 {
+                                    height = 21
+                                }
+                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 , height))
                                 value.numberOfLines = 0
-                                value.text = String(subJson["value"])
+                                if String(subJson["value"]) == "" {
+                                    value.text = "N/A"
+                                }else{
+                                    value.text = String(subJson["value"])
+                                }
+
                                 value.tag = self.teamNumber
                                 self.container.addSubview(value)
                                 
@@ -337,14 +345,22 @@ class TeamVC: UIViewController {
                                 self.container.addSubview(line)
                                 self.viewTopMargin += line.frame.height + 10
                             }else{
-                                let key = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
+                                let key = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 160, 21))
                                 key.text = String(subJson["name"])
                                 key.tag = self.teamNumber
                                 self.container.addSubview(key)
-                                
-                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 ,heightForView(String(subJson["value"]), width: 140)))
+                                var height = heightForView(String(subJson["value"]), width: 140)
+                                if height == 0 {
+                                    height = 21
+                                }
+                                let value = UILabel(frame: CGRectMake(self.view.frame.width-150, self.viewTopMargin, 140 , height))
                                 value.numberOfLines = 0
-                                value.text = String(subJson["value"])
+                                if String(subJson["value"]) == "" {
+                                    value.text = "N/A"
+                                }else{
+                                    value.text = String(subJson["value"])
+                                }
+
                                 value.tag = self.teamNumber
                                 self.container.addSubview(value)
                                 
@@ -437,7 +453,8 @@ class TeamVC: UIViewController {
             
             let textField = DropdownTextField(frame: CGRectMake(label.intrinsicContentSize().width+15, self.scoutTopMargin, self.view.frame.width-20-label.intrinsicContentSize().width-15, 21))
             textField.dropdown = dataPoint.name
-            textField.placeholder = "Choose.."
+            //textField.placeholder = "Choose.."
+            textField.text = options[0] + " ▾"
             textField.delegate = self
             textField.inputView = self.picker
             textField.tag = 0
@@ -531,15 +548,22 @@ class TeamVC: UIViewController {
             for (var i = 0; i < self.container.subviews.count; i++) {
                 let views = self.container.subviews
                 let type = String(Mirror(reflecting: views[i]).subjectType)
-                if type == "UILabel" && String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
-                    let label = views[i] as! UILabel
-                    jsonStringDataArray += "{\"name\": \"\(label.text!)\"},"
+                if type == "UILabel" {
+                    if i < self.container.subviews.count-1 {
+                        if String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
+                            let label = views[i] as! UILabel
+                            jsonStringDataArray += "{\"name\": \"\(label.text!)\"},"
+                        }
+                    }
                 }else if type == "UITextView" {
                     let textViewLabel = views[i-1] as! UILabel
                     let textView = views[i] as! UITextView
                     jsonStringDataArray += "{\"name\": \"\(textViewLabel.text!)\", \"value\": \"\(textView.text!)\"},"
                 }else if type == "DropdownTextField" {
                     let textField = views[i] as! DropdownTextField
+                    if textField.text?.containsString("▾") == true {
+                        textField.text = textField.text![0...(textField.text?.characters.count)!-3]
+                    }
                     jsonStringDataArray += "{\"name\": \"\(textField.dropdown!)\", \"value\": \"\(textField.text!)\"},"
                 }else if type == "NumberStepper" {
                     let stepperLabel = views[i-2] as! UILabel
@@ -619,7 +643,7 @@ extension TeamVC: UIPickerViewDelegate, UIPickerViewDataSource {
             if String(Mirror(reflecting: view).subjectType) == "DropdownTextField" {
                 let textField = view as! DropdownTextField
                 if textField.dropdown == self.picker.dropdown {
-                    textField.text = self.pickerLists[pickerView.dropdown!]![row]
+                    textField.text = self.pickerLists[pickerView.dropdown!]![row] + " ▾"
                 }
             }
         }

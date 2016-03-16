@@ -1167,22 +1167,33 @@
         <scene sceneID="gQc-g9-WHh">
             <objects>
                 <tableViewController id="peo-f3-P1M" customClass="SettingsVC" customModule="MorScout" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="dLQ-Gt-FhI">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="dLQ-Gt-FhI">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.9137254901960784" green="0.9137254901960784" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
-                        <label key="tableHeaderView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only admins, leaders and scout captains can change settings" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="70Q-am-Iq1">
-                            <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="ZzD-dh-OxN">
+                            <rect key="frame" x="0.0" y="64" width="600" height="62.5"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Only admins, leaders and scout captains can edit settings" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rsZ-sP-uVr">
+                                    <rect key="frame" x="8" y="21" width="584" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.82352941176470584" green="0.82352941176470584" blue="0.82352941176470584" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="rsZ-sP-uVr" secondAttribute="trailing" constant="8" id="FFW-bW-LGP"/>
+                                <constraint firstItem="rsZ-sP-uVr" firstAttribute="leading" secondItem="ZzD-dh-OxN" secondAttribute="leading" constant="8" id="VxJ-ES-wqX"/>
+                                <constraint firstItem="rsZ-sP-uVr" firstAttribute="centerY" secondItem="ZzD-dh-OxN" secondAttribute="centerY" id="mdJ-kA-SQ5"/>
+                            </constraints>
+                        </view>
                         <sections>
                             <tableViewSection headerTitle="Current Event" id="vFL-p4-aUJ" userLabel="s">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Uxk-EQ-g6l">
-                                        <rect key="frame" x="0.0" y="157.5" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="176" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uxk-EQ-g6l" id="6Px-qw-9Hj">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1204,7 +1215,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="104" id="Pdl-sX-4ru">
-                                        <rect key="frame" x="0.0" y="201.5" width="600" height="104"/>
+                                        <rect key="frame" x="0.0" y="220" width="600" height="104"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pdl-sX-4ru" id="EKu-Ff-2tE">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="103.5"/>
@@ -1227,7 +1238,7 @@
                             <tableViewSection headerTitle="Data Privacy" id="kpD-Bp-HNy">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="zax-Fa-DEN">
-                                        <rect key="frame" x="0.0" y="355.5" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="374" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zax-Fa-DEN" id="Tpr-P8-07l">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -1270,6 +1281,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="infoBar" destination="ZzD-dh-OxN" id="lZv-UO-piX"/>
                         <outlet property="menuButton" destination="kXd-kQ-AXF" id="oif-o3-abM"/>
                         <outlet property="regionalPicker" destination="h8P-L6-U2E" id="wrY-PP-X1M"/>
                         <outlet property="regionalYear" destination="7VT-rH-Hq0" id="nwi-jK-0Gt"/>
