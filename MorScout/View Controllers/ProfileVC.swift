@@ -23,6 +23,9 @@ class ProfileVC: UIViewController {
     @IBOutlet weak var assignmentsIncomplete: UILabel!
     @IBOutlet weak var assignmentCompletion: UILabel!
     
+    var container = UIView()
+    var assignmentsTopMargin: CGFloat = 0
+    
     var userId = storage.stringForKey("_id")!
     var firstName = ""
     var lastName = ""
@@ -34,6 +37,8 @@ class ProfileVC: UIViewController {
         super.viewDidLoad()
         
         scoutCaptainSwitch.enabled = false
+        
+        assigmentsScrollView.addSubview(container)
         
         if let savedFirstName = storage.stringForKey("firstname"), let savedLastName = storage.stringForKey("lastname") {
             profileName.text = savedFirstName + " " + savedLastName
@@ -125,6 +130,22 @@ class ProfileVC: UIViewController {
                     self.assignmentsIncomplete.text = incompleteMatches.joinWithSeparator(", ")
                 }
                 
+                if tasks["assignments"].array?.count == 0 {
+                    let label = UILabel(frame: CGRectMake(0, self.assignmentsTopMargin, self.view.frame.width, 21))
+                    label.text = "None"
+                    label.font = UIFont(name: "Helvetica", size: 17)
+                    self.container.addSubview(label)
+                }else{
+                    for(_, subJson):(String, JSON) in tasks["assignments"] {
+                        print(subJson)
+                        print("----")
+                        let label = UILabel(frame: CGRectMake(0, self.assignmentsTopMargin, self.view.frame.width, 21))
+                        label.text = "• From match \(subJson["startMatch"]) to \(subJson["endMatch"]), \(subJson["alliance"]) alliance, Team \(subJson["teamSection"])"
+                        label.font = UIFont(name: "Helvetica", size: 14.5)
+                        self.container.addSubview(label)
+                        self.assignmentsTopMargin += label.frame.height + 7
+                    }
+                }
                 
                 let totalMatches = (tasks["matchesDone"].array?.count)! + (tasks["matchesNotDone"].array?.count)!
                 self.assignmentCompletion.text = String((tasks["matchesDone"].array?.count)!) + "/" + String(totalMatches)

@@ -47,6 +47,7 @@ class MatchVC: UIViewController {
     var strategyIsLoaded = false
     
     var selectedTeam = 0
+    var myTeam = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +75,9 @@ class MatchVC: UIViewController {
         
         self.scrollView.addSubview(self.container)
         
-        if let currentTeamNumber = storage.stringForKey("currentTeamNumber") {
-            if redTeams.contains(currentTeamNumber) || blueTeams.contains(currentTeamNumber) {
-                modeTabs.insertSegmentWithTitle("Strategy", atIndex: 2, animated: false)
+        getTeamNumber() {
+            if self.redTeams.contains(self.myTeam) || self.blueTeams.contains(self.myTeam) {
+                self.modeTabs.insertSegmentWithTitle("Strategy", atIndex: 2, animated: false)
             }
         }
     }
@@ -723,31 +724,33 @@ class MatchVC: UIViewController {
             for (var i = 0; i < self.container.subviews.count; i++) {
                 let views = self.container.subviews
                 let type = String(Mirror(reflecting: views[i]).subjectType)
-                if type == "UILabel" {
-                    if i < self.container.subviews.count-1 {
-                        if String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
-                            let label = views[i] as! UILabel
-                            jsonStringDataArray += "{\"name\": \"\(label.text!)\"},"
+                if views[i].tag == 0 {
+                    if type == "UILabel" {
+                        if i < self.container.subviews.count-1 {
+                            if String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
+                                let label = views[i] as! UILabel
+                                jsonStringDataArray += "{\"name\": \"\(escapeQuotes(label.text!))\"},"
+                            }
                         }
+                    }else if type == "UITextView" {
+                        let textViewLabel = views[i-1] as! UILabel
+                        let textView = views[i] as! UITextView
+                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(textViewLabel.text!))\", \"value\": \"\(escapeQuotes(textView.text!))\"},"
+                    }else if type == "DropdownTextField" {
+                        let textField = views[i] as! DropdownTextField
+                        if textField.text?.containsString("▾") == true {
+                            textField.text = textField.text![0...(textField.text?.characters.count)!-3]
+                        }
+                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(textField.dropdown!))\", \"value\": \"\(escapeQuotes(textField.text!))\"},"
+                    }else if type == "NumberStepper" {
+                        let stepperLabel = views[i-2] as! UILabel
+                        let stepperTextField = views[i-1] as! UITextField
+                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
+                    }else if type == "UISwitch" {
+                        let checkLabel = views[i-1] as! UILabel
+                        let check = views[i] as! UISwitch
+                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(checkLabel.text!))\", \"value\": \"\(check.on)\"},"
                     }
-                }else if type == "UITextView" {
-                    let textViewLabel = views[i-1] as! UILabel
-                    let textView = views[i] as! UITextView
-                    jsonStringDataArray += "{\"name\": \"\(textViewLabel.text!)\", \"value\": \"\(textView.text!)\"},"
-                }else if type == "DropdownTextField" {
-                    let textField = views[i] as! DropdownTextField
-                    if textField.text?.containsString("▾") == true {
-                        textField.text = textField.text![0...(textField.text?.characters.count)!-3]
-                    }
-                    jsonStringDataArray += "{\"name\": \"\(textField.dropdown!)\", \"value\": \"\(textField.text!)\"},"
-                }else if type == "NumberStepper" {
-                    let stepperLabel = views[i-2] as! UILabel
-                    let stepperTextField = views[i-1] as! UITextField
-                    jsonStringDataArray += "{\"name\": \"\(String(stepperLabel.text!.characters.dropLast()))\", \"value\": \"\(stepperTextField.text!)\"},"
-                }else if type == "UISwitch" {
-                    let checkLabel = views[i-1] as! UILabel
-                    let check = views[i] as! UISwitch
-                    jsonStringDataArray += "{\"name\": \"\(checkLabel.text!)\", \"value\": \"\(check.on)\"},"
                 }
             }
             jsonStringDataArray = String(jsonStringDataArray.characters.dropLast())
@@ -755,7 +758,7 @@ class MatchVC: UIViewController {
             
             print(jsonStringDataArray)
             
-            let data = ["data": jsonStringDataArray, "team": String(selectedTeam), "context": "match", "match": String(matchNumber)]
+            let data = ["data": jsonStringDataArray, "team": String(selectedTeam), "context": "match", "match": String(matchNumber), "regional": storage.stringForKey("currentRegional")!]
             
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
@@ -797,7 +800,20 @@ class MatchVC: UIViewController {
         }
     }
     
-
+    func getTeamNumber(cb: () -> Void) {
+        if let savedTeamNumber = storage.stringForKey("c_team_number") {
+            self.myTeam = savedTeamNumber
+            cb()
+        }else{
+            httpRequest(morTeamURL+"/f/getTeamNum", type: "POST") { responseText in
+                if responseText != "fail" {
+                    self.myTeam = responseText
+                    storage.setObject(self.myTeam, forKey: "c_team_number")
+                    cb()
+                }
+            }
+        }
+    }
     
 }
 

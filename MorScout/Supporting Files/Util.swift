@@ -235,6 +235,9 @@ func sendSubmissionSilently(data: [String: String]) {
     }
 }
 
+func escapeQuotes(text: String) -> String {
+    return text.stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+}
 
 extension String {
     
