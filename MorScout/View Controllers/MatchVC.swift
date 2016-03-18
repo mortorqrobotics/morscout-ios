@@ -80,6 +80,11 @@ class MatchVC: UIViewController {
                 self.modeTabs.insertSegmentWithTitle("Strategy", atIndex: 2, animated: false)
             }
         }
+        
+        if Reachability.isConnectedToNetwork() {
+            getCurrentRegionalKey()
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -160,6 +165,18 @@ class MatchVC: UIViewController {
             showStrategyForm()
         default:
             break
+        }
+    }
+    
+    func getCurrentRegionalKey() {
+        httpRequest(baseURL+"/getCurrentRegionalInfo", type: "POST"){
+            responseText in
+            
+            let regionalInfo = parseJSON(responseText)
+            if (!regionalInfo["Errors"]){
+                let currentRegionalKey = String(regionalInfo["key"])
+                storage.setValue(currentRegionalKey, forKey: "currentRegional")
+            }
         }
     }
     
@@ -252,7 +269,7 @@ class MatchVC: UIViewController {
                 view.hidden = true
             }
         }
-        scoutFormIsVisible = false
+        self.scoutFormIsVisible = false
     }
     
     // MARK: - View Form Generation
@@ -511,7 +528,7 @@ class MatchVC: UIViewController {
                         view.hidden = false
                     }
                 }
-                resizeContainer(strategyBoxHeight + 10)
+                resizeContainer(strategyBoxHeight + 20 + 30 + 10)
             }
         }else{
             if Reachability.isConnectedToNetwork() {
@@ -523,9 +540,19 @@ class MatchVC: UIViewController {
                         if let strategyText = strategies[currentRegional]![String(matchNumber)] {
                             let textView = UITextView(frame: CGRectMake(10, 5, self.view.frame.width-20, strategyBoxHeight))
                             textView.text = strategyText
+                            textView.editable = false
+                            textView.backgroundColor = UIColorFromHex("E9E9E9")
                             textView.tag = -1
                             self.container.addSubview(textView)
-                            resizeContainer(strategyBoxHeight + 10)
+                            
+                            let button = UIButton(frame: CGRectMake(100, strategyBoxHeight + 20, self.view.frame.width-200, 30))
+                            button.setTitle("Save", forState: .Normal)
+                            button.backgroundColor = UIColor.lightGrayColor()
+                            button.tag = -1
+                            button.addTarget(self, action: "saveStrategyClickDisabled:", forControlEvents: .TouchUpInside)
+                            self.container.addSubview(button)
+
+                            resizeContainer(strategyBoxHeight + 20 + button.frame.height + 10)
                             strategyIsLoaded = true
                         }
                     }
@@ -534,20 +561,48 @@ class MatchVC: UIViewController {
                 }
             }
         }
-        scoutFormIsVisible = true
+        strategyFormIsVisible = true
     }
     
     func loadStrategy() {
         httpRequest(baseURL+"/getMatchStrategy", type: "POST", data: ["match": String(matchNumber)]) {responseText in
             let strategy = parseJSON(responseText)
-            let strategyText = String(strategy["strategy"])
+            var strategyText = String(strategy["strategy"])
+            
+            if strategyText == "null" {
+                strategyText = ""
+            }
+            
+            if let currentRegional = storage.stringForKey("currentRegional") {
+                if let strategies = storage.objectForKey("strategies"){
+                    var strategies = strategies as! [String: [String: String]]
+                    if let _ = strategies[currentRegional] {
+                        strategies[currentRegional]![String(self.matchNumber)] = strategyText
+                    }else{
+                        strategies[currentRegional] = [String(self.matchNumber): strategyText]
+                    }
+                    storage.setObject(strategies, forKey: "strategies")
+                }else{
+                    var strategies = [String: [String: String]]()
+                    strategies[currentRegional] = [String(self.matchNumber): strategyText]
+                    storage.setObject(strategies, forKey: "strategies")
+                }
+            }
             
             dispatch_async(dispatch_get_main_queue(),{
                 let textView = UITextView(frame: CGRectMake(10, 5, self.view.frame.width-20, self.strategyBoxHeight))
                 textView.text = strategyText
                 textView.tag = -1
                 self.container.addSubview(textView)
-                self.resizeContainer(self.strategyBoxHeight + 10)
+                
+                let button = UIButton(frame: CGRectMake(100, self.strategyBoxHeight + 20, self.view.frame.width-200, 30))
+                button.setTitle("Save", forState: .Normal)
+                button.backgroundColor = UIColor.orangeColor()
+                button.tag = -1
+                button.addTarget(self, action: "saveStrategyClick:", forControlEvents: .TouchUpInside)
+                self.container.addSubview(button)
+                
+                self.resizeContainer(self.strategyBoxHeight + 20 + button.frame.height + 10)
                 self.strategyIsLoaded = true
             })
         }
@@ -560,6 +615,32 @@ class MatchVC: UIViewController {
             }
         }
         strategyFormIsVisible = false
+    }
+    
+    func saveStrategyClick(sender: UIButton) {
+        if Reachability.isConnectedToNetwork() {
+            var textViewText = ""
+            for(var i = 0; i < self.container.subviews.count; i++) {
+                let view = self.container.subviews[i]
+                if view.tag == -1 {
+                    let textView = view as! UITextView
+                    textViewText = textView.text
+                    break
+                }
+            }
+            
+            httpRequest(baseURL+"/setMatchStrategy", type: "POST", data: ["match": String(self.matchNumber), "strategy": textViewText]) { responseText in
+                if responseText == "success" {
+                    alert(title: "Success", message: "The match strategy was successfully updated", buttonText: "OK", viewController: self)
+                }
+            }
+        }else{
+            alert(title: "No Internet", message: "Cannot edit strategy when internet connection is not available.", buttonText: "OK", viewController: self)
+        }
+    }
+    
+    func saveStrategyClickDisabled(sender: UIButton) {
+        alert(title: "No Internet", message: "Cannot edit strategy when internet connection is not available.", buttonText: "OK", viewController: self)
     }
     
     // MARK: - Misc
@@ -729,34 +810,32 @@ class MatchVC: UIViewController {
                         if i < self.container.subviews.count-1 {
                             if String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
                                 let label = views[i] as! UILabel
-                                jsonStringDataArray += "{\"name\": \"\(escapeQuotes(label.text!))\"},"
+                                jsonStringDataArray += "{\"name\": \"\(escape(label.text!))\"},"
                             }
                         }
                     }else if type == "UITextView" {
                         let textViewLabel = views[i-1] as! UILabel
                         let textView = views[i] as! UITextView
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(textViewLabel.text!))\", \"value\": \"\(escapeQuotes(textView.text!))\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(textViewLabel.text!))\", \"value\": \"\(escape(textView.text!))\"},"
                     }else if type == "DropdownTextField" {
                         let textField = views[i] as! DropdownTextField
                         if textField.text?.containsString("▾") == true {
                             textField.text = textField.text![0...(textField.text?.characters.count)!-3]
                         }
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(textField.dropdown!))\", \"value\": \"\(escapeQuotes(textField.text!))\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(textField.dropdown!))\", \"value\": \"\(escape(textField.text!))\"},"
                     }else if type == "NumberStepper" {
                         let stepperLabel = views[i-2] as! UILabel
                         let stepperTextField = views[i-1] as! UITextField
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
                     }else if type == "UISwitch" {
                         let checkLabel = views[i-1] as! UILabel
                         let check = views[i] as! UISwitch
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(checkLabel.text!))\", \"value\": \"\(check.on)\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(checkLabel.text!))\", \"value\": \"\(check.on)\"},"
                     }
                 }
             }
             jsonStringDataArray = String(jsonStringDataArray.characters.dropLast())
             jsonStringDataArray += "]"
-            
-            print(jsonStringDataArray)
             
             let data = ["data": jsonStringDataArray, "team": String(selectedTeam), "context": "match", "match": String(matchNumber), "regional": storage.stringForKey("currentRegional")!]
             

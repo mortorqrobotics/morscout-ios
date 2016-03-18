@@ -782,11 +782,15 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="logoutCell" destination="V3i-wi-YJ7" id="fbe-17-zzf"/>
+                        <outlet property="homeCell" destination="feO-aX-eh2" id="LIi-NA-t1Q"/>
+                        <outlet property="logoutCell" destination="V3i-wi-YJ7" id="hRW-Z3-2P1"/>
+                        <outlet property="matchesCell" destination="aGq-Ue-i3p" id="joj-fq-GZ0"/>
                         <outlet property="menuName" destination="xuc-nx-sWX" id="hdC-gL-CrC"/>
                         <outlet property="menuProfilePic" destination="2Kc-2N-6VS" id="flf-9R-eEv"/>
                         <outlet property="menuTable" destination="rdH-wy-lGF" id="PLS-Pq-cxW"/>
                         <outlet property="settingsCell" destination="QpU-5i-Aaj" id="laP-9u-DlE"/>
+                        <outlet property="teamsCell" destination="uqP-Np-LAA" id="BeC-VH-CUA"/>
+                        <outlet property="viewProfileCell" destination="qEF-0O-mn7" id="hvK-im-qzc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OYy-SU-kFb" userLabel="First Responder" sceneMemberID="firstResponder"/>

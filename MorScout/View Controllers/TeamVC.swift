@@ -553,28 +553,28 @@ class TeamVC: UIViewController {
                         if i < self.container.subviews.count-1 {
                             if String(Mirror(reflecting: views[i+1]).subjectType) == "UIView" {
                                 let label = views[i] as! UILabel
-                                jsonStringDataArray += "{\"name\": \"\(escapeQuotes(label.text!))\"},"
+                                jsonStringDataArray += "{\"name\": \"\(escape(label.text!))\"},"
                             }
                         }
                     }else if type == "UITextView" {
                         let textViewLabel = views[i-1] as! UILabel
                         let textView = views[i] as! UITextView
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(textViewLabel.text!))\", \"value\": \"\(escapeQuotes(textView.text!))\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(textViewLabel.text!))\", \"value\": \"\(escape(textView.text!))\"},"
                         
                     }else if type == "DropdownTextField" {
                         let textField = views[i] as! DropdownTextField
                         if textField.text?.containsString("▾") == true {
                             textField.text = textField.text![0...(textField.text?.characters.count)!-3]
                         }
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(textField.dropdown!))\", \"value\": \"\(escapeQuotes(textField.text!))\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(textField.dropdown!))\", \"value\": \"\(escape(textField.text!))\"},"
                     }else if type == "NumberStepper" {
                         let stepperLabel = views[i-2] as! UILabel
                         let stepperTextField = views[i-1] as! UITextField
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
                     }else if type == "UISwitch" {
                         let checkLabel = views[i-1] as! UILabel
                         let check = views[i] as! UISwitch
-                        jsonStringDataArray += "{\"name\": \"\(escapeQuotes(checkLabel.text!))\", \"value\": \"\(check.on)\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(checkLabel.text!))\", \"value\": \"\(check.on)\"},"
                     }
                 }
             }
@@ -582,9 +582,7 @@ class TeamVC: UIViewController {
             jsonStringDataArray += "]"
             
             let data = ["data": jsonStringDataArray, "team": String(teamNumber), "context": "pit", "regional": storage.stringForKey("currentRegional")!]
-            
-            print(jsonStringDataArray)
-            
+
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
             }else{
