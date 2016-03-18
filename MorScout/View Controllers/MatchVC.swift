@@ -540,6 +540,7 @@ class MatchVC: UIViewController {
                         if let strategyText = strategies[currentRegional]![String(matchNumber)] {
                             let textView = UITextView(frame: CGRectMake(10, 5, self.view.frame.width-20, strategyBoxHeight))
                             textView.text = strategyText
+                            textView.font = UIFont(name: "Helvetica", size: 14.0)
                             textView.editable = false
                             textView.backgroundColor = UIColorFromHex("E9E9E9")
                             textView.tag = -1
@@ -592,6 +593,7 @@ class MatchVC: UIViewController {
             dispatch_async(dispatch_get_main_queue(),{
                 let textView = UITextView(frame: CGRectMake(10, 5, self.view.frame.width-20, self.strategyBoxHeight))
                 textView.text = strategyText
+                textView.font = UIFont(name: "Helvetica", size: 14.0)
                 textView.tag = -1
                 self.container.addSubview(textView)
                 
