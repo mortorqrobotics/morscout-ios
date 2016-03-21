@@ -255,4 +255,14 @@ extension String {
     subscript (r: Range<Int>) -> String {
         return substringWithRange(Range(start: startIndex.advancedBy(r.startIndex), end: startIndex.advancedBy(r.endIndex)))
     }
+    
+    var first: String {
+        return String(characters.prefix(1))
+    }
+    var last: String {
+        return String(characters.suffix(1))
+    }
+    var capitalized: String {
+        return first.uppercaseString + String(characters.dropFirst())
+    }
 }

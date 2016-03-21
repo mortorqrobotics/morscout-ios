@@ -16,6 +16,11 @@ class CreateTeamVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        teamNumberField.becomeFirstResponder()
+        
+        teamNumberField.delegate = self
+        teamNameField.delegate = self
+        teamCodeField.delegate = self
         
     }
     @IBAction func createTeamClick(sender: UIButton) {
@@ -32,4 +37,18 @@ class CreateTeamVC: UIViewController {
         }
     }
     
+}
+
+extension CreateTeamVC: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        if textField.placeholder! == "Team Number" {
+            teamNameField.becomeFirstResponder()
+        }else if textField.placeholder! == "Team Name" {
+            teamCodeField.becomeFirstResponder()
+        }else if textField.placeholder! == "Team Code" {
+            teamNumberField.becomeFirstResponder()
+        }
+        return true
+    }
 }

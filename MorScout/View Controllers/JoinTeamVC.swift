@@ -14,6 +14,7 @@ class JoinTeamVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        teamCodeField.becomeFirstResponder()
         
     }
     @IBAction func joinClick(sender: UIButton) {

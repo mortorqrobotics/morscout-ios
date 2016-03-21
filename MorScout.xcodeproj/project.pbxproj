@@ -17,7 +17,6 @@
 		8E3357C71C4C8C9400F2B879 /* Exo2-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AB1C4C8C9400F2B879 /* Exo2-Regular.ttf */; };
 		8E3357C81C4C8C9400F2B879 /* Exo2-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AC1C4C8C9400F2B879 /* Exo2-SemiBold.ttf */; };
 		8E3357C91C4C8C9400F2B879 /* Exo2-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AD1C4C8C9400F2B879 /* Exo2-Thin.ttf */; };
-		8E3357CA1C4C8C9400F2B879 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AE1C4C8C9400F2B879 /* Info.plist */; };
 		8E3357CB1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357AF1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf */; };
 		8E3357CC1C4C8C9400F2B879 /* TitilliumWeb-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B01C4C8C9400F2B879 /* TitilliumWeb-Light.ttf */; };
 		8E3357CD1C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B11C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf */; };
@@ -46,6 +45,7 @@
 		8EBC63091C712C00000DBE6A /* TeamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC63081C712C00000DBE6A /* TeamCell.swift */; };
 		8EBC630B1C77F88F000DBE6A /* MatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EBC630A1C77F88F000DBE6A /* MatchVC.swift */; };
 		8EC4CFC51C68639E00D3AB22 /* Regional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC4CFC41C68639E00D3AB22 /* Regional.swift */; };
+		8EDE07D41C9F6A2B004B5C34 /* SignupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDE07D31C9F6A2B004B5C34 /* SignupVC.swift */; };
 		8EE543821C8548FD009048F1 /* DropdownTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543811C8548FD009048F1 /* DropdownTextField.swift */; };
 		8EE543841C854D08009048F1 /* DropdownPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543831C854D08009048F1 /* DropdownPicker.swift */; };
 		8EE543861C85606F009048F1 /* DoneButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EE543851C85606F009048F1 /* DoneButton.swift */; };
@@ -98,6 +98,7 @@
 		8EBC63081C712C00000DBE6A /* TeamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamCell.swift; sourceTree = "<group>"; };
 		8EBC630A1C77F88F000DBE6A /* MatchVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchVC.swift; sourceTree = "<group>"; };
 		8EC4CFC41C68639E00D3AB22 /* Regional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Regional.swift; sourceTree = "<group>"; };
+		8EDE07D31C9F6A2B004B5C34 /* SignupVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupVC.swift; sourceTree = "<group>"; };
 		8EE543811C8548FD009048F1 /* DropdownTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownTextField.swift; sourceTree = "<group>"; };
 		8EE543831C854D08009048F1 /* DropdownPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownPicker.swift; sourceTree = "<group>"; };
 		8EE543851C85606F009048F1 /* DoneButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoneButton.swift; sourceTree = "<group>"; };
@@ -190,6 +191,7 @@
 				8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */,
 				8EF4B7AC1C937CAB00107E90 /* JoinTeamVC.swift */,
 				8EF4B7AE1C937CB700107E90 /* CreateTeamVC.swift */,
+				8EDE07D31C9F6A2B004B5C34 /* SignupVC.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -288,6 +290,7 @@
 				TargetAttributes = {
 					8E7AF0B41C40BE79007B8133 = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 2DYNL8A66H;
 					};
 				};
 			};
@@ -317,7 +320,6 @@
 				8E3357C41C4C8C9400F2B879 /* Main.storyboard in Resources */,
 				8E3357CB1C4C8C9400F2B879 /* TitilliumWeb-ExtraLight.ttf in Resources */,
 				8E3357C21C4C8C9400F2B879 /* Assets.xcassets in Resources */,
-				8E3357CA1C4C8C9400F2B879 /* Info.plist in Resources */,
 				8E3357C51C4C8C9400F2B879 /* Exo2-ExtraLight.ttf in Resources */,
 				8E3357C61C4C8C9400F2B879 /* Exo2-Light.ttf in Resources */,
 				8E3357CD1C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf in Resources */,
@@ -335,7 +337,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		62A767E3DD8608B60653579A /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -393,6 +395,7 @@
 				8EE543841C854D08009048F1 /* DropdownPicker.swift in Sources */,
 				8E3357D31C4C8C9400F2B879 /* LoginVC.swift in Sources */,
 				8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */,
+				8EDE07D41C9F6A2B004B5C34 /* SignupVC.swift in Sources */,
 				8EF4B7AF1C937CB700107E90 /* CreateTeamVC.swift in Sources */,
 				8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */,
 				8E3357D51C4C8C9400F2B879 /* MenuVC.swift in Sources */,
@@ -537,7 +540,7 @@
 				INFOPLIST_FILE = MorScout/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mortorq1515.morscout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mortorq1515.morscout1515;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";
@@ -556,7 +559,7 @@
 				INFOPLIST_FILE = MorScout/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mortorq1515.morscout;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mortorq1515.morscout1515;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";

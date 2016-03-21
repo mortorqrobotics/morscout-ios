@@ -40,11 +40,6 @@ class LoginVC: UIViewController {
 
     }
     
-    @IBAction func registerClick(sender: UIButton) {
-        if let url = NSURL(string: "http://www.morteam.com/signup?mobileapp") {
-            UIApplication.sharedApplication().openURL(url)
-        }
-    }
     func login() {
         httpRequest(morTeamURL+"/f/login", type: "POST", data: [
             "username": usernameTextField.text!,
