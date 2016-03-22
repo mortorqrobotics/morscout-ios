@@ -15,29 +15,29 @@ class LoginVC: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBAction func clickLogin(sender: UIButton) {
+        loginButton.setTitle("Loading...", forState: .Normal)
+        loginButton.enabled = false
         login()
     }
     
     override func viewDidLoad() {
         setup()
+        usernameTextField.becomeFirstResponder()
     }
     
     func setup() {
         
-//        self.view.backgroundColor = UIColor.blackColor()
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
         
-        loginButton.backgroundColor = UIColorFromHex("#FFA500")
+        //paddings for text fields
+        let uPaddingView = UIView(frame: CGRectMake(0, 0, 8, self.usernameTextField.frame.height))
+        let pPaddingView = UIView(frame: CGRectMake(0, 0, 8, self.passwordTextField.frame.height))
         
-        usernameTextField.layer.borderWidth = 2
-        usernameTextField.layer.borderColor = UIColorFromHex("#FFA500").CGColor
-        passwordTextField.layer.borderWidth = 2
-        passwordTextField.layer.borderColor = UIColorFromHex("#FFA500").CGColor
-        
-        usernameTextField.attributedPlaceholder = NSAttributedString(string:"Username",
-            attributes:[NSForegroundColorAttributeName: UIColorFromHex("#FFA500", alpha: 0.8)])
-        passwordTextField.attributedPlaceholder = NSAttributedString(string:"Password",
-            attributes:[NSForegroundColorAttributeName: UIColorFromHex("#FFA500", alpha: 0.8)])
-
+        usernameTextField.leftView = uPaddingView
+        usernameTextField.leftViewMode = UITextFieldViewMode.Always
+        passwordTextField.leftView = pPaddingView
+        passwordTextField.leftViewMode = UITextFieldViewMode.Always
     }
     
     func login() {
@@ -47,15 +47,15 @@ class LoginVC: UIViewController {
         ]) { responseText in
             if responseText == "inc/username" || responseText == "inc/password"{
                 dispatch_async(dispatch_get_main_queue(),{
-                    let alert = UIAlertController(title: "Incorrect Username/Password", message: "This Username/Password combination does not exist.", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+                    self.loginButton.setTitle("Login", forState: .Normal)
+                    self.loginButton.enabled = true
+                    alert(title: "Incorrect Username/Password", message: "This Username/Password combination does not exist.", buttonText: "OK", viewController: self)
                 })
             }else if responseText == "fail"{
                 dispatch_async(dispatch_get_main_queue(),{
-                    let alert = UIAlertController(title: "Oops", message: "Something went wrong...", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+                    self.loginButton.setTitle("Login", forState: .Normal)
+                    self.loginButton.enabled = true
+                    alert(title: "Oops", message: "Something went wrong...", buttonText: "OK", viewController: self)
                 })
                 
             }else{
@@ -113,4 +113,19 @@ class LoginVC: UIViewController {
         
     }
     
+}
+
+extension LoginVC: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        if textField.placeholder! == "Username/Email" {
+            passwordTextField.becomeFirstResponder()
+        }else if textField.placeholder! == "Password" {
+            loginButton.setTitle("Loading...", forState: .Normal)
+            loginButton.enabled = false
+            login()
+        }
+        return true
+    }
+
 }

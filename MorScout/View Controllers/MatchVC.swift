@@ -446,7 +446,7 @@ class MatchVC: UIViewController {
                         let reportNumber = Int(i)!+1
                         let label = UILabel(frame: CGRectMake(10, self.viewTopMargin, self.view.frame.width - 20, 21))
                         label.text = "Report \(reportNumber)"
-                        label.font = UIFont(name: "Helvetica-Light", size: 22.0)
+                        label.font = UIFont(name: "Helvetica-Light", size: 21.0)
                         label.textAlignment = .Center
                         label.tag = self.selectedTeam
                         self.container.addSubview(label)

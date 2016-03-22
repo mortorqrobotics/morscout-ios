@@ -24,7 +24,7 @@ class CreateTeamVC: UIViewController {
         
     }
     @IBAction func createTeamClick(sender: UIButton) {
-        httpRequest(morTeamURL+"/f/createTeam", type: "POST", data: ["id": teamCodeField.text!, "number": teamNameField.text!, "name": teamNameField.text!]){ responseText in
+        httpRequest(morTeamURL+"/f/createTeam", type: "POST", data: ["id": teamCodeField.text!, "number": teamNumberField.text!, "name": teamNameField.text!]){ responseText in
             if responseText == "success" {
                 storage.setBool(false, forKey: "noTeam")
                 dispatch_async(dispatch_get_main_queue(),{
