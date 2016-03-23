@@ -15,7 +15,6 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var matchesTable: UITableView!
     
     let searchController = UISearchController(searchResultsController: nil)
-    
     var matches = [Match]()
     var filteredMatches = [Match]()
     
@@ -23,27 +22,9 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         setup()
-        
-        
-        searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = false
-        matchesTable.tableHeaderView = searchController.searchBar
-        self.searchController.hidesNavigationBarDuringPresentation = false
-        self.searchController.searchBar.placeholder = "Search Teams in Matches"
-        
         checkConnectionAndSync()
+        loadMatchesFromCache()
         
-        if let matchesData = storage.objectForKey("matches") {
-            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
-            
-            if cachedMatches!.count == 0 {
-                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-            }else{
-                self.matches = cachedMatches!
-            }
-        }
-
         if Reachability.isConnectedToNetwork() {
             getMatches()
         }
@@ -53,18 +34,26 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.searchController.searchBar.hidden = false
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
     func setup() {
         matchesTable.delegate = self
         matchesTable.dataSource = self
-        if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = "revealToggle:"
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+        setupMenu(menuButton)
+        
+        //setup search
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = false
+        matchesTable.tableHeaderView = searchController.searchBar
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.searchBar.placeholder = "Search Teams in Matches"
     }
     
     func getMatches() {
-        httpRequest(baseURL+"/getMatchesForCurrentRegional", type: "POST") {responseText in
+        httpRequest(baseURL+"/getMatchesForCurrentRegional", type: "POST") { responseText in
             if responseText != "fail" {
                 let matches = parseJSON(responseText)
                 self.matches = []
@@ -73,12 +62,15 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     let time = subJson["time"]
                     var redTeams = [String]()
                     var blueTeams = [String]()
+                    
                     for i in 0...2 {
                         var redTeam = String(subJson["alliances"]["red"]["teams"][i])
+                        //remove "frc" from the beginning of team number
                         redTeam = redTeam[3...redTeam.characters.count-1]
                         redTeams.append(redTeam)
                         
                         var blueTeam = String(subJson["alliances"]["blue"]["teams"][i])
+                        //remove "frc" from the beginning of team number
                         blueTeam = blueTeam[3...blueTeam.characters.count-1]
                         blueTeams.append(blueTeam)
                     }
@@ -89,9 +81,6 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         }else{
                             self.matches.append(Match(number: Int(match_num)!, time: nil, redTeams: redTeams, blueTeams: blueTeams))
                         }
-                        
-                        
-                        
                     }
                     
                 }
@@ -111,9 +100,19 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    func loadMatchesFromCache() {
+        if let matchesData = storage.objectForKey("matches") {
+            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+            
+            if cachedMatches!.count == 0 {
+                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+            }else{
+                self.matches = cachedMatches!
+            }
+        }
     }
+    
+    //MARK: - TableView methods
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.active && searchController.searchBar.text != "" {
@@ -192,6 +191,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
 }
+
+//MARK: - Extensions
 
 extension MatchesVC: UISearchResultsUpdating {
     func updateSearchResultsForSearchController(searchController: UISearchController) {

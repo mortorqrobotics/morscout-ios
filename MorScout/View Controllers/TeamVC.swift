@@ -59,6 +59,10 @@ class TeamVC: UIViewController {
         
         self.scrollView.addSubview(self.container)
         
+        if Reachability.isConnectedToNetwork() {
+            getCurrentRegionalKey()
+        }
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

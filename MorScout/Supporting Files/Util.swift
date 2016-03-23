@@ -242,6 +242,26 @@ func escape(text: String) -> String {
     return newText
 }
 
+func logoutSilently() {
+    httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
+        for key in storage.dictionaryRepresentation().keys {
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+        }
+    }
+}
+
+func getCurrentRegionalKey() {
+    httpRequest(baseURL+"/getCurrentRegionalInfo", type: "POST"){
+        responseText in
+        
+        let regionalInfo = parseJSON(responseText)
+        if (!regionalInfo["Errors"]){
+            let currentRegionalKey = String(regionalInfo["key"])
+            storage.setValue(currentRegionalKey, forKey: "currentRegional")
+        }
+    }
+}
+
 extension String {
     
     subscript (i: Int) -> Character {
@@ -264,5 +284,24 @@ extension String {
     }
     var capitalized: String {
         return first.uppercaseString + String(characters.dropFirst())
+    }
+}
+
+extension UIViewController {
+    //allow user to click on button (or swipe) to open side menu
+    func setupMenu(button: UIBarButtonItem) {
+        if self.revealViewController() != nil {
+            button.target = self.revealViewController()
+            button.action = "revealToggle:"
+            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        }
+    }
+    
+    //transition to any view controller using storyboard ID
+    func goTo(viewController identifier: String) {
+        dispatch_async(dispatch_get_main_queue(),{
+            let vc : AnyObject! = self.storyboard!.instantiateViewControllerWithIdentifier(identifier)
+            self.showViewController(vc as! UIViewController, sender: vc)
+        })
     }
 }

@@ -14,37 +14,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func logoutSilently() {
-        httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
-            for key in storage.dictionaryRepresentation().keys {
-                NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
-            }
-        }
-    }
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
         
-//        print("INITIAL MATCH DATA:")
-//        print(MatchDataStorage.sharedInstance.data)
-        
+        //set navigation bar color
         UINavigationBar.appearance().barTintColor = UIColorFromHex("#FFC547")
         UINavigationBar.appearance().tintColor = UIColor.blackColor()
         UINavigationBar.appearance().translucent = false
         
-        
+        //set cookies for Kingfisher image download (needed for user authentication)
         KingfisherManager.sharedManager.downloader.requestModifier = {
             (request: NSMutableURLRequest) in
-            
             request.addValue("connect.sid=\(storage.stringForKey("connect.sid")!)", forHTTPHeaderField: "Cookie")
         }
         
-        
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        
         let revealVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("reveal")
         let loginVC : UIViewController! = mainStoryboard.instantiateViewControllerWithIdentifier("login")
-        
         
         if let _ = storage.stringForKey("connect.sid"){
             //logged in
@@ -55,11 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.window?.rootViewController = revealVC
             }
         }else{
-            //logged out
+            //not logged in
             self.window?.rootViewController = loginVC
         }
 
-        
         return true
     }
 

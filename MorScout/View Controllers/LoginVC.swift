@@ -14,15 +14,19 @@ class LoginVC: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    @IBAction func clickLogin(sender: UIButton) {
-        loginButton.setTitle("Loading...", forState: .Normal)
-        loginButton.enabled = false
-        login()
-    }
     
     override func viewDidLoad() {
         setup()
         usernameTextField.becomeFirstResponder()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func clickLogin(sender: UIButton) {
+        showLoading()
+        login()
     }
     
     func setup() {
@@ -30,41 +34,35 @@ class LoginVC: UIViewController {
         usernameTextField.delegate = self
         passwordTextField.delegate = self
         
-        //paddings for text fields
+        //set paddings for text fields
         let uPaddingView = UIView(frame: CGRectMake(0, 0, 8, self.usernameTextField.frame.height))
         let pPaddingView = UIView(frame: CGRectMake(0, 0, 8, self.passwordTextField.frame.height))
-        
         usernameTextField.leftView = uPaddingView
         usernameTextField.leftViewMode = UITextFieldViewMode.Always
         passwordTextField.leftView = pPaddingView
         passwordTextField.leftViewMode = UITextFieldViewMode.Always
     }
     
+    
     func login() {
-        httpRequest(morTeamURL+"/f/login", type: "POST", data: [
-            "username": usernameTextField.text!,
-            "password": passwordTextField.text!
-        ]) { responseText in
+        httpRequest(morTeamURL+"/f/login", type: "POST", data: ["username": usernameTextField.text!, "password":passwordTextField.text!]) { responseText in
             if responseText == "inc/username" || responseText == "inc/password"{
                 dispatch_async(dispatch_get_main_queue(),{
-                    self.loginButton.setTitle("Login", forState: .Normal)
-                    self.loginButton.enabled = true
+                    self.hideLoading()
                     alert(title: "Incorrect Username/Password", message: "This Username/Password combination does not exist.", buttonText: "OK", viewController: self)
                 })
             }else if responseText == "fail"{
                 dispatch_async(dispatch_get_main_queue(),{
-                    self.loginButton.setTitle("Login", forState: .Normal)
-                    self.loginButton.enabled = true
+                    self.hideLoading()
                     alert(title: "Oops", message: "Something went wrong...", buttonText: "OK", viewController: self)
                 })
                 
             }else{
                 //login successful
-                
                 let user = parseJSON(responseText)
-                
                 let storedUserProperties = ["username", "firstname", "lastname", "_id", "phone", "email", "profpicpath"]
                 
+                //store user properties in storage
                 for (key, value):(String, JSON) in user {
                     if storedUserProperties.indexOf(key) > -1 {
                         storage.setObject(String(value), forKey: key)
@@ -78,46 +76,32 @@ class LoginVC: UIViewController {
                         anyTeam = true
                         storage.setObject(String(user["current_team"]["id"]), forKey: "c_team")
                         storage.setObject(String(user["current_team"]["position"]), forKey: "c_team_position")
-                        dispatch_async(dispatch_get_main_queue(),{
-                            let vc : AnyObject! = self.storyboard!.instantiateViewControllerWithIdentifier("reveal")
-                            self.showViewController(vc as! UIViewController, sender: vc)
-                        })
+                        self.goTo(viewController: "reveal")
                     }
                 }
                 if !anyTeam {
                     storage.setBool(true, forKey: "noTeam")
-                    dispatch_async(dispatch_get_main_queue(),{
-                        let vc : AnyObject! = self.storyboard!.instantiateViewControllerWithIdentifier("void")
-                        self.showViewController(vc as! UIViewController, sender: vc)
-                    })
-
+                    self.goTo(viewController: "void")
                 }else{
                     storage.setBool(false, forKey: "noTeam")
                 }
-
-                
-//                let storedProperties = ["_id", "username", "firstName", "lastName", "admin", "teamCode", "teamName", "teamNumber"]
-//                
-//                for (key, value):(String, JSON) in user {
-//                    if storedProperties.indexOf(key) > -1 {
-//                        storage.setObject(String(value), forKey: key)
-//                    }
-//                }
-                
-                
             }
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        
+    func showLoading() {
+        loginButton.setTitle("Loading...", forState: .Normal)
+        loginButton.enabled = false
     }
     
+    func hideLoading() {
+        self.loginButton.setTitle("Login", forState: .Normal)
+        self.loginButton.enabled = true
+    }
 }
 
 extension LoginVC: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        
         if textField.placeholder! == "Username/Email" {
             passwordTextField.becomeFirstResponder()
         }else if textField.placeholder! == "Password" {
@@ -127,5 +111,4 @@ extension LoginVC: UITextFieldDelegate {
         }
         return true
     }
-
 }

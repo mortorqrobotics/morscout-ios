@@ -19,15 +19,11 @@ class HomeVC: UIViewController {
         super.viewDidLoad()
         
         checkConnectionAndSync()
-        
-        if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = "revealToggle:"
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
-
+        setupMenu(menuButton)
     }
+    
     override func viewDidAppear(animated: Bool) {
+        //randomize welcome message
         let welcomeMessagesLength = UInt32(welcomeMessages.count)
         let randomInt = Int(arc4random_uniform(welcomeMessagesLength))
         welcomeMessage.text = welcomeMessages[randomInt]
@@ -35,7 +31,6 @@ class HomeVC: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 }
