@@ -4,6 +4,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'MorScout' do
-	pod 'Kingfisher', '~> 1.8'
+	pod 'Kingfisher', '~> 3.0’
+	pod 'SwiftyJSON', '3.0.0'
 end
 

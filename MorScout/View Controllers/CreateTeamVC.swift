@@ -23,13 +23,13 @@ class CreateTeamVC: UIViewController {
         teamCodeField.delegate = self
         
     }
-    @IBAction func createTeamClick(sender: UIButton) {
+    @IBAction func createTeamClick(_ sender: UIButton) {
         httpRequest(morTeamURL+"/f/createTeam", type: "POST", data: ["id": teamCodeField.text!, "number": teamNumberField.text!, "name": teamNameField.text!]){ responseText in
             if responseText == "success" {
-                storage.setBool(false, forKey: "noTeam")
-                dispatch_async(dispatch_get_main_queue(),{
-                    let vc : AnyObject! = self.storyboard!.instantiateViewControllerWithIdentifier("reveal")
-                    self.showViewController(vc as! UIViewController, sender: vc)
+                storage.set(false, forKey: "noTeam")
+                DispatchQueue.main.async(execute: {
+                    let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "reveal")
+                    self.show(vc as! UIViewController, sender: vc)
                 })
             }else{
                 alert(title: "Failed", message: "Oops, something went wrong.", buttonText: "OK", viewController: self)
@@ -40,7 +40,7 @@ class CreateTeamVC: UIViewController {
 }
 
 extension CreateTeamVC: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         if textField.placeholder! == "Team Number" {
             teamNameField.becomeFirstResponder()

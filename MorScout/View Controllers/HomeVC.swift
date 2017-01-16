@@ -22,7 +22,7 @@ class HomeVC: UIViewController {
         setupMenu(menuButton)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         //randomize welcome message
         let welcomeMessagesLength = UInt32(welcomeMessages.count)
         let randomInt = Int(arc4random_uniform(welcomeMessagesLength))

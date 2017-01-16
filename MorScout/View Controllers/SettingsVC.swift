@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftyJSON
 
 class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
@@ -25,7 +26,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         
         setup()
         checkConnectionAndSync()
-        handleEditing(storage.stringForKey("_id")!)
+        handleEditing(storage.string(forKey: "_id")!)
         
 //        if let savedReports = storage.arrayForKey("savedReports") {
 //            print(savedReports)
@@ -43,7 +44,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         
         regionalPicker.dataSource = self
         regionalPicker.delegate = self
-        regionalYear.addTarget(self, action: "textFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+        regionalYear.addTarget(self, action: #selector(SettingsVC.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
         
         if Reachability.isConnectedToNetwork() {
             getCurrentRegionalInfo()
@@ -53,9 +54,9 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         }
         
         
-        self.regionalPicker.userInteractionEnabled = false
-        self.regionalYear.userInteractionEnabled = false
-        self.shareData.enabled = false
+        self.regionalPicker.isUserInteractionEnabled = false
+        self.regionalYear.isUserInteractionEnabled = false
+        self.shareData.isEnabled = false
 
         let toolbarAndButton = createToolbar()
         let doneButton = toolbarAndButton.1
@@ -65,7 +66,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
-            menuButton.action = "revealToggle:"
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }
@@ -75,17 +76,17 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             responseText in
             
             let regionalInfo = parseJSON(responseText)
-            let currentRegionalYear = String(regionalInfo["year"])
-            let currentRegionalName = String(regionalInfo["short_name"])
-            if (!regionalInfo["Errors"]){
-                dispatch_async(dispatch_get_main_queue(),{
+            let currentRegionalYear = regionalInfo["year"].stringValue
+            let currentRegionalName = regionalInfo["short_name"].stringValue
+            if !regionalInfo["Errors"].exists() {
+                DispatchQueue.main.async(execute: {
                     self.regionalYear.text = currentRegionalYear
                     self.loadRegionalsForYear(currentRegionalYear) {
-                        for(var i = 0; i < self.regionals.count; i++) {
+                        for i in 0..<self.regionals.count {
                             if self.regionals[i].name == currentRegionalName {
                                 self.regionalPicker.selectRow(i, inComponent: 0, animated: false)
                                 //self.chooseRegional(self.regionals[i].key)
-                                let selectedRow = self.regionalPicker.selectedRowInComponent(0)
+                                let selectedRow = self.regionalPicker.selectedRow(inComponent: 0)
                                 if selectedRow < self.regionals.count  {
                                     self.chooseRegional(self.regionals[selectedRow].key)
                                 }
@@ -108,15 +109,15 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
                 }else{
                     isPrivate = false
                 }
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     self.shareData.setOn(!isPrivate, animated: false)
                 })
-                self.shareData.addTarget(self, action: Selector("shareDataStateChanged:"), forControlEvents: UIControlEvents.ValueChanged)
+                self.shareData.addTarget(self, action: #selector(SettingsVC.shareDataStateChanged(_:)), for: UIControlEvents.valueChanged)
             }
         }
     }
     
-    func loadRegionalsForYear(year: String, cb: (() -> ())?) {
+    func loadRegionalsForYear(_ year: String, cb: (() -> ())?) {
         httpRequest(baseURL+"/getRegionalsForTeam", type: "POST", data:[
             "year": year
         ]){ responseText in
@@ -127,13 +128,13 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
                 }
                 self.regionals = []
                 for (_, subJson):(String, JSON) in regionals {
-                    let key = String(subJson["key"])
-                    let name = String(subJson["short_name"])
-                    let year = String(subJson["year"])
+                    let key = subJson["key"].stringValue
+                    let name = subJson["short_name"].stringValue
+                    let year = subJson["year"].stringValue
                     let regional = Regional(key: key, name: name, year: year)
                     self.regionals.append(regional)
                 }
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     self.regionalPicker.reloadAllComponents()
                     cb?()
                 })
@@ -141,7 +142,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         }
     }
     
-    func chooseRegional(key: String) {
+    func chooseRegional(_ key: String) {
         httpRequest(baseURL+"/chooseCurrentRegional", type: "POST", data: [
             "eventCode": key
         ]) { responseText in
@@ -152,10 +153,10 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         }
     }
     
-    func textFieldDidChange(textField: UITextField) {
+    func textFieldDidChange(_ textField: UITextField) {
         if regionalYear.text!.characters.count == 4 {
             loadRegionalsForYear(regionalYear.text!){
-                let selectedRow = self.regionalPicker.selectedRowInComponent(0)
+                let selectedRow = self.regionalPicker.selectedRow(inComponent: 0)
                 if selectedRow < self.regionals.count  {
                     self.chooseRegional(self.regionals[selectedRow].key)
                 }
@@ -163,8 +164,8 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         }
     }
     
-    func shareDataStateChanged(switchState: UISwitch) {
-        if switchState.on {
+    func shareDataStateChanged(_ switchState: UISwitch) {
+        if switchState.isOn {
             httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
                 "status": "public"
             ]){ responseText in
@@ -185,16 +186,16 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         }
     }
     
-    func handleEditing(_id: String) {
+    func handleEditing(_ _id: String) {
         httpRequest(morTeamURL+"/f/getUser", type: "POST", data: ["_id": _id]) {responseText in
             if responseText != "fail" {
                 let user = parseJSON(responseText)
                 
-                if String(user["current_team"]["position"]) != "member" || Bool(user["current_team"]["scoutCaptain"]) == true {
-                    dispatch_async(dispatch_get_main_queue(),{
-                        self.regionalPicker.userInteractionEnabled = true
-                        self.regionalYear.userInteractionEnabled = true
-                        self.shareData.enabled = true
+                if user["current_team"]["position"].stringValue != "member" || user["current_team"]["scoutCaptain"].boolValue == true {
+                    DispatchQueue.main.async(execute: {
+                        self.regionalPicker.isUserInteractionEnabled = true
+                        self.regionalYear.isUserInteractionEnabled = true
+                        self.shareData.isEnabled = true
                     })
                 }
             }
@@ -202,15 +203,15 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     }
     
     func createToolbar() -> (UIToolbar, DoneButton) {
-        let toolBar = UIToolbar(frame: CGRectMake(0, self.view.frame.size.height/6, self.view.frame.size.width, 40.0))
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: self.view.frame.size.height/6, width: self.view.frame.size.width, height: 40.0))
         toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: self, action: nil)
-        let doneButton = DoneButton(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: "clickedDoneButton:")
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: self, action: nil)
+        let doneButton = DoneButton(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SettingsVC.clickedDoneButton(_:)))
         toolBar.setItems([flexSpace, doneButton], animated: true)
         return (toolBar, doneButton)
     }
     
-    func clickedDoneButton(sender: UIBarButtonItem) {
+    func clickedDoneButton(_ sender: UIBarButtonItem) {
         let sender = sender as! DoneButton
         
         if let textField = sender.textField {
@@ -223,17 +224,17 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     }
 
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return regionals.count
     }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return regionals[row].name
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if row < regionals.count && row >= 0 {
             self.chooseRegional(regionals[row].key)
         }

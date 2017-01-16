@@ -8,6 +8,32 @@
 
 import Foundation
 import UIKit
+import SwiftyJSON
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -37,12 +63,12 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
-            menuButton.action = "revealToggle:"
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        if let teamsData = storage.objectForKey("teams") {
-            let cachedTeams = NSKeyedUnarchiver.unarchiveObjectWithData(teamsData as! NSData) as? [Team]
+        if let teamsData = storage.object(forKey: "teams") {
+            let cachedTeams = NSKeyedUnarchiver.unarchiveObject(with: teamsData as! Data) as? [Team]
             
             if cachedTeams!.count == 0 {
                 alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
@@ -57,14 +83,14 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
     }
     
-    override func viewDidAppear(animated: Bool) {
-        self.searchController.searchBar.hidden = false
+    override func viewDidAppear(_ animated: Bool) {
+        self.searchController.searchBar.isHidden = false
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setToolbarHidden(false, animated: false)
     }
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setToolbarHidden(true, animated: false)
     }
     
@@ -84,7 +110,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         if rankings.count > 0 {
                             for (i, subJson):(String, JSON) in rankings {
                                 if Int(i) > 0 {
-                                    teamRankings[String(subJson[1])] = Int(String(subJson[0]))
+                                    teamRankings[subJson[1].stringValue] = subJson[0].intValue
                                 }
                             }
                         }
@@ -95,7 +121,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             
                             let team_number = subJson["team_number"]
                             let team_name = subJson["nickname"]
-                            let team_rank = teamRankings[String(team_number)]
+                            let team_rank = teamRankings[String(describing: team_number)]
                             
                             
                             
@@ -105,12 +131,12 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             
                         }
                         
-                        self.teams.sortInPlace { $0.number < $1.number }
+                        self.teams.sort { $0.number < $1.number }
                         
-                        let teamsData = NSKeyedArchiver.archivedDataWithRootObject(self.teams)
-                        storage.setObject(teamsData, forKey: "teams")
+                        let teamsData = NSKeyedArchiver.archivedData(withRootObject: self.teams)
+                        storage.set(teamsData, forKey: "teams")
                     
-                        dispatch_async(dispatch_get_main_queue(),{
+                        DispatchQueue.main.async(execute: {
                             self.teamsTable.reloadData()
                         })
                         
@@ -124,19 +150,19 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchController.active && searchController.searchBar.text != "" {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchController.isActive && searchController.searchBar.text != "" {
             return filteredTeams.count
         }else{
             return teams.count
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = teamsTable.dequeueReusableCellWithIdentifier("teamCell") as! TeamCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = teamsTable.dequeueReusableCell(withIdentifier: "teamCell") as! TeamCell
         
         let team: Team
-        if searchController.active && searchController.searchBar.text != "" {
+        if searchController.isActive && searchController.searchBar.text != "" {
             team = filteredTeams[indexPath.row]
         }else{
             team = teams[indexPath.row]
@@ -154,29 +180,29 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("showTeam", sender: indexPath)
-        teamsTable.deselectRowAtIndexPath(indexPath, animated: true)
-        self.searchController.searchBar.hidden = true
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "showTeam", sender: indexPath)
+        teamsTable.deselectRow(at: indexPath, animated: true)
+        self.searchController.searchBar.isHidden = true
     }
     
-    func filterContentForSearchText(searchText: String) {
+    func filterContentForSearchText(_ searchText: String) {
         filteredTeams = teams.filter { team in
-            let containsName = team.name.lowercaseString.containsString(searchText.lowercaseString)
-            let containsNumber = String(team.number).lowercaseString.containsString(searchText.lowercaseString)
+            let containsName = team.name.lowercased().contains(searchText.lowercased())
+            let containsNumber = String(team.number).lowercased().contains(searchText.lowercased())
             return containsName || containsNumber
         }
         
         teamsTable.reloadData()
     }
     
-    @IBAction func changedSort(sender: UISegmentedControl) {
+    @IBAction func changedSort(_ sender: UISegmentedControl) {
         switch sortTabs.selectedSegmentIndex {
         case 0:
-           self.teams.sortInPlace { $0.number < $1.number }
+           self.teams.sort { $0.number < $1.number }
             self.teamsTable.reloadData()
         case 1:
-            self.teams.sortInPlace { $0.rank < $1.rank }
+            self.teams.sort { $0.rank < $1.rank }
             self.teamsTable.reloadData()
         default:
             break
@@ -184,16 +210,16 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "showTeam") {
             let team: Team
-            if searchController.active && searchController.searchBar.text != "" {
-                team = filteredTeams[sender!.row]
+            if searchController.isActive && searchController.searchBar.text != "" {
+                team = filteredTeams[(sender! as AnyObject).row]
             }else{
-                team = teams[sender!.row]
+                team = teams[(sender! as AnyObject).row]
             }
 
-            let teamVC = segue.destinationViewController as! TeamVC
+            let teamVC = segue.destination as! TeamVC
             teamVC.teamNumber = team.number
             teamVC.teamName = team.name
             
@@ -202,7 +228,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 }
 
 extension TeamsVC: UISearchResultsUpdating {
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         filterContentForSearchText(searchController.searchBar.text!)
     }
 }

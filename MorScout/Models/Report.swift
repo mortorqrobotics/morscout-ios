@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class Report {
     var data: [[String: String]]
     init(json: JSON) {
         data = []
         for(_, subJson):(String, JSON) in json["data"] {
-            data.append([String(subJson["name"]): String(subJson["value"])])
+            data.append([subJson["name"].stringValue: subJson["value"].stringValue])
         }
     }
 }

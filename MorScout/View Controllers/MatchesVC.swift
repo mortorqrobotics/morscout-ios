@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftyJSON
 
 class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -30,8 +31,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        self.searchController.searchBar.hidden = false
+    override func viewDidAppear(_ animated: Bool) {
+        self.searchController.searchBar.isHidden = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -64,20 +65,20 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     var blueTeams = [String]()
                     
                     for i in 0...2 {
-                        var redTeam = String(subJson["alliances"]["red"]["teams"][i])
+                        var redTeam = subJson["alliances"]["red"]["teams"][i].stringValue
                         //remove "frc" from the beginning of team number
-                        redTeam = redTeam[3...redTeam.characters.count-1]
+                        redTeam = String(redTeam.characters.dropFirst(3))
                         redTeams.append(redTeam)
                         
-                        var blueTeam = String(subJson["alliances"]["blue"]["teams"][i])
+                        var blueTeam = subJson["alliances"]["blue"]["teams"][i].stringValue
                         //remove "frc" from the beginning of team number
-                        blueTeam = blueTeam[3...blueTeam.characters.count-1]
+                        blueTeam = String(blueTeam.characters.dropFirst(3))
                         blueTeams.append(blueTeam)
                     }
                     
                     if let match_num = match_number.rawString(), let match_time = time.rawString() {
                         if let match_time = Double(match_time) {
-                            self.matches.append(Match(number: Int(match_num)!, time: NSDate(timeIntervalSince1970: match_time), redTeams: redTeams, blueTeams: blueTeams))
+                            self.matches.append(Match(number: Int(match_num)!, time: Date(timeIntervalSince1970: match_time), redTeams: redTeams, blueTeams: blueTeams))
                         }else{
                             self.matches.append(Match(number: Int(match_num)!, time: nil, redTeams: redTeams, blueTeams: blueTeams))
                         }
@@ -85,12 +86,12 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     
                 }
                 
-                self.matches.sortInPlace { $0.time!.compare($1.time!) == .OrderedAscending }
+                self.matches.sort { $0.time!.compare($1.time!) == .orderedAscending }
                 
-                let matchesData = NSKeyedArchiver.archivedDataWithRootObject(self.matches)
-                storage.setObject(matchesData, forKey: "matches")
+                let matchesData = NSKeyedArchiver.archivedData(withRootObject: self.matches)
+                storage.set(matchesData, forKey: "matches")
                 
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     self.matchesTable.reloadData()
                 })
                 
@@ -101,8 +102,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func loadMatchesFromCache() {
-        if let matchesData = storage.objectForKey("matches") {
-            let cachedMatches = NSKeyedUnarchiver.unarchiveObjectWithData(matchesData as! NSData) as? [Match]
+        if let matchesData = storage.object(forKey: "matches") {
+            let cachedMatches = NSKeyedUnarchiver.unarchiveObject(with: matchesData as! Data) as? [Match]
             
             if cachedMatches!.count == 0 {
                 alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
@@ -114,8 +115,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     //MARK: - TableView methods
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchController.active && searchController.searchBar.text != "" {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchController.isActive && searchController.searchBar.text != "" {
             return filteredMatches.count
         }else{
             return matches.count
@@ -123,12 +124,12 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = matchesTable.dequeueReusableCellWithIdentifier("matchCell") as! MatchCell
+        let cell = matchesTable.dequeueReusableCell(withIdentifier: "matchCell") as! MatchCell
         
         let match: Match
-        if searchController.active && searchController.searchBar.text != "" {
+        if searchController.isActive && searchController.searchBar.text != "" {
             match = filteredMatches[indexPath.row]
         }else{
             match = matches[indexPath.row]
@@ -155,35 +156,35 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("showMatch", sender: indexPath)
-        matchesTable.deselectRowAtIndexPath(indexPath, animated: true)
-        self.searchController.searchBar.hidden = true
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "showMatch", sender: indexPath)
+        matchesTable.deselectRow(at: indexPath, animated: true)
+        self.searchController.searchBar.isHidden = true
     }
     
-    func filterContentForSearchText(searchText: String) {
+    func filterContentForSearchText(_ searchText: String) {
         filteredMatches = matches.filter { match in
-            let containsRed1 = String(match.redTeams[0]).lowercaseString.containsString(searchText.lowercaseString)
-            let containsRed2 = String(match.redTeams[1]).lowercaseString.containsString(searchText.lowercaseString)
-            let containsRed3 = String(match.redTeams[2]).lowercaseString.containsString(searchText.lowercaseString)
-            let containsBlue1 = String(match.blueTeams[0]).lowercaseString.containsString(searchText.lowercaseString)
-            let containsBlue2 = String(match.blueTeams[1]).lowercaseString.containsString(searchText.lowercaseString)
-            let containsBlue3 = String(match.blueTeams[2]).lowercaseString.containsString(searchText.lowercaseString)
+            let containsRed1 = String(match.redTeams[0]).lowercased().contains(searchText.lowercased())
+            let containsRed2 = String(match.redTeams[1]).lowercased().contains(searchText.lowercased())
+            let containsRed3 = String(match.redTeams[2]).lowercased().contains(searchText.lowercased())
+            let containsBlue1 = String(match.blueTeams[0]).lowercased().contains(searchText.lowercased())
+            let containsBlue2 = String(match.blueTeams[1]).lowercased().contains(searchText.lowercased())
+            let containsBlue3 = String(match.blueTeams[2]).lowercased().contains(searchText.lowercased())
             return containsRed1 || containsRed2 || containsRed3 || containsBlue1 || containsBlue2 || containsBlue3
         }
         
         matchesTable.reloadData()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "showMatch") {
             let match: Match
-            if searchController.active && searchController.searchBar.text != "" {
-                match = filteredMatches[sender!.row]
+            if searchController.isActive && searchController.searchBar.text != "" {
+                match = filteredMatches[(sender! as AnyObject).row]
             }else{
-                match = matches[sender!.row]
+                match = matches[(sender! as AnyObject).row]
             }
-            let matchVC = segue.destinationViewController as! MatchVC
+            let matchVC = segue.destination as! MatchVC
             matchVC.matchNumber = match.number
             matchVC.redTeams = match.redTeams
             matchVC.blueTeams = match.blueTeams
@@ -195,7 +196,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 //MARK: - Extensions
 
 extension MatchesVC: UISearchResultsUpdating {
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         filterContentForSearchText(searchController.searchBar.text!)
     }
 }

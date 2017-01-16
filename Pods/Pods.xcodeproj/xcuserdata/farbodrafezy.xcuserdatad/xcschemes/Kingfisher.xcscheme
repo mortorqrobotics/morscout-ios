@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0720"
+   LastUpgradeVersion = "0810"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F91226101ECE8FCFD221A3EC54481F82"
+               BlueprintIdentifier = "1DE93A359FA21F91DFBE81309E851A4A"
                BuildableName = "Kingfisher.framework"
                BlueprintName = "Kingfisher"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F91226101ECE8FCFD221A3EC54481F82"
+            BlueprintIdentifier = "1DE93A359FA21F91DFBE81309E851A4A"
             BuildableName = "Kingfisher.framework"
             BlueprintName = "Kingfisher"
             ReferencedContainer = "container:Pods.xcodeproj">

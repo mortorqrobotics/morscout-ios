@@ -38,72 +38,72 @@ class SignupVC: UIViewController {
         
     }
     
-    @IBAction func signupClick(sender: UIButton) {
-        submitButton.setTitle("Loading...", forState: .Normal)
-        submitButton.enabled = false
-        submitButton.backgroundColor = UIColor.lightGrayColor()
+    @IBAction func signupClick(_ sender: UIButton) {
+        submitButton.setTitle("Loading...", for: UIControlState())
+        submitButton.isEnabled = false
+        submitButton.backgroundColor = UIColor.lightGray
         if isValidEmail(emailField.text!) {
             if isValidPhone(phoneField.text!) {
                 if validNames() {
                     if passwordsMatch() {
                         httpRequest(morTeamURL+"/f/createUser", type: "POST", data: ["firstname": firstNameField.text!.capitalized, "lastname": lastNameField.text!.capitalized, "username": usernameField.text!, "email": emailField.text!, "password": passwordField.text!, "password_confirm": confirmPasswordField.text!, "phone": trimPhone(phoneField.text!)]) { responseText in
-                            dispatch_async(dispatch_get_main_queue(),{
+                            DispatchQueue.main.async(execute: {
                                 if responseText == "success" {
-                                        self.performSegueWithIdentifier("showLogin", sender: nil)
+                                        self.performSegue(withIdentifier: "showLogin", sender: nil)
                                 }else if responseText == "exists" {
-                                    self.submitButton.setTitle("Submit", forState: .Normal)
-                                    self.submitButton.enabled = true
+                                    self.submitButton.setTitle("Submit", for: UIControlState())
+                                    self.submitButton.isEnabled = true
                                     self.submitButton.backgroundColor = UIColorFromHex("FFA500")
                                     alert(title: "User exists", message: "The username, email address or phone number you entered has been registered.", buttonText: "OK", viewController: self)
                                 }else{
-                                    self.submitButton.setTitle("Submit", forState: .Normal)
-                                    self.submitButton.enabled = true
+                                    self.submitButton.setTitle("Submit", for: UIControlState())
+                                    self.submitButton.isEnabled = true
                                     self.submitButton.backgroundColor = UIColorFromHex("FFA500")
                                     alert(title: "Failed", message: "Oops, something went wrong", buttonText: "OK", viewController: self)
                                 }
                             })
                         }
                     }else{
-                        submitButton.setTitle("Submit", forState: .Normal)
-                        submitButton.enabled = true
+                        submitButton.setTitle("Submit", for: UIControlState())
+                        submitButton.isEnabled = true
                         submitButton.backgroundColor = UIColorFromHex("FFA500")
                         alert(title: "Passwords don't match", message: "Make sure you entered both password fields correctly.", buttonText: "OK", viewController: self)
                     }
                 }else{
-                    submitButton.setTitle("Submit", forState: .Normal)
-                    submitButton.enabled = true
+                    submitButton.setTitle("Submit", for: UIControlState())
+                    submitButton.isEnabled = true
                     submitButton.backgroundColor = UIColorFromHex("FFA500")
                     alert(title: "Invalid Name/Username", message: "Make sure you enter a first name, last name and username.", buttonText: "OK", viewController: self)
                 }
             }else{
-                submitButton.setTitle("Submit", forState: .Normal)
-                submitButton.enabled = true
+                submitButton.setTitle("Submit", for: UIControlState())
+                submitButton.isEnabled = true
                 submitButton.backgroundColor = UIColorFromHex("FFA500")
                 alert(title: "Invalid Phone", message: "Looks like your phone number is not valid.", buttonText: "OK", viewController: self)
             }
         }else{
-            submitButton.setTitle("Submit", forState: .Normal)
-            submitButton.enabled = true
+            submitButton.setTitle("Submit", for: UIControlState())
+            submitButton.isEnabled = true
             submitButton.backgroundColor = UIColorFromHex("FFA500")
             alert(title: "Invalid Email", message: "Looks like your email address is not valid.", buttonText: "OK", viewController: self)
         }
     }
     
-    func isValidEmail(testStr: String) -> Bool {
+    func isValidEmail(_ testStr: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailTest.evaluateWithObject(testStr)
+        return emailTest.evaluate(with: testStr)
     }
-    func isValidPhone(testStr: String) -> Bool {
-        let stringArray = testStr.componentsSeparatedByCharactersInSet(
-            NSCharacterSet.decimalDigitCharacterSet().invertedSet)
-        let newString = stringArray.joinWithSeparator("")
+    func isValidPhone(_ testStr: String) -> Bool {
+        let stringArray = testStr.components(
+            separatedBy: CharacterSet.decimalDigits.inverted)
+        let newString = stringArray.joined(separator: "")
         return newString.characters.count == 10
     }
-    func trimPhone(str: String) -> String {
-        let stringArray = str.componentsSeparatedByCharactersInSet(
-            NSCharacterSet.decimalDigitCharacterSet().invertedSet)
-        return stringArray.joinWithSeparator("")
+    func trimPhone(_ str: String) -> String {
+        let stringArray = str.components(
+            separatedBy: CharacterSet.decimalDigits.inverted)
+        return stringArray.joined(separator: "")
     }
     func validNames() -> Bool {
         return !(firstNameField.text == "" || lastNameField.text == "" || usernameField.text == "")
@@ -114,7 +114,7 @@ class SignupVC: UIViewController {
 }
 
 extension SignupVC: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         if textField.placeholder! == "First Name" {
             lastNameField.becomeFirstResponder()

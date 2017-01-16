@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class ProfileVC: UIViewController {
     
@@ -26,7 +27,7 @@ class ProfileVC: UIViewController {
     var container = UIView()
     var assignmentsTopMargin: CGFloat = 0
     
-    var userId = storage.stringForKey("_id")!
+    var userId = storage.string(forKey: "_id")!
     var firstName = ""
     var lastName = ""
     var position = ""
@@ -36,16 +37,16 @@ class ProfileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        scoutCaptainSwitch.enabled = false
+        scoutCaptainSwitch.isEnabled = false
         
         assigmentsScrollView.addSubview(container)
         
-        if let savedFirstName = storage.stringForKey("firstname"), let savedLastName = storage.stringForKey("lastname") {
+        if let savedFirstName = storage.string(forKey: "firstname"), let savedLastName = storage.string(forKey: "lastname") {
             profileName.text = savedFirstName + " " + savedLastName
         }
         
-        if let savedProfPicPath = storage.stringForKey("profpicpath") {
-            profileImageView.kf_setImageWithURL(NSURL(string: morTeamURL+savedProfPicPath)!)
+        if let savedProfPicPath = storage.string(forKey: "profpicpath") {
+            profileImageView.kf.setImage(with: URL(string: morTeamURL+savedProfPicPath)!, options: [.requestModifier(modifier)])
         }
         
         if Reachability.isConnectedToNetwork() {
@@ -59,7 +60,7 @@ class ProfileVC: UIViewController {
         
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
-            menuButton.action = "revealToggle:"
+            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }
@@ -68,70 +69,70 @@ class ProfileVC: UIViewController {
         
     }
     
-    func getUserData(_id: String) {
+    func getUserData(_ _id: String) {
         httpRequest(morTeamURL+"/f/getUser", type: "POST", data: ["_id": _id]) {responseText in
             if responseText != "fail" {
                 let user = parseJSON(responseText)
                 
-                self.firstName = String(user["firstname"])
-                self.lastName = String(user["lastname"])
-                self.position = String(user["current_team"]["position"])
-                self.profilePicturePath = String(user["profpicpath"])
-                self.isScoutCaptain = Bool(user["current_team"]["scoutCaptain"])
+                self.firstName = String(describing: user["firstname"])
+                self.lastName = String(describing: user["lastname"])
+                self.position = String(describing: user["current_team"]["position"])
+                self.profilePicturePath = String(describing: user["profpicpath"])
+                self.isScoutCaptain = user["current_team"]["scoutCaptain"].boolValue
                 
-                dispatch_async(dispatch_get_main_queue(),{
+                DispatchQueue.main.async(execute: {
                     self.profileName.text = self.firstName + " " + self.lastName
-                    self.profileImageView.kf_setImageWithURL(NSURL(string: morTeamURL+self.profilePicturePath+"-300")!)
+                    self.profileImageView.kf.setImage(with: URL(string: morTeamURL+self.profilePicturePath+"-300")!, options: [.requestModifier(modifier)])
                     self.scoutCaptainSwitch.setOn(self.isScoutCaptain, animated: false)
-                    self.scoutCaptainSwitch.enabled = self.isScoutCaptain || self.position == "admin" || self.position == "leader"
+                    self.scoutCaptainSwitch.isEnabled = self.isScoutCaptain || self.position == "admin" || self.position == "leader"
                 })
                 
-                self.scoutCaptainSwitch.addTarget(self, action: Selector("scoutCaptainStateChanged:"), forControlEvents: UIControlEvents.ValueChanged)
+                self.scoutCaptainSwitch.addTarget(self, action: #selector(ProfileVC.scoutCaptainStateChanged(_:)), for: UIControlEvents.valueChanged)
             }
         }
     }
     
-    func getUserStats(_id: String) {
+    func getUserStats(_ _id: String) {
         httpRequest(baseURL+"/getUserStats", type: "POST", data: ["userID": _id]) { responseText in
             
             let stats = parseJSON(responseText)
-            dispatch_async(dispatch_get_main_queue(),{
-                self.matchReports.text = String(stats["matchesScouted"])
-                self.pitReports.text = String(stats["pitsScouted"])
-                self.teamsScouted.text = String(stats["teamsScouted"])
+            DispatchQueue.main.async(execute: {
+                self.matchReports.text = stats["matchesScouted"].stringValue
+                self.pitReports.text = stats["pitsScouted"].stringValue
+                self.teamsScouted.text = stats["teamsScouted"].stringValue
             })
         }
     }
     
-    func getUserTasks(_id: String) {
+    func getUserTasks(_ _id: String) {
         httpRequest(baseURL+"/showTasks", type: "POST", data: ["scoutID": _id]) { responseText in
             
             let tasks = parseJSON(responseText)
-            dispatch_async(dispatch_get_main_queue(),{
+            DispatchQueue.main.async(execute: {
                 
                 var completedMatches = [String]()
                 for(_, subJson):(String, JSON) in tasks["matchesDone"] {
-                    completedMatches.append(String(subJson))
+                    completedMatches.append(subJson.stringValue)
                 }
                 if completedMatches.count == 0 {
                     self.assignmentsComplete.text = "none"
                 }else{
-                    self.assignmentsComplete.text = completedMatches.joinWithSeparator(", ")
+                    self.assignmentsComplete.text = completedMatches.joined(separator: ", ")
                 }
                 
                 
                 var incompleteMatches = [String]()
                 for(_, subJson):(String, JSON) in tasks["matchesNotDone"] {
-                    incompleteMatches.append(String(subJson))
+                    incompleteMatches.append(subJson.stringValue)
                 }
                 if incompleteMatches.count == 0 {
                     self.assignmentsIncomplete.text = "none"
                 }else{
-                    self.assignmentsIncomplete.text = incompleteMatches.joinWithSeparator(", ")
+                    self.assignmentsIncomplete.text = incompleteMatches.joined(separator: ", ")
                 }
                 
                 if tasks["assignments"].array?.count == 0 {
-                    let label = UILabel(frame: CGRectMake(0, self.assignmentsTopMargin, self.view.frame.width, 21))
+                    let label = UILabel(frame: CGRect(x: 0, y: self.assignmentsTopMargin, width: self.view.frame.width, height: 21))
                     label.text = "None"
                     label.font = UIFont(name: "Helvetica", size: 17)
                     self.container.addSubview(label)
@@ -139,7 +140,7 @@ class ProfileVC: UIViewController {
                     for(_, subJson):(String, JSON) in tasks["assignments"] {
                         print(subJson)
                         print("----")
-                        let label = UILabel(frame: CGRectMake(0, self.assignmentsTopMargin, self.view.frame.width, 21))
+                        let label = UILabel(frame: CGRect(x: 0, y: self.assignmentsTopMargin, width: self.view.frame.width, height: 21))
                         label.text = "• From match \(subJson["startMatch"]) to \(subJson["endMatch"]), \(subJson["alliance"]) alliance, Team \(subJson["teamSection"])"
                         label.font = UIFont(name: "Helvetica", size: 14.5)
                         self.container.addSubview(label)
@@ -153,13 +154,13 @@ class ProfileVC: UIViewController {
         }
     }
     
-    func scoutCaptainStateChanged(switchState: UISwitch) {
-        if switchState.on {
+    func scoutCaptainStateChanged(_ switchState: UISwitch) {
+        if switchState.isOn {
             httpRequest(baseURL+"/setSC", type: "POST", data: ["isSC": "true", "userID": userId]) { responseText in
                 
                 if responseText == "fail" {
                     alert(title: "Failed", message: "Oops. Something went wrong.", buttonText: "OK", viewController: self)
-                    dispatch_async(dispatch_get_main_queue(),{
+                    DispatchQueue.main.async(execute: {
                         self.scoutCaptainSwitch.setOn(false, animated: true)
                     })
                 }
@@ -169,7 +170,7 @@ class ProfileVC: UIViewController {
                 
                 if responseText == "fail" {
                     alert(title: "Failed", message: "Oops. Something went wrong.", buttonText: "OK", viewController: self)
-                    dispatch_async(dispatch_get_main_queue(),{
+                    DispatchQueue.main.async(execute: {
                         self.scoutCaptainSwitch.setOn(true, animated: true)
                     })
                 }

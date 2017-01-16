@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class NumberBox: DataPoint {
     let name: String
@@ -15,10 +16,10 @@ class NumberBox: DataPoint {
     let max: Int
     
     init(json: JSON) {
-        name = String(json["name"])
-        start = Int(String(json["start"]))!
-        min = Int(String(json["min"]))!
-        max = Int(String(json["max"]))!
+        name = json["name"].stringValue
+        start = json["start"].intValue
+        min = json["min"].intValue
+        max = json["max"].intValue
     }
     
     init(name: String, start: Int, min: Int, max: Int){
@@ -29,16 +30,16 @@ class NumberBox: DataPoint {
     }
     
     required convenience init(coder aDecoder: NSCoder) {
-        let name = aDecoder.decodeObjectForKey("name") as! String
-        let start = aDecoder.decodeIntegerForKey("start")
-        let min = aDecoder.decodeIntegerForKey("min")
-        let max = aDecoder.decodeIntegerForKey("max")
+        let name = aDecoder.decodeObject(forKey: "name") as! String
+        let start = aDecoder.decodeInteger(forKey: "start")
+        let min = aDecoder.decodeInteger(forKey: "min")
+        let max = aDecoder.decodeInteger(forKey: "max")
         self.init(name: name, start: start, min: min, max: max)
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: "name")
-        aCoder.encodeInteger(start, forKey: "start")
-        aCoder.encodeInteger(min, forKey: "min")
-        aCoder.encodeInteger(max, forKey: "max")
+    func encodeWithCoder(_ aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(start, forKey: "start")
+        aCoder.encode(min, forKey: "min")
+        aCoder.encode(max, forKey: "max")
     }}

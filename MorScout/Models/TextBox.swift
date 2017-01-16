@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class TextBox: DataPoint {
     
     let name: String
     
     init(json: JSON) {
-        name = String(json["name"])
+        name = json["name"].stringValue
     }
     
     init(name: String){
@@ -21,11 +22,11 @@ class TextBox: DataPoint {
     }
     
     required convenience init(coder aDecoder: NSCoder) {
-        let name = aDecoder.decodeObjectForKey("name") as! String
+        let name = aDecoder.decodeObject(forKey: "name") as! String
         self.init(name: name)
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: "name")
+    func encodeWithCoder(_ aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
     }
 }

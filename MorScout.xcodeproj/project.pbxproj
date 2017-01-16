@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		36890409C0CA99E8B2BEFF02 /* Pods_MorScout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */; };
+		494DB06607F64005803F1072 /* Pods_MorScout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D81E3BF4CF7DCE46193AF24 /* Pods_MorScout.framework */; };
 		8E3357C11C4C8C9400F2B879 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357A21C4C8C9400F2B879 /* AppDelegate.swift */; };
 		8E3357C21C4C8C9400F2B879 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357A31C4C8C9400F2B879 /* Assets.xcassets */; };
 		8E3357C31C4C8C9400F2B879 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357A41C4C8C9400F2B879 /* LaunchScreen.storyboard */; };
@@ -21,7 +21,6 @@
 		8E3357CC1C4C8C9400F2B879 /* TitilliumWeb-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B01C4C8C9400F2B879 /* TitilliumWeb-Light.ttf */; };
 		8E3357CD1C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B11C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf */; };
 		8E3357CE1C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E3357B21C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf */; };
-		8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357B41C4C8C9400F2B879 /* SwiftyJSON.swift */; };
 		8E3357D01C4C8C9400F2B879 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357B81C4C8C9400F2B879 /* SWRevealViewController.m */; };
 		8E3357D11C4C8C9400F2B879 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357B91C4C8C9400F2B879 /* Util.swift */; };
 		8E3357D21C4C8C9400F2B879 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3357BB1C4C8C9400F2B879 /* HomeVC.swift */; };
@@ -57,6 +56,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5534174573CEC5618CC56E4A /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
+		5D81E3BF4CF7DCE46193AF24 /* Pods_MorScout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MorScout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E3357A21C4C8C9400F2B879 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E3357A31C4C8C9400F2B879 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E3357A51C4C8C9400F2B879 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -71,7 +72,6 @@
 		8E3357B01C4C8C9400F2B879 /* TitilliumWeb-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Light.ttf"; sourceTree = "<group>"; };
 		8E3357B11C4C8C9400F2B879 /* TitilliumWeb-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-Regular.ttf"; sourceTree = "<group>"; };
 		8E3357B21C4C8C9400F2B879 /* TitilliumWeb-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TitilliumWeb-SemiBold.ttf"; sourceTree = "<group>"; };
-		8E3357B41C4C8C9400F2B879 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		8E3357B61C4C8C9400F2B879 /* MorScout-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MorScout-Bridging-Header.h"; sourceTree = "<group>"; };
 		8E3357B71C4C8C9400F2B879 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		8E3357B81C4C8C9400F2B879 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
@@ -107,9 +107,7 @@
 		8EF4B7AC1C937CAB00107E90 /* JoinTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinTeamVC.swift; sourceTree = "<group>"; };
 		8EF4B7AE1C937CB700107E90 /* CreateTeamVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTeamVC.swift; sourceTree = "<group>"; };
 		8EFFA5A21C8E6BD20020A1AE /* ProfileVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
-		C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
-		D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.debug.xcconfig"; sourceTree = "<group>"; };
-		E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MorScout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D820F7D97E4A0D44CB593227 /* Pods-MorScout.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MorScout.release.xcconfig"; path = "Pods/Target Support Files/Pods-MorScout/Pods-MorScout.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,13 +115,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36890409C0CA99E8B2BEFF02 /* Pods_MorScout.framework in Frameworks */,
+				494DB06607F64005803F1072 /* Pods_MorScout.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C35192DA79A3C84A2E48467 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5D81E3BF4CF7DCE46193AF24 /* Pods_MorScout.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8E3357A11C4C8C9400F2B879 /* MorScout */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,7 +166,6 @@
 			isa = PBXGroup;
 			children = (
 				8E3357B51C4C8C9400F2B879 /* SWRevealViewController */,
-				8E3357B41C4C8C9400F2B879 /* SwiftyJSON.swift */,
 				8E3357B91C4C8C9400F2B879 /* Util.swift */,
 				8EE543891C86A62D009048F1 /* Reachability.swift */,
 			);
@@ -224,9 +229,9 @@
 			isa = PBXGroup;
 			children = (
 				8E3357A11C4C8C9400F2B879 /* MorScout */,
-				BD81F900F382C0EF9A3B4DA5 /* Pods */,
-				FCFECB81817F678E6EDE2802 /* Frameworks */,
 				8E7AF0B61C40BE79007B8133 /* Products */,
+				9FCEE0F7F0BECC5282AF6DCF /* Pods */,
+				0C35192DA79A3C84A2E48467 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -238,21 +243,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BD81F900F382C0EF9A3B4DA5 /* Pods */ = {
+		9FCEE0F7F0BECC5282AF6DCF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */,
-				C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */,
+				5534174573CEC5618CC56E4A /* Pods-MorScout.debug.xcconfig */,
+				D820F7D97E4A0D44CB593227 /* Pods-MorScout.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		FCFECB81817F678E6EDE2802 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				E39867EE2A9D3471E21EFCD2 /* Pods_MorScout.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,12 +259,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8E7AF0C91C40BE79007B8133 /* Build configuration list for PBXNativeTarget "MorScout" */;
 			buildPhases = (
-				757FF3C22430DA869D0F2DB9 /* Check Pods Manifest.lock */,
+				46B68ED9D46E463C9868EEBE /* [CP] Check Pods Manifest.lock */,
 				8E7AF0B11C40BE79007B8133 /* Sources */,
 				8E7AF0B21C40BE79007B8133 /* Frameworks */,
 				8E7AF0B31C40BE79007B8133 /* Resources */,
-				62A767E3DD8608B60653579A /* Embed Pods Frameworks */,
-				CA75423786D4F4572434D3C1 /* Copy Pods Resources */,
+				9D384EF7A106A0B5CD0CA493 /* [CP] Embed Pods Frameworks */,
+				A21951A5B4A9464DB98BE9FE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -285,12 +282,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = MorTorq;
 				TargetAttributes = {
 					8E7AF0B41C40BE79007B8133 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 2DYNL8A66H;
+						LastSwiftMigration = 0810;
 					};
 				};
 			};
@@ -335,14 +333,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		62A767E3DD8608B60653579A /* Embed Pods Frameworks */ = {
+		46B68ED9D46E463C9868EEBE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9D384EF7A106A0B5CD0CA493 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -350,29 +363,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MorScout/Pods-MorScout-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		757FF3C22430DA869D0F2DB9 /* Check Pods Manifest.lock */ = {
+		A21951A5B4A9464DB98BE9FE /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		CA75423786D4F4572434D3C1 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,7 +392,6 @@
 				8E3357E41C5090F400F2B879 /* Team.swift in Sources */,
 				8EE543841C854D08009048F1 /* DropdownPicker.swift in Sources */,
 				8E3357D31C4C8C9400F2B879 /* LoginVC.swift in Sources */,
-				8E3357CF1C4C8C9400F2B879 /* SwiftyJSON.swift in Sources */,
 				8EDE07D41C9F6A2B004B5C34 /* SignupVC.swift in Sources */,
 				8EF4B7AF1C937CB700107E90 /* CreateTeamVC.swift in Sources */,
 				8E3357D41C4C8C9400F2B879 /* MatchesVC.swift in Sources */,
@@ -459,8 +456,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -504,8 +503,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -524,6 +525,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -531,8 +533,9 @@
 		};
 		8E7AF0CA1C40BE79007B8133 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D8F78BEDC7085EAF09F5ABC1 /* Pods-MorScout.debug.xcconfig */;
+			baseConfigurationReference = 5534174573CEC5618CC56E4A /* Pods-MorScout.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -545,13 +548,15 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		8E7AF0CB1C40BE79007B8133 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C03FB826B61A64CD9A2CB39D /* Pods-MorScout.release.xcconfig */;
+			baseConfigurationReference = D820F7D97E4A0D44CB593227 /* Pods-MorScout.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -563,6 +568,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MorScout/Supporting Files/SWRevealViewController/MorScout-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

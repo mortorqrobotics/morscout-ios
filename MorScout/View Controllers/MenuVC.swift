@@ -33,20 +33,20 @@ class MenuVC: UITableViewController {
         settingsCell.backgroundColor = UIColorFromHex("FFC547")
         logoutCell.backgroundColor = UIColorFromHex("FFC547")
         
-        if let firstName = storage.stringForKey("firstname"), lastName = storage.stringForKey("lastname") {
-            dispatch_async(dispatch_get_main_queue(),{
+        if let firstName = storage.string(forKey: "firstname"), let lastName = storage.string(forKey: "lastname") {
+            DispatchQueue.main.async(execute: {
                 self.menuName.text = "\(firstName) \(lastName)"
                 self.menuProfilePic.layer.cornerRadius = 17
                 self.menuProfilePic.clipsToBounds = true
             })
         }
-        if let savedProfPicPath = storage.stringForKey("profpicpath") {
-            menuProfilePic.kf_setImageWithURL(NSURL(string: morTeamURL+savedProfPicPath+"-60")!)
+        if let savedProfPicPath = storage.string(forKey: "profpicpath") {
+            menuProfilePic.kf.setImage(with: URL(string: morTeamURL+savedProfPicPath+"-60")!, options: [.requestModifier(modifier)])
         }
         
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 5 {
             logout()
         }
@@ -56,18 +56,18 @@ class MenuVC: UITableViewController {
         httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
 
             for key in storage.dictionaryRepresentation().keys {
-                NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+                UserDefaults.standard.removeObject(forKey: key)
             }
-            dispatch_async(dispatch_get_main_queue(),{
-                let vc : UIViewController! = self.storyboard!.instantiateViewControllerWithIdentifier("login")
-                self.presentViewController(vc, animated: true, completion: nil)
+            DispatchQueue.main.async(execute: {
+                let vc : UIViewController! = self.storyboard!.instantiateViewController(withIdentifier: "login")
+                self.present(vc, animated: true, completion: nil)
             })
 
         }
     }
     
-    override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        cell.selectionStyle = .Default
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.selectionStyle = .default
         let bgColorView: UIView = UIView()
         bgColorView.backgroundColor = UIColorFromHex("FFA500")
         cell.selectedBackgroundView = bgColorView

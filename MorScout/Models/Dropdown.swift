@@ -7,15 +7,16 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class Dropdown: DataPoint {
     let name: String
     var options: [String]
     init(json: JSON) {
-        name = String(json["name"])
+        name = json["name"].stringValue
         options = []
         for (_, subJson):(String, JSON) in json["options"] {
-            options.append(String(subJson))
+            options.append(subJson.stringValue)
         }
     }
 
@@ -25,13 +26,13 @@ class Dropdown: DataPoint {
     }
     
     required convenience init(coder aDecoder: NSCoder) {
-        let name = aDecoder.decodeObjectForKey("name") as! String
-        let options = aDecoder.decodeObjectForKey("options") as! [String]
+        let name = aDecoder.decodeObject(forKey: "name") as! String
+        let options = aDecoder.decodeObject(forKey: "options") as! [String]
         self.init(name: name, options: options)
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: "name")
-        aCoder.encodeObject(options, forKey: "options")
+    func encodeWithCoder(_ aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(options, forKey: "options")
     }
 }

@@ -20,15 +20,15 @@ class Team: NSObject, NSCoding {
     }
     
     required convenience init(coder aDecoder: NSCoder) {
-        let number = aDecoder.decodeIntegerForKey("number")
-        let name = aDecoder.decodeObjectForKey("name") as! String
-        let rank = aDecoder.decodeObjectForKey("rank") as? Int
+        let number = aDecoder.decodeInteger(forKey: "number")
+        let name = aDecoder.decodeObject(forKey: "name") as! String
+        let rank = aDecoder.decodeObject(forKey: "rank") as? Int
         self.init(number: number, name: name, rank: rank)
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeInteger(number, forKey: "number")
-        aCoder.encodeObject(name, forKey: "name")
-        aCoder.encodeObject(rank, forKey: "rank")
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(number, forKey: "number")
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(rank, forKey: "rank")
     }
 }

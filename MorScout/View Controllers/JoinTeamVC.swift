@@ -17,13 +17,13 @@ class JoinTeamVC: UIViewController {
         teamCodeField.becomeFirstResponder()
         
     }
-    @IBAction func joinClick(sender: UIButton) {
+    @IBAction func joinClick(_ sender: UIButton) {
         httpRequest(morTeamURL+"/f/joinTeam", type: "POST", data: ["team_id": teamCodeField.text!]) {responseText in
             if responseText == "success" {
-                storage.setBool(false, forKey: "noTeam")
-                dispatch_async(dispatch_get_main_queue(),{
-                    let vc : AnyObject! = self.storyboard!.instantiateViewControllerWithIdentifier("reveal")
-                    self.showViewController(vc as! UIViewController, sender: vc)
+                storage.set(false, forKey: "noTeam")
+                DispatchQueue.main.async(execute: {
+                    let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "reveal")
+                    self.show(vc as! UIViewController, sender: vc)
                 })
             }else if responseText == "fail" {
                 alert(title: "Failed", message: "Oops, seems like somethings wrong.", buttonText: "OK", viewController: self)
