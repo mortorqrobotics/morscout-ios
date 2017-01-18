@@ -66,7 +66,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
-            menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
+            menuButton.action = #selector((SWRevealViewController.revealToggle) as (SWRevealViewController) -> (Void) -> Void)
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }

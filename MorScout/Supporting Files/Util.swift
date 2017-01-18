@@ -304,7 +304,7 @@ extension UIViewController {
     func setupMenu(_ button: UIBarButtonItem) {
         if self.revealViewController() != nil {
             button.target = self.revealViewController()
-            button.action = #selector(SWRevealViewController.revealToggle(_:))
+            button.action = #selector((SWRevealViewController.revealToggle) as (SWRevealViewController) -> (Void) -> Void)
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }
