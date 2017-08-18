@@ -46,7 +46,7 @@ class ProfileVC: UIViewController {
         }
         
         if let savedProfPicPath = storage.string(forKey: "profpicpath") {
-            profileImageView.kf.setImage(with: URL(string: morTeamURL+savedProfPicPath)!, options: [.requestModifier(modifier)])
+            profileImageView.kf.setImage(with: URL(string: "http://www.morteam.com" + savedProfPicPath)!, options: [.requestModifier(modifier)])
         }
         
         if Reachability.isConnectedToNetwork() {
@@ -70,19 +70,21 @@ class ProfileVC: UIViewController {
     }
     
     func getUserData(_ _id: String) {
-        httpRequest(morTeamURL+"/f/getUser", type: "POST", data: ["_id": _id]) {responseText in
-            if responseText != "fail" {
+        httpRequest(morTeamURL + "/users/id/\(_id)", type: "GET") { responseText in
+            if responseText != "null" {
                 let user = parseJSON(responseText)
                 
                 self.firstName = String(describing: user["firstname"])
                 self.lastName = String(describing: user["lastname"])
-                self.position = String(describing: user["current_team"]["position"])
+                self.position = String(describing: user["position"])
                 self.profilePicturePath = String(describing: user["profpicpath"])
-                self.isScoutCaptain = user["current_team"]["scoutCaptain"].boolValue
+                self.isScoutCaptain = user["scoutCaptain"].boolValue
                 
                 DispatchQueue.main.async(execute: {
                     self.profileName.text = self.firstName + " " + self.lastName
-                    self.profileImageView.kf.setImage(with: URL(string: morTeamURL+self.profilePicturePath+"-300")!, options: [.requestModifier(modifier)])
+                    self.profileImageView.kf.setImage(
+                        with: URL(string: "http://www.morteam.com" + self.profilePicturePath + "-300")!,
+                        options: [.requestModifier(modifier)])
                     self.scoutCaptainSwitch.setOn(self.isScoutCaptain, animated: false)
                     self.scoutCaptainSwitch.isEnabled = self.isScoutCaptain || self.position == "admin" || self.position == "leader"
                 })

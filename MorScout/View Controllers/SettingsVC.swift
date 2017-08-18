@@ -187,11 +187,11 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     }
     
     func handleEditing(_ _id: String) {
-        httpRequest(morTeamURL+"/f/getUser", type: "POST", data: ["_id": _id]) {responseText in
-            if responseText != "fail" {
+        httpRequest(morTeamURL + "/users/id/\(_id)", type: "GET") { responseText in
+            if responseText != "null" {
                 let user = parseJSON(responseText)
                 
-                if user["current_team"]["position"].stringValue != "member" || user["current_team"]["scoutCaptain"].boolValue == true {
+                if user["position"].stringValue == "leader" || user["position"].stringValue == "mentor" || user["scoutCaptain"].boolValue == true {
                     DispatchQueue.main.async(execute: {
                         self.regionalPicker.isUserInteractionEnabled = true
                         self.regionalYear.isUserInteractionEnabled = true

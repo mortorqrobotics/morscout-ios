@@ -13,7 +13,7 @@ import Kingfisher
 
 let storage = UserDefaults.standard
 let baseURL = "http://www.scout.morteam.com"
-let morTeamURL = "http://www.morteam.com"
+let morTeamURL = "http://www.morteam.com/api"
 let modifier = AnyModifier { request in
     var r = request
     r.addValue("connect.sid=\(storage.string(forKey: "connect.sid")!)", forHTTPHeaderField: "Cookie")
@@ -98,6 +98,7 @@ func httpRequest(_ url: String, type: String, data: [String: String], cb: @escap
         }
         
         if let httpResponse = response as? HTTPURLResponse, let fields = httpResponse.allHeaderFields as? [String : String] {
+
             let cookies = HTTPCookie.cookies(withResponseHeaderFields: fields, for: response!.url!)
             HTTPCookieStorage.shared.setCookies(cookies, for: response!.url!, mainDocumentURL: nil)
             for cookie in cookies {
@@ -194,7 +195,7 @@ func getCurrentYear() -> String {
 func timeFromNSDate(_ date: Date) -> String? {
     let calendar = Calendar.current
     let components = (calendar as NSCalendar).components([.hour, .minute], from: date)
-    var minutes = String(describing: components.minute)
+    var minutes = String(describing: components.minute!)
     let hours = String((components.hour! - 1) % 12 + 1)
     let suffix: String
     if components.hour! > 11 {
@@ -252,7 +253,7 @@ func escape(_ text: String) -> String {
 }
 
 func logoutSilently() {
-    httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
+    httpRequest(morTeamURL + "/logout", type: "POST"){ responseText in
         for key in storage.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key)
         }

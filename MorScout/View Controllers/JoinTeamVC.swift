@@ -15,24 +15,29 @@ class JoinTeamVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         teamCodeField.becomeFirstResponder()
-        
     }
+
     @IBAction func joinClick(_ sender: UIButton) {
-        httpRequest(morTeamURL+"/f/joinTeam", type: "POST", data: ["team_id": teamCodeField.text!]) {responseText in
-            if responseText == "success" {
+        httpRequest(morTeamURL + "/teams/code/\(teamCodeField.text!)/join", type: "POST") { responseText in
+
+            if responseText == "You already have a team" {
+                alert(title: "Failed", message: "Seems like you already have a team.", buttonText: "OK", viewController: self)
+            } else if responseText == "Team does not exist" {
+                alert(title: "Team does not exist", message: "That team doesn't exist. Try another code.", buttonText: "OK", viewController: self)
+            } else if responseText == "You are banned from this team" {
+                alert(title: "Banned", message: "Jeez, looks like you were banned from this team.", buttonText: "OK", viewController: self)
+            } else {
+                let team = parseJSON(responseText)
                 storage.set(false, forKey: "noTeam")
+                storage.set(team["id"].stringValue, forKey: "team")
+                storage.set("member", forKey: "position")
                 DispatchQueue.main.async(execute: {
                     let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "reveal")
                     self.show(vc as! UIViewController, sender: vc)
                 })
-            }else if responseText == "fail" {
-                alert(title: "Failed", message: "Oops, seems like somethings wrong.", buttonText: "OK", viewController: self)
-            }else if responseText == "no such team" {
-                alert(title: "Team Does Not Exist", message: "Sorry, but this team does not exist.", buttonText: "OK", viewController: self)
-            }else if responseText == "banned" {
-                alert(title: "You've been banned", message: "It seems like you;ve been banned from joining this team.", buttonText: "OK", viewController: self)
+                // TODO: maybe try this?
+                //self.goTo(viewController: "reveal")
             }
-
         }
     }
     

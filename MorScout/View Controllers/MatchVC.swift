@@ -883,16 +883,14 @@ class MatchVC: UIViewController {
     }
     
     func getTeamNumber(_ cb: @escaping () -> Void) {
-        if let savedTeamNumber = storage.string(forKey: "c_team_number") {
+        if let savedTeamNumber = storage.string(forKey: "team_number") {
             self.myTeam = savedTeamNumber
             cb()
         }else{
-            httpRequest(morTeamURL+"/f/getTeamNum", type: "POST") { responseText in
-                if responseText != "fail" {
-                    self.myTeam = responseText
-                    storage.set(self.myTeam, forKey: "c_team_number")
-                    cb()
-                }
+            httpRequest(morTeamURL + "/teams/current/number", type: "GET") { responseText in
+                self.myTeam = responseText
+                storage.set(self.myTeam, forKey: "team_number")
+                cb()
             }
         }
     }

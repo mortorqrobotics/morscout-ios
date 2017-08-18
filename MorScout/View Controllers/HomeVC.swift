@@ -13,7 +13,10 @@ class HomeVC: UIViewController {
     @IBOutlet weak var menuButton: UIBarButtonItem!
     @IBOutlet weak var welcomeMessage: UILabel!
     
-    let welcomeMessages = ["Welcome to MorScout!", "OurScout is MorScout than YourScout", "Made With Fifty Shades of Orange", "LessWork, MorScout", "MorPower, MorTeamwork, MorIngenuity, MorScout"]
+    let welcomeMessages = [
+        "Welcome to MorScout!", "OurScout is MorScout than YourScout",
+        "Made With Fifty Shades of Orange", "LessWork, MorScout",
+        "MorPower, MorTeamwork, MorIngenuity, MorScout"]
     
     override func viewDidLoad() {
         super.viewDidLoad()

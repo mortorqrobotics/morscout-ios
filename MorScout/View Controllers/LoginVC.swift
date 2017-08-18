@@ -56,37 +56,39 @@ class LoginVC: UIViewController {
     }
     
     func setup() {
-        
         usernameTextField.delegate = self
         passwordTextField.delegate = self
         
         //set paddings for text fields
-        let uPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: self.usernameTextField.frame.height))
-        let pPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: self.passwordTextField.frame.height))
-        usernameTextField.leftView = uPaddingView
+        let usernamePaddingView = UIView(
+            frame: CGRect(x: 0, y: 0, width: 8, height: self.usernameTextField.frame.height))
+        let passwordPaddingView = UIView(
+            frame: CGRect(x: 0, y: 0, width: 8, height: self.passwordTextField.frame.height))
+        usernameTextField.leftView = usernamePaddingView
         usernameTextField.leftViewMode = UITextFieldViewMode.always
-        passwordTextField.leftView = pPaddingView
+        passwordTextField.leftView = passwordPaddingView
         passwordTextField.leftViewMode = UITextFieldViewMode.always
     }
     
     
     func login() {
-        httpRequest(morTeamURL+"/f/login", type: "POST", data: ["username": usernameTextField.text!, "password":passwordTextField.text!]) { responseText in
-            if responseText == "inc/username" || responseText == "inc/password"{
+        httpRequest(morTeamURL + "/login", type: "POST", data: [
+            "username": usernameTextField.text!,
+            "password": passwordTextField.text!,
+            "rememberMe": "true",
+        ]) { responseText in
+
+            if responseText == "Invalid login credentials"{
                 DispatchQueue.main.async(execute: {
                     self.hideLoading()
                     alert(title: "Incorrect Username/Password", message: "This Username/Password combination does not exist.", buttonText: "OK", viewController: self)
                 })
-            }else if responseText == "fail"{
-                DispatchQueue.main.async(execute: {
-                    self.hideLoading()
-                    alert(title: "Oops", message: "Something went wrong...", buttonText: "OK", viewController: self)
-                })
-                
-            }else{
+            } else {
                 //login successful
                 let user = parseJSON(responseText)
-                let storedUserProperties = ["username", "firstname", "lastname", "_id", "phone", "email", "profpicpath"]
+                let storedUserProperties = [
+                    "username", "firstname", "lastname",
+                    "_id", "phone", "email", "profpicpath",]
                 
                 //store user properties in storage
                 for (key, value):(String, JSON) in user {
@@ -94,23 +96,17 @@ class LoginVC: UIViewController {
                         storage.set(String(describing: value), forKey: key)
                     }
                 }
-                
-                var anyTeam = false
-                
-                if user["teams"].exists() && user["teams"].count > 0 {
-                    if user["current_team"].exists() {
-                        anyTeam = true
-                        storage.set(user["current_team"]["id"].stringValue, forKey: "c_team")
-                        storage.set(user["current_team"]["position"].stringValue, forKey: "c_team_position")
-                        self.goTo(viewController: "reveal")
-                    }
-                }
-                if !anyTeam {
+
+                if user["team"].exists() {
+                    storage.set(false, forKey: "noTeam")
+                    storage.set(user["team"]["id"].stringValue, forKey: "team")
+                    storage.set(user["position"].stringValue, forKey: "position")
+                    self.goTo(viewController: "reveal")
+                } else {
                     storage.set(true, forKey: "noTeam")
                     self.goTo(viewController: "void")
-                }else{
-                    storage.set(false, forKey: "noTeam")
                 }
+                
             }
         }
     }
@@ -127,14 +123,15 @@ class LoginVC: UIViewController {
 }
 
 extension LoginVC: UITextFieldDelegate {
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.placeholder! == "Username/Email" {
             passwordTextField.becomeFirstResponder()
-        }else if textField.placeholder! == "Password" {
-            loginButton.setTitle("Loading...", for: UIControlState())
-            loginButton.isEnabled = false
+        } else if textField.placeholder! == "Password" {
+            showLoading()
             login()
         }
         return true
     }
+
 }

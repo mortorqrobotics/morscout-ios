@@ -41,7 +41,7 @@ class MenuVC: UITableViewController {
             })
         }
         if let savedProfPicPath = storage.string(forKey: "profpicpath") {
-            menuProfilePic.kf.setImage(with: URL(string: morTeamURL+savedProfPicPath+"-60")!, options: [.requestModifier(modifier)])
+            menuProfilePic.kf.setImage(with: URL(string: "http://www.morteam.com" + savedProfPicPath + "-60")!, options: [.requestModifier(modifier)])
         }
         
     }
@@ -53,7 +53,7 @@ class MenuVC: UITableViewController {
     }
     
     func logout() {
-        httpRequest(morTeamURL+"/f/logout", type: "POST"){ responseText in
+        httpRequest(morTeamURL + "/logout", type: "POST"){ responseText in
 
             for key in storage.dictionaryRepresentation().keys {
                 UserDefaults.standard.removeObject(forKey: key)

@@ -39,52 +39,57 @@ class SignupVC: UIViewController {
     }
     
     @IBAction func signupClick(_ sender: UIButton) {
-        submitButton.setTitle("Loading...", for: UIControlState())
-        submitButton.isEnabled = false
-        submitButton.backgroundColor = UIColor.lightGray
+        showLoading()
         if isValidEmail(emailField.text!) {
             if isValidPhone(phoneField.text!) {
                 if validNames() {
                     if passwordsMatch() {
-                        httpRequest(morTeamURL+"/f/createUser", type: "POST", data: ["firstname": firstNameField.text!.capitalized, "lastname": lastNameField.text!.capitalized, "username": usernameField.text!, "email": emailField.text!, "password": passwordField.text!, "password_confirm": confirmPasswordField.text!, "phone": trimPhone(phoneField.text!)]) { responseText in
+                        httpRequest(morTeamURL + "/users", type: "POST", data: [
+                            "firstname": firstNameField.text!.capitalized,
+                            "lastname": lastNameField.text!.capitalized,
+                            "username": usernameField.text!,
+                            "email": emailField.text!,
+                            "password": passwordField.text!,
+                            "phone": trimPhone(phoneField.text!)
+                        ]) { responseText in
                             DispatchQueue.main.async(execute: {
-                                if responseText == "success" {
-                                        self.performSegue(withIdentifier: "showLogin", sender: nil)
-                                }else if responseText == "exists" {
-                                    self.submitButton.setTitle("Submit", for: UIControlState())
-                                    self.submitButton.isEnabled = true
-                                    self.submitButton.backgroundColor = UIColorFromHex("FFA500")
-                                    alert(title: "User exists", message: "The username, email address or phone number you entered has been registered.", buttonText: "OK", viewController: self)
-                                }else{
-                                    self.submitButton.setTitle("Submit", for: UIControlState())
-                                    self.submitButton.isEnabled = true
-                                    self.submitButton.backgroundColor = UIColorFromHex("FFA500")
-                                    alert(title: "Failed", message: "Oops, something went wrong", buttonText: "OK", viewController: self)
+                                if responseText == "Invalid email" {
+                                    alert(title: "Invalid email", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    self.hideLoading()
+                                } else if responseText == "Invalid phone number" {
+                                    alert(title: "Invalid phone number", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    self.hideLoading()
+                                } else if responseText == "Username is taken" {
+                                    alert(title: "Username is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    self.hideLoading()
+                                } else if responseText == "Email is taken" {
+                                    alert(title: "Username is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    self.hideLoading()
+                                } else if responseText == "Phone number is taken" {
+                                    alert(title: "Phone number is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    self.hideLoading()
+                                } else if responseText == "Email is taken" {
+                                    alert(title: "Email address is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    self.hideLoading()
+                                } else {
+                                    self.performSegue(withIdentifier: "showLogin", sender: nil)
                                 }
                             })
                         }
                     }else{
-                        submitButton.setTitle("Submit", for: UIControlState())
-                        submitButton.isEnabled = true
-                        submitButton.backgroundColor = UIColorFromHex("FFA500")
+                        self.hideLoading()
                         alert(title: "Passwords don't match", message: "Make sure you entered both password fields correctly.", buttonText: "OK", viewController: self)
                     }
                 }else{
-                    submitButton.setTitle("Submit", for: UIControlState())
-                    submitButton.isEnabled = true
-                    submitButton.backgroundColor = UIColorFromHex("FFA500")
+                    self.hideLoading()
                     alert(title: "Invalid Name/Username", message: "Make sure you enter a first name, last name and username.", buttonText: "OK", viewController: self)
                 }
             }else{
-                submitButton.setTitle("Submit", for: UIControlState())
-                submitButton.isEnabled = true
-                submitButton.backgroundColor = UIColorFromHex("FFA500")
+                self.hideLoading()
                 alert(title: "Invalid Phone", message: "Looks like your phone number is not valid.", buttonText: "OK", viewController: self)
             }
         }else{
-            submitButton.setTitle("Submit", for: UIControlState())
-            submitButton.isEnabled = true
-            submitButton.backgroundColor = UIColorFromHex("FFA500")
+            self.hideLoading()
             alert(title: "Invalid Email", message: "Looks like your email address is not valid.", buttonText: "OK", viewController: self)
         }
     }
@@ -110,6 +115,18 @@ class SignupVC: UIViewController {
     }
     func passwordsMatch() -> Bool {
         return passwordField.text == confirmPasswordField.text
+    }
+
+    func showLoading() {
+        submitButton.setTitle("Loading...", for: UIControlState())
+        submitButton.isEnabled = false
+        submitButton.backgroundColor = UIColor.lightGray
+    }
+
+    func hideLoading() {
+        self.submitButton.setTitle("Submit", for: UIControlState())
+        self.submitButton.isEnabled = true
+        self.submitButton.backgroundColor = UIColorFromHex("FFA500")
     }
 }
 

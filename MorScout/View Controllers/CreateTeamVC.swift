@@ -24,15 +24,27 @@ class CreateTeamVC: UIViewController {
         
     }
     @IBAction func createTeamClick(_ sender: UIButton) {
-        httpRequest(morTeamURL+"/f/createTeam", type: "POST", data: ["id": teamCodeField.text!, "number": teamNumberField.text!, "name": teamNameField.text!]){ responseText in
-            if responseText == "success" {
+        httpRequest(morTeamURL + "/teams", type: "POST", data: [
+            "id": teamCodeField.text!,
+            "number": teamNumberField.text!,
+            "name": teamNameField.text!
+        ]){ responseText in
+
+            if responseText == "You already have a team" {
+                alert(title: "Failed", message: "Looks like you already have a team.", buttonText: "OK", viewController: self)
+            } else if responseText == "Invalid team number" {
+                alert(title: "Invalid team number", message: "Try another team number.", buttonText: "OK", viewController: self)
+            } else if responseText == "Team code is taken" {
+                alert(title: "Failed", message: "That team code is already taken. Try another one.", buttonText: "OK", viewController: self)
+            } else {
+                let team = parseJSON(responseText)
                 storage.set(false, forKey: "noTeam")
+                storage.set(team["id"].stringValue, forKey: "team")
+                storage.set("leader", forKey: "position")
                 DispatchQueue.main.async(execute: {
                     let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "reveal")
                     self.show(vc as! UIViewController, sender: vc)
                 })
-            }else{
-                alert(title: "Failed", message: "Oops, something went wrong.", buttonText: "OK", viewController: self)
             }
         }
     }
