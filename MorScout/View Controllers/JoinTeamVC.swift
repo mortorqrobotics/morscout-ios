@@ -31,12 +31,7 @@ class JoinTeamVC: UIViewController {
                 storage.set(false, forKey: "noTeam")
                 storage.set(team["id"].stringValue, forKey: "team")
                 storage.set("member", forKey: "position")
-                DispatchQueue.main.async(execute: {
-                    let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "reveal")
-                    self.show(vc as! UIViewController, sender: vc)
-                })
-                // TODO: maybe try this?
-                //self.goTo(viewController: "reveal")
+                self.goTo(viewController: "reveal")
             }
         }
     }

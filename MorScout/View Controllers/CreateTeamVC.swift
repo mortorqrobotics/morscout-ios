@@ -41,10 +41,7 @@ class CreateTeamVC: UIViewController {
                 storage.set(false, forKey: "noTeam")
                 storage.set(team["id"].stringValue, forKey: "team")
                 storage.set("leader", forKey: "position")
-                DispatchQueue.main.async(execute: {
-                    let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "reveal")
-                    self.show(vc as! UIViewController, sender: vc)
-                })
+                self.goTo(viewController: "reveal")
             }
         }
     }

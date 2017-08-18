@@ -58,10 +58,7 @@ class MenuVC: UITableViewController {
             for key in storage.dictionaryRepresentation().keys {
                 UserDefaults.standard.removeObject(forKey: key)
             }
-            DispatchQueue.main.async(execute: {
-                let vc : UIViewController! = self.storyboard!.instantiateViewController(withIdentifier: "login")
-                self.present(vc, animated: true, completion: nil)
-            })
+            self.goTo(viewController: "login")
 
         }
     }
