@@ -26,7 +26,7 @@ class HomeVC: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        //randomize welcome message
+        // randomize welcome message
         let welcomeMessagesLength = UInt32(welcomeMessages.count)
         let randomInt = Int(arc4random_uniform(welcomeMessagesLength))
         welcomeMessage.text = welcomeMessages[randomInt]

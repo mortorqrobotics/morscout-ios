@@ -10,31 +10,6 @@ import Foundation
 import UIKit
 import SwiftyJSON
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
-}
-
-
 class LoginVC: UIViewController {
     
     @IBOutlet weak var loginButton: UIButton!
@@ -42,7 +17,7 @@ class LoginVC: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     override func viewDidLoad() {
-        setup()
+        self.setupView()
         usernameTextField.becomeFirstResponder()
     }
     
@@ -55,7 +30,7 @@ class LoginVC: UIViewController {
         login()
     }
     
-    func setup() {
+    func setupView() {
         usernameTextField.delegate = self
         passwordTextField.delegate = self
         
@@ -92,7 +67,7 @@ class LoginVC: UIViewController {
                 
                 //store user properties in storage
                 for (key, value):(String, JSON) in user {
-                    if storedUserProperties.index(of: key) > -1 {
+                    if storedUserProperties.index(of: key)! > -1 {
                         storage.set(String(describing: value), forKey: key)
                     }
                 }
@@ -104,18 +79,26 @@ class LoginVC: UIViewController {
                     self.goTo(viewController: "reveal")
                 } else {
                     storage.set(true, forKey: "noTeam")
-                    self.goTo(viewController: "void")
+                    self.goTo(viewController: "void") // this page gives users the option
+                                                      // to join or create a team.
                 }
                 
             }
         }
     }
-    
+
+    /**
+        Changes login button appearance to signify that
+        the user is in the process of being logged in
+     */
     func showLoading() {
         loginButton.setTitle("Loading...", for: UIControlState())
         loginButton.isEnabled = false
     }
-    
+
+    /**
+        Reverts login button to original appearance.
+    */
     func hideLoading() {
         self.loginButton.setTitle("Login", for: UIControlState())
         self.loginButton.isEnabled = true
@@ -124,6 +107,10 @@ class LoginVC: UIViewController {
 
 extension LoginVC: UITextFieldDelegate {
 
+    /*
+        This is called when the return button on
+        the keyboard is pressed.
+    */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.placeholder! == "Username/Email" {
             passwordTextField.becomeFirstResponder()

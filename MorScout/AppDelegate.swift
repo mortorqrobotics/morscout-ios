@@ -16,17 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        //set navigation bar color
+        // set navigation bar color
         UINavigationBar.appearance().barTintColor = UIColorFromHex("#FFC547")
         UINavigationBar.appearance().tintColor = UIColor.black
         UINavigationBar.appearance().isTranslucent = false
-        
-        //set cookies for Kingfisher image download (needed for user authentication)
-//        KingfisherManager.shared.downloader.requestModifier = {
-//            (request: NSMutableURLRequest) in
-//            request.addValue("connect.sid=\(storage.string(forKey: "connect.sid")!)", forHTTPHeaderField: "Cookie")
-//        }
-        
+
+        // this is so we can set the initial view controller to either
+        // the login screen on the home screen depending on login
+        // status upon opening the app.
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let revealVC : UIViewController! = mainStoryboard.instantiateViewController(withIdentifier: "reveal")
         let loginVC : UIViewController! = mainStoryboard.instantiateViewController(withIdentifier: "login")
