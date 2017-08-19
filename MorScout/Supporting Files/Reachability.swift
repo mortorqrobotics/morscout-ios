@@ -10,6 +10,10 @@ import Foundation
 import SystemConfiguration
 
 open class Reachability {
+
+    /**
+        Checks to see if client is connected to the internet.
+     */
     class func isConnectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))

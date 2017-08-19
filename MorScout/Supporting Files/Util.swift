@@ -11,16 +11,26 @@ import UIKit
 import SwiftyJSON
 import Kingfisher
 
+/// this variable stores local data for this application (e.g. user data)
 let storage = UserDefaults.standard
+
+/// base MorScout URL for requests to the MorScout server
 let baseURL = "http://www.scout.morteam.com"
+
+/// base MorTeam URL for requests to the MorTeam server
+/// (typically for account/team related requests)
 let morTeamURL = "http://www.morteam.com/api"
+
+// modifies all kingfisher requests to send session cookie
 let modifier = AnyModifier { request in
     var r = request
     r.addValue("connect.sid=\(storage.string(forKey: "connect.sid")!)", forHTTPHeaderField: "Cookie")
     return r
 }
 
-
+/**
+    This can be used to get a color using a known hex value.
+ */
 func UIColorFromHex(_ hex: String) -> UIColor {
     var hex = hex
     
@@ -47,6 +57,9 @@ func UIColorFromHex(_ hex: String) -> UIColor {
     return UIColor(red: rdFloat/255, green: gdFloat/255, blue: bdFloat/255, alpha: 1)
 }
 
+/**
+    This can be used to get a color using a known hex value and alpha value.
+ */
 func UIColorFromHex(_ hex: String, alpha: Double) -> UIColor {
     var hex = hex
     if hex.hasPrefix("#") {
@@ -71,6 +84,11 @@ func UIColorFromHex(_ hex: String, alpha: Double) -> UIColor {
     return UIColor(red: rdFloat/255, green: gdFloat/255, blue: bdFloat/255, alpha: CGFloat(alpha))
 }
 
+/**
+    This can be used to make a standard HTTP request.
+    This method also sends and receives/stores the "connect.sid"
+    cookie which is used to identify unique user sessions.
+ */
 func httpRequest(_ url: String, type: String, data: [String: String], cb: @escaping (_ responseText: String) -> Void ){
     
     let requestUrl = URL(string: url)
@@ -125,6 +143,11 @@ func httpRequest(_ url: String, type: String, data: [String: String], cb: @escap
     task.resume()
 }
 
+/**
+    This can be used to make a standard HTTP request.
+    This method also sends and receives/stores the "connect.sid"
+    cookie which is used to identify unique user sessions.
+ */
 func httpRequest(_ url: String, type: String, cb: @escaping (_ responseText: String) -> Void ){
     
     let requestUrl = URL(string: url)
@@ -169,6 +192,10 @@ func httpRequest(_ url: String, type: String, cb: @escaping (_ responseText: Str
     
     task.resume()
 }
+
+/**
+    Converts string into a JSON object.
+ */
 func parseJSON(_ string: String) -> JSON {
     let data = string.data(using: String.Encoding.utf8, allowLossyConversion: true)
     return JSON(data: data!)
@@ -192,6 +219,9 @@ func getCurrentYear() -> String {
     return String(describing: components.year)
 }
 
+/**
+    Converts a Date object into a readable time.
+ */
 func timeFromNSDate(_ date: Date) -> String? {
     let calendar = Calendar.current
     let components = (calendar as NSCalendar).components([.hour, .minute], from: date)
@@ -200,7 +230,7 @@ func timeFromNSDate(_ date: Date) -> String? {
     let suffix: String
     if components.hour! > 11 {
         suffix = "PM"
-    }else{
+    } else {
         suffix = "AM"
     }
     //(components.hour! - 1) % 12 + 1
@@ -210,6 +240,9 @@ func timeFromNSDate(_ date: Date) -> String? {
     return "\(hours):\(minutes) \(suffix)"
 }
 
+/**
+    Calculates height for a text view with specified text and width.
+ */
 func heightForView(_ text:String, width:CGFloat) -> CGFloat{
     let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
     label.numberOfLines = 0
@@ -220,6 +253,11 @@ func heightForView(_ text:String, width:CGFloat) -> CGFloat{
     return label.frame.height
 }
 
+/**
+    Checks internet connection and if client is connected,
+    this method syncs all locally saved reports that were
+    not previously sent to the server.
+ */
 func checkConnectionAndSync() {
     if Reachability.isConnectedToNetwork() {
         if let savedReports = storage.array(forKey: "savedReports") {
@@ -231,8 +269,11 @@ func checkConnectionAndSync() {
     }
 }
 
+/**
+    Submits a report to the server with no activity in the UI.
+ */
 func sendSubmissionSilently(_ data: [String: String]) {
-    httpRequest(baseURL+"/submitReport", type: "POST", data: data) { responseText in
+    httpRequest(baseURL + "/submitReport", type: "POST", data: data) { responseText in
         if responseText != "fail" {
             if let savedReports = storage.array(forKey: "savedReports"){
                 if let i = savedReports.index(where: {$0 as! [String : String] == data}) {
@@ -245,6 +286,9 @@ func sendSubmissionSilently(_ data: [String: String]) {
     }
 }
 
+/**
+    Escapes text to be suitable for URLs.
+ */
 func escape(_ text: String) -> String {
     var newText: String
     newText = text.replacingOccurrences(of: "\"", with: "\\\"")
@@ -252,6 +296,9 @@ func escape(_ text: String) -> String {
     return newText
 }
 
+/**
+    Logs out with no activity in the UI.
+ */
 func logoutSilently() {
     httpRequest(morTeamURL + "/logout", type: "POST"){ responseText in
         for key in storage.dictionaryRepresentation().keys {
@@ -260,8 +307,11 @@ func logoutSilently() {
     }
 }
 
+/**
+    Gets the key for the current regional and stores it locally.
+ */
 func getCurrentRegionalKey() {
-    httpRequest(baseURL+"/getCurrentRegionalInfo", type: "POST"){
+    httpRequest(baseURL + "/getCurrentRegionalInfo", type: "POST"){
         responseText in
         
         let regionalInfo = parseJSON(responseText)
