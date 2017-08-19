@@ -10,31 +10,6 @@ import Foundation
 import UIKit
 import SwiftyJSON
 
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l > r
-  default:
-    return rhs < lhs
-  }
-}
-
-
 class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
@@ -48,39 +23,30 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        teamsTable.delegate = self
-        teamsTable.dataSource = self
-        
-        searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = false
-        teamsTable.tableHeaderView = searchController.searchBar
-        self.searchController.hidesNavigationBarDuringPresentation = false
-        self.searchController.searchBar.placeholder = "Search Teams"
-        
+
+        self.setupView()
         checkConnectionAndSync()
-        
-        if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = #selector((SWRevealViewController.revealToggle) as (SWRevealViewController) -> (Void) -> Void)
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
-        
-        if let teamsData = storage.object(forKey: "teams") {
-            let cachedTeams = NSKeyedUnarchiver.unarchiveObject(with: teamsData as! Data) as? [Team]
-            
-            if cachedTeams!.count == 0 {
-                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-            }else{
-                self.teams = cachedTeams!
-            }
-        }
-        
+        loadTeamsFromCache()
+
         if Reachability.isConnectedToNetwork() {
             getTeams()
         }
-        
+    }
+
+    func setupView() {
+        teamsTable.delegate = self
+        teamsTable.dataSource = self
+        setupMenu(menuButton)
+
+        // setup search
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        self.definesPresentationContext = false
+        teamsTable.tableHeaderView = searchController.searchBar
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.searchBar.placeholder = "Search Teams"
+
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,6 +56,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setToolbarHidden(false, animated: false)
     }
+
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.setToolbarHidden(true, animated: false)
     }
@@ -99,17 +66,16 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func getTeams() {
-        httpRequest(baseURL+"/getTeamListForRegional", type: "POST") {teams in
-            if teams != "fail" {
-                let teams = parseJSON(teams)
-                httpRequest(baseURL+"/getRankingsForRegional", type: "POST"){rankings in
-                    if rankings != "fail" {
-                        
-                        let rankings = parseJSON(rankings)
+        httpRequest(baseURL + "/getTeamListForRegional", type: "POST") { teamsResponseText in
+            if teamsResponseText != "fail" {
+                let teams = parseJSON(teamsResponseText)
+                httpRequest(baseURL + "/getRankingsForRegional", type: "POST") { rankingsResponseText in
+                    if rankingsResponseText != "fail" {
+                        let rankings = parseJSON(rankingsResponseText)
                         var teamRankings = [String: Int]()
                         if rankings.count > 0 {
                             for (i, subJson):(String, JSON) in rankings {
-                                if Int(i) > 0 {
+                                if Int(i)! > 0 {
                                     teamRankings[subJson[1].stringValue] = subJson[0].intValue
                                 }
                             }
@@ -132,7 +98,8 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                         }
                         
                         self.teams.sort { $0.number < $1.number }
-                        
+
+                        // store teams in cache for later use
                         let teamsData = NSKeyedArchiver.archivedData(withRootObject: self.teams)
                         storage.set(teamsData, forKey: "teams")
                     
@@ -140,20 +107,34 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             self.teamsTable.reloadData()
                         })
                         
+                    } else {
+                        print("fail")
                     }
                 }
                 
-            }else{
+            } else {
                 print("fail")
             }
         }
 
     }
-    
+
+    func loadTeamsFromCache() {
+        if let teamsData = storage.object(forKey: "teams") {
+            let cachedTeams = NSKeyedUnarchiver.unarchiveObject(with: teamsData as! Data) as? [Team]
+
+            if cachedTeams!.count == 0 {
+                alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+            } else {
+                self.teams = cachedTeams!
+            }
+        }
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.isActive && searchController.searchBar.text != "" {
             return filteredTeams.count
-        }else{
+        } else {
             return teams.count
         }
     }
@@ -164,7 +145,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let team: Team
         if searchController.isActive && searchController.searchBar.text != "" {
             team = filteredTeams[indexPath.row]
-        }else{
+        } else {
             team = teams[indexPath.row]
         }
         
@@ -172,7 +153,7 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.teamName.text = team.name
         if let rank = team.rank {
             cell.teamRank.text = "Rank \(String(rank))"
-        }else{
+        } else {
             cell.teamRank.text = "Rank N/A"
         }
         
@@ -196,13 +177,16 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         teamsTable.reloadData()
     }
     
+    /*
+        This is called when user switches between sort by name/rank
+    */
     @IBAction func changedSort(_ sender: UISegmentedControl) {
         switch sortTabs.selectedSegmentIndex {
         case 0:
            self.teams.sort { $0.number < $1.number }
             self.teamsTable.reloadData()
         case 1:
-            self.teams.sort { $0.rank < $1.rank }
+            self.teams.sort { $0.rank! < $1.rank! }
             self.teamsTable.reloadData()
         default:
             break
@@ -212,10 +196,11 @@ class TeamsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "showTeam") {
+            // transfer team info to next view controller
             let team: Team
             if searchController.isActive && searchController.searchBar.text != "" {
                 team = filteredTeams[(sender! as AnyObject).row]
-            }else{
+            } else {
                 team = teams[(sender! as AnyObject).row]
             }
 

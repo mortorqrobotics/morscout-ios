@@ -17,24 +17,17 @@ class LoginVC: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         self.setupView()
         usernameTextField.becomeFirstResponder()
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    @IBAction func clickLogin(_ sender: UIButton) {
-        showLoading()
-        login()
-    }
-    
+
     func setupView() {
         usernameTextField.delegate = self
         passwordTextField.delegate = self
-        
-        //set paddings for text fields
+
+        // set paddings for text fields
         let usernamePaddingView = UIView(
             frame: CGRect(x: 0, y: 0, width: 8, height: self.usernameTextField.frame.height))
         let passwordPaddingView = UIView(
@@ -44,7 +37,15 @@ class LoginVC: UIViewController {
         passwordTextField.leftView = passwordPaddingView
         passwordTextField.leftViewMode = UITextFieldViewMode.always
     }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
     
+    @IBAction func clickLogin(_ sender: UIButton) {
+        showLoading()
+        login()
+    }
     
     func login() {
         httpRequest(morTeamURL + "/login", type: "POST", data: [
@@ -67,7 +68,7 @@ class LoginVC: UIViewController {
                 
                 //store user properties in storage
                 for (key, value):(String, JSON) in user {
-                    if storedUserProperties.index(of: key)! > -1 {
+                    if storedUserProperties.contains(key) {
                         storage.set(String(describing: value), forKey: key)
                     }
                 }

@@ -33,10 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if storage.bool(forKey: "noTeam") {
                 logoutSilently()
                 self.window?.rootViewController = loginVC
-            }else{
+            } else {
                 self.window?.rootViewController = revealVC
             }
-        }else{
+        } else {
             //not logged in
             self.window?.rootViewController = loginVC
         }

@@ -22,13 +22,27 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setup()
+        self.setupView()
         checkConnectionAndSync()
         loadMatchesFromCache()
         
         if Reachability.isConnectedToNetwork() {
             getMatches()
         }
+    }
+
+    func setupView() {
+        matchesTable.delegate = self
+        matchesTable.dataSource = self
+        setupMenu(menuButton)
+
+        // setup search
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        self.definesPresentationContext = false
+        matchesTable.tableHeaderView = searchController.searchBar
+        self.searchController.hidesNavigationBarDuringPresentation = false
+        self.searchController.searchBar.placeholder = "Search Teams in Matches"
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -39,22 +53,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.didReceiveMemoryWarning()
     }
     
-    func setup() {
-        matchesTable.delegate = self
-        matchesTable.dataSource = self
-        setupMenu(menuButton)
-        
-        //setup search
-        searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = false
-        matchesTable.tableHeaderView = searchController.searchBar
-        self.searchController.hidesNavigationBarDuringPresentation = false
-        self.searchController.searchBar.placeholder = "Search Teams in Matches"
-    }
-    
     func getMatches() {
-        httpRequest(baseURL+"/getMatchesForCurrentRegional", type: "POST") { responseText in
+        httpRequest(baseURL + "/getMatchesForCurrentRegional", type: "POST") { responseText in
             if responseText != "fail" {
                 let matches = parseJSON(responseText)
                 self.matches = []
@@ -79,7 +79,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     if let match_num = match_number.rawString(), let match_time = time.rawString() {
                         if let match_time = Double(match_time) {
                             self.matches.append(Match(number: Int(match_num)!, time: Date(timeIntervalSince1970: match_time), redTeams: redTeams, blueTeams: blueTeams))
-                        }else{
+                        } else {
                             self.matches.append(Match(number: Int(match_num)!, time: nil, redTeams: redTeams, blueTeams: blueTeams))
                         }
                     }
@@ -87,7 +87,8 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 self.matches.sort { $0.time!.compare($1.time!) == .orderedAscending }
-                
+
+                // store matches in cache for later use
                 let matchesData = NSKeyedArchiver.archivedData(withRootObject: self.matches)
                 storage.set(matchesData, forKey: "matches")
                 
@@ -95,7 +96,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     self.matchesTable.reloadData()
                 })
                 
-            }else{
+            } else {
                 print("fail")
             }
         }
@@ -107,7 +108,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             if cachedMatches!.count == 0 {
                 alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-            }else{
+            } else {
                 self.matches = cachedMatches!
             }
         }
@@ -118,7 +119,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.isActive && searchController.searchBar.text != "" {
             return filteredMatches.count
-        }else{
+        } else {
             return matches.count
         }
         
@@ -131,7 +132,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let match: Match
         if searchController.isActive && searchController.searchBar.text != "" {
             match = filteredMatches[indexPath.row]
-        }else{
+        } else {
             match = matches[indexPath.row]
         }
         
@@ -140,7 +141,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if let readableTime = timeFromNSDate(time) {
                 displayedTime = readableTime
             }
-        }else{
+        } else {
             displayedTime = "N/A"
         }
         cell.matchNum.text = "Match " + String(match.number)
@@ -177,11 +178,13 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if(segue.identifier == "showMatch") {
+        if (segue.identifier == "showMatch") {
+
+            // transfer match info of selected row to next view controller
             let match: Match
             if searchController.isActive && searchController.searchBar.text != "" {
                 match = filteredMatches[(sender! as AnyObject).row]
-            }else{
+            } else {
                 match = matches[(sender! as AnyObject).row]
             }
             let matchVC = segue.destination as! MatchVC
