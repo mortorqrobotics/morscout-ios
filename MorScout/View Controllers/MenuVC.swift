@@ -25,7 +25,8 @@ class MenuVC: UITableViewController {
     
     override func viewDidLoad() {
         
-        //for weird color bug on iPad
+        // for weird color bug on iPad
+        // TODO: someone figure out whats causing this
         viewProfileCell.backgroundColor = UIColorFromHex("FFC547")
         homeCell.backgroundColor = UIColorFromHex("FFC547")
         matchesCell.backgroundColor = UIColorFromHex("FFC547")
@@ -33,7 +34,8 @@ class MenuVC: UITableViewController {
         settingsCell.backgroundColor = UIColorFromHex("FFC547")
         logoutCell.backgroundColor = UIColorFromHex("FFC547")
         
-        if let firstName = storage.string(forKey: "firstname"), let lastName = storage.string(forKey: "lastname") {
+        if let firstName = storage.string(forKey: "firstname"),
+            let lastName = storage.string(forKey: "lastname") {
             DispatchQueue.main.async(execute: {
                 self.menuName.text = "\(firstName) \(lastName)"
                 self.menuProfilePic.layer.cornerRadius = 17
@@ -41,17 +43,20 @@ class MenuVC: UITableViewController {
             })
         }
         if let savedProfPicPath = storage.string(forKey: "profpicpath") {
-            menuProfilePic.kf.setImage(with: URL(string: "http://www.morteam.com" + savedProfPicPath + "-60")!, options: [.requestModifier(modifier)])
+            menuProfilePic.kf.setImage(
+                with: URL(string: "http://www.morteam.com" + savedProfPicPath + "-60")!,
+                options: [.requestModifier(modifier)])
         }
         
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // dont forget to change this whenever the number of items in the menu changes
         if indexPath.row == 5 {
             logout()
         }
     }
-    
+
     func logout() {
         httpRequest(morTeamURL + "/logout", type: "POST"){ responseText in
 

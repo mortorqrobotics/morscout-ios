@@ -16,6 +16,7 @@ class MatchesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var matchesTable: UITableView!
     
     let searchController = UISearchController(searchResultsController: nil)
+    
     var matches = [Match]()
     var filteredMatches = [Match]()
     

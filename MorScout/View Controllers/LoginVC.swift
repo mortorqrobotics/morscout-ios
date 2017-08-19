@@ -98,7 +98,7 @@ class LoginVC: UIViewController {
     }
 
     /**
-        Reverts login button to original appearance.
+        Restores login button to original appearance.
     */
     func hideLoading() {
         self.loginButton.setTitle("Login", for: UIControlState())

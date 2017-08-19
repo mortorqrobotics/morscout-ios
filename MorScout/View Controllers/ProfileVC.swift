@@ -41,34 +41,39 @@ class ProfileVC: UIViewController {
         
         assigmentsScrollView.addSubview(container)
         
-        if let savedFirstName = storage.string(forKey: "firstname"), let savedLastName = storage.string(forKey: "lastname") {
+        if let savedFirstName = storage.string(forKey: "firstname"),
+            let savedLastName = storage.string(forKey: "lastname") {
             profileName.text = savedFirstName + " " + savedLastName
         }
         
         if let savedProfPicPath = storage.string(forKey: "profpicpath") {
-            profileImageView.kf.setImage(with: URL(string: "http://www.morteam.com" + savedProfPicPath)!, options: [.requestModifier(modifier)])
+            profileImageView.kf.setImage(
+                with: URL(string: "http://www.morteam.com" + savedProfPicPath)!,
+                options: [.requestModifier(modifier)])
         }
         
         if Reachability.isConnectedToNetwork() {
             getUserData(userId)
             getUserStats(userId)
             getUserTasks(userId)
-        }else{
-            alert(title: "No Internet Connection", message: "Could not load all user data", buttonText: "OK", viewController: self)
+        } else {
+            alert(
+                title: "No Internet Connection",
+                message: "Could not load all user data",
+                buttonText: "OK", viewController: self)
         }
-        
-        
-        if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = #selector((SWRevealViewController.revealToggle) as (SWRevealViewController) -> (Void) -> Void)
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+
+        setupMenu(menuButton)
     }
     
     override func didReceiveMemoryWarning() {
-        
+        super.didReceiveMemoryWarning()
     }
-    
+
+    /**
+        Acquires user data from the server and populates
+        the relevant fields.
+    */
     func getUserData(_ _id: String) {
         httpRequest(morTeamURL + "/users/id/\(_id)", type: "GET") { responseText in
             if responseText != "null" {
@@ -95,8 +100,7 @@ class ProfileVC: UIViewController {
     }
     
     func getUserStats(_ _id: String) {
-        httpRequest(baseURL+"/getUserStats", type: "POST", data: ["userID": _id]) { responseText in
-            
+        httpRequest(baseURL + "/getUserStats", type: "POST", data: ["userID": _id]) { responseText in
             let stats = parseJSON(responseText)
             DispatchQueue.main.async(execute: {
                 self.matchReports.text = stats["matchesScouted"].stringValue
@@ -107,8 +111,7 @@ class ProfileVC: UIViewController {
     }
     
     func getUserTasks(_ _id: String) {
-        httpRequest(baseURL+"/showTasks", type: "POST", data: ["scoutID": _id]) { responseText in
-            
+        httpRequest(baseURL + "/showTasks", type: "POST", data: ["scoutID": _id]) { responseText in
             let tasks = parseJSON(responseText)
             DispatchQueue.main.async(execute: {
                 
@@ -118,7 +121,7 @@ class ProfileVC: UIViewController {
                 }
                 if completedMatches.count == 0 {
                     self.assignmentsComplete.text = "none"
-                }else{
+                } else {
                     self.assignmentsComplete.text = completedMatches.joined(separator: ", ")
                 }
                 
@@ -129,7 +132,7 @@ class ProfileVC: UIViewController {
                 }
                 if incompleteMatches.count == 0 {
                     self.assignmentsIncomplete.text = "none"
-                }else{
+                } else {
                     self.assignmentsIncomplete.text = incompleteMatches.joined(separator: ", ")
                 }
                 
@@ -138,7 +141,7 @@ class ProfileVC: UIViewController {
                     label.text = "None"
                     label.font = UIFont(name: "Helvetica", size: 17)
                     self.container.addSubview(label)
-                }else{
+                } else {
                     for(_, subJson):(String, JSON) in tasks["assignments"] {
                         print(subJson)
                         print("----")
@@ -155,23 +158,36 @@ class ProfileVC: UIViewController {
             })
         }
     }
-    
+
+    /*
+        This is called when a user toggles the "is scout captain" switch
+    */
     func scoutCaptainStateChanged(_ switchState: UISwitch) {
         if switchState.isOn {
-            httpRequest(baseURL+"/setSC", type: "POST", data: ["isSC": "true", "userID": userId]) { responseText in
-                
+            httpRequest(baseURL + "/setSC", type: "POST", data: [
+                "isSC": "true",
+                "userID": userId
+            ]) { responseText in
                 if responseText == "fail" {
-                    alert(title: "Failed", message: "Oops. Something went wrong.", buttonText: "OK", viewController: self)
+                    alert(
+                        title: "Failed",
+                        message: "Oops. Something went wrong.",
+                        buttonText: "OK", viewController: self)
                     DispatchQueue.main.async(execute: {
                         self.scoutCaptainSwitch.setOn(false, animated: true)
                     })
                 }
             }
-        }else{
-            httpRequest(baseURL+"/setSC", type: "POST", data: ["isSC": "false", "userID": userId]) { responseText in
-                
+        } else {
+            httpRequest(baseURL + "/setSC", type: "POST", data: [
+                "isSC": "false",
+                "userID": userId
+            ]) { responseText in
                 if responseText == "fail" {
-                    alert(title: "Failed", message: "Oops. Something went wrong.", buttonText: "OK", viewController: self)
+                    alert(
+                        title: "Failed",
+                        message: "Oops. Something went wrong.",
+                        buttonText: "OK", viewController: self)
                     DispatchQueue.main.async(execute: {
                         self.scoutCaptainSwitch.setOn(true, animated: true)
                     })
@@ -179,5 +195,4 @@ class ProfileVC: UIViewController {
             }
         }
     }
-    
 }

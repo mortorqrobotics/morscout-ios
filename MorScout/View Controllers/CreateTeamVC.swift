@@ -31,11 +31,20 @@ class CreateTeamVC: UIViewController {
         ]){ responseText in
 
             if responseText == "You already have a team" {
-                alert(title: "Failed", message: "Looks like you already have a team.", buttonText: "OK", viewController: self)
+                alert(
+                    title: "Failed",
+                    message: "Looks like you already have a team.",
+                    buttonText: "OK", viewController: self)
             } else if responseText == "Invalid team number" {
-                alert(title: "Invalid team number", message: "Try another team number.", buttonText: "OK", viewController: self)
+                alert(
+                    title: "Invalid team number",
+                    message: "Try another team number.",
+                    buttonText: "OK", viewController: self)
             } else if responseText == "Team code is taken" {
-                alert(title: "Failed", message: "That team code is already taken. Try another one.", buttonText: "OK", viewController: self)
+                alert(
+                    title: "Failed",
+                    message: "That team code is already taken. Try another one.",
+                    buttonText: "OK", viewController: self)
             } else {
                 let team = parseJSON(responseText)
                 storage.set(false, forKey: "noTeam")
@@ -53,9 +62,9 @@ extension CreateTeamVC: UITextFieldDelegate {
         
         if textField.placeholder! == "Team Number" {
             teamNameField.becomeFirstResponder()
-        }else if textField.placeholder! == "Team Name" {
+        } else if textField.placeholder! == "Team Name" {
             teamCodeField.becomeFirstResponder()
-        }else if textField.placeholder! == "Team Code" {
+        } else if textField.placeholder! == "Team Code" {
             teamNumberField.becomeFirstResponder()
         }
         return true

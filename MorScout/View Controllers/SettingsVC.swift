@@ -12,7 +12,6 @@ import SwiftyJSON
 
 class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
-    
     @IBOutlet weak var regionalPicker: UIPickerView!
     @IBOutlet weak var regionalYear: UITextField!
     @IBOutlet weak var shareData: UISwitch!
@@ -24,15 +23,9 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setup()
+        self.setupView()
         checkConnectionAndSync()
         handleEditing(storage.string(forKey: "_id")!)
-        
-//        if let savedReports = storage.arrayForKey("savedReports") {
-//            print(savedReports)
-//        }else{
-//            print("no saved reports")
-//        }
         
     }
     
@@ -40,52 +33,49 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         super.didReceiveMemoryWarning()
     }
     
-    func setup() {
-        
+    func setupView() {
         regionalPicker.dataSource = self
         regionalPicker.delegate = self
         regionalYear.addTarget(self, action: #selector(SettingsVC.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
+
+        setupMenu(menuButton)
         
         if Reachability.isConnectedToNetwork() {
             getCurrentRegionalInfo()
             getShareDataStatus()
-        }else{
-            alert(title: "No Connection", message: "Cannot edit settings without internet connection", buttonText: "OK", viewController: self)
+        } else {
+            alert(
+                title: "No Connection",
+                message: "Cannot edit settings without internet connection",
+                buttonText: "OK", viewController: self)
         }
         
-        
+        // disable controls initially so they can be enabled
+        // later based on their user permissions
         self.regionalPicker.isUserInteractionEnabled = false
         self.regionalYear.isUserInteractionEnabled = false
         self.shareData.isEnabled = false
 
+        // add done button and toolbar for regional year picker
         let toolbarAndButton = createToolbar()
         let doneButton = toolbarAndButton.1
         let toolbar = toolbarAndButton.0
         doneButton.textField = self.regionalYear
         self.regionalYear.inputAccessoryView = toolbar
-        
-        if self.revealViewController() != nil {
-            menuButton.target = self.revealViewController()
-            menuButton.action = #selector((SWRevealViewController.revealToggle) as (SWRevealViewController) -> (Void) -> Void)
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
     }
     
     func getCurrentRegionalInfo() {
-        httpRequest(baseURL+"/getCurrentRegionalInfo", type: "POST"){
-            responseText in
-            
+        httpRequest(baseURL + "/getCurrentRegionalInfo", type: "POST") { responseText in
             let regionalInfo = parseJSON(responseText)
             let currentRegionalYear = regionalInfo["year"].stringValue
             let currentRegionalName = regionalInfo["short_name"].stringValue
             if !regionalInfo["Errors"].exists() {
                 DispatchQueue.main.async(execute: {
                     self.regionalYear.text = currentRegionalYear
-                    self.loadRegionalsForYear(currentRegionalYear) {
+                    self.loadRegionalsFor(year: currentRegionalYear) {
                         for i in 0..<self.regionals.count {
                             if self.regionals[i].name == currentRegionalName {
                                 self.regionalPicker.selectRow(i, inComponent: 0, animated: false)
-                                //self.chooseRegional(self.regionals[i].key)
                                 let selectedRow = self.regionalPicker.selectedRow(inComponent: 0)
                                 if selectedRow < self.regionals.count  {
                                     self.chooseRegional(self.regionals[selectedRow].key)
@@ -97,16 +87,19 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             }
         }
     }
-    
+
+    /**
+        Gets status of whether the current team shares its scout data
+    */
     func getShareDataStatus() {
-        httpRequest(baseURL+"/getDataStatus", type: "POST"){
+        httpRequest(baseURL + "/getDataStatus", type: "POST") {
             responseText in
             
             if responseText != "fail" {
                 let isPrivate: Bool
                 if responseText == "true" {
                     isPrivate = true
-                }else{
+                } else {
                     isPrivate = false
                 }
                 DispatchQueue.main.async(execute: {
@@ -117,7 +110,7 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
         }
     }
     
-    func loadRegionalsForYear(_ year: String, cb: (() -> ())?) {
+    func loadRegionalsFor(year: String, cb: (() -> ())?) {
         httpRequest(baseURL+"/getRegionalsForTeam", type: "POST", data:[
             "year": year
         ]){ responseText in
@@ -141,9 +134,12 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             }
         }
     }
-    
+
+    /*
+        This is called when a new regional is selected on the picker
+    */
     func chooseRegional(_ key: String) {
-        httpRequest(baseURL+"/chooseCurrentRegional", type: "POST", data: [
+        httpRequest(baseURL + "/chooseCurrentRegional", type: "POST", data: [
             "eventCode": key
         ]) { responseText in
             if responseText == "success" {
@@ -152,10 +148,13 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             }
         }
     }
-    
+
+    /*
+        This is called when the content of the "year" text field changes
+     */
     func textFieldDidChange(_ textField: UITextField) {
         if regionalYear.text!.characters.count == 4 {
-            loadRegionalsForYear(regionalYear.text!){
+            loadRegionalsFor(year: regionalYear.text!){
                 let selectedRow = self.regionalPicker.selectedRow(inComponent: 0)
                 if selectedRow < self.regionals.count  {
                     self.chooseRegional(self.regionals[selectedRow].key)
@@ -163,29 +162,41 @@ class SettingsVC: UITableViewController,UIPickerViewDataSource,UIPickerViewDeleg
             }
         }
     }
-    
+
+    /*
+        This is called when a user toggles the share data switch
+     */
     func shareDataStateChanged(_ switchState: UISwitch) {
         if switchState.isOn {
-            httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
+            httpRequest(baseURL + "/setDataStatus", type: "POST", data: [
                 "status": "public"
             ]){ responseText in
                 if responseText == "fail" {
                     self.shareData.setOn(false, animated: true)
-                    alert(title: "failed to switch", message: "Oops, there was an internal error when switching the status", buttonText: "OK", viewController: self)
+                    alert(
+                        title: "failed to switch",
+                        message: "Oops, there was an internal error when switching the status",
+                        buttonText: "OK", viewController: self)
                 }
             }
         } else {
-            httpRequest(baseURL+"/setDataStatus", type: "POST", data: [
+            httpRequest(baseURL + "/setDataStatus", type: "POST", data: [
                 "status": "private"
             ]){ responseText in
                 if responseText == "fail" {
                     self.shareData.setOn(true, animated: true)
-                    alert(title: "failed to switch", message: "Oops, there was an internal error when switching the status", buttonText: "OK", viewController: self)
+                    alert(
+                        title: "failed to switch",
+                        message: "Oops, there was an internal error when switching the status",
+                        buttonText: "OK", viewController: self)
                 }
             }
         }
     }
-    
+
+    /**
+        Enables the settings controls based on whether the user has edit priveleges
+     */
     func handleEditing(_ _id: String) {
         httpRequest(morTeamURL + "/users/id/\(_id)", type: "GET") { responseText in
             if responseText != "null" {

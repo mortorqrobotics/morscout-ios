@@ -35,7 +35,6 @@ class SignupVC: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
     
     @IBAction func signupClick(_ sender: UIButton) {
@@ -54,43 +53,73 @@ class SignupVC: UIViewController {
                         ]) { responseText in
                             DispatchQueue.main.async(execute: {
                                 if responseText == "Invalid email" {
-                                    alert(title: "Invalid email", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    alert(
+                                        title: "Invalid email",
+                                        message: "Please try again.",
+                                        buttonText: "OK", viewController: self)
                                     self.hideLoading()
                                 } else if responseText == "Invalid phone number" {
-                                    alert(title: "Invalid phone number", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    alert(
+                                        title: "Invalid phone number",
+                                        message: "Please try again.",
+                                        buttonText: "OK", viewController: self)
                                     self.hideLoading()
                                 } else if responseText == "Username is taken" {
-                                    alert(title: "Username is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    alert(
+                                        title: "Username is taken",
+                                        message: "Please try again.",
+                                        buttonText: "OK", viewController: self)
                                     self.hideLoading()
                                 } else if responseText == "Email is taken" {
-                                    alert(title: "Username is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    alert(
+                                        title: "Username is taken",
+                                        message: "Please try again.",
+                                        buttonText: "OK", viewController: self)
                                     self.hideLoading()
                                 } else if responseText == "Phone number is taken" {
-                                    alert(title: "Phone number is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    alert(
+                                        title: "Phone number is taken",
+                                        message: "Please try again.",
+                                        buttonText: "OK", viewController: self)
                                     self.hideLoading()
                                 } else if responseText == "Email is taken" {
-                                    alert(title: "Email address is taken", message: "Please try again.", buttonText: "OK", viewController: self)
+                                    alert(
+                                        title: "Email address is taken",
+                                        message: "Please try again.",
+                                        buttonText: "OK", viewController: self)
                                     self.hideLoading()
                                 } else {
                                     self.performSegue(withIdentifier: "showLogin", sender: nil)
                                 }
                             })
                         }
-                    }else{
+                    } else {
                         self.hideLoading()
-                        alert(title: "Passwords don't match", message: "Make sure you entered both password fields correctly.", buttonText: "OK", viewController: self)
+                        alert(
+                            title: "Passwords don't match",
+                            message: "Make sure you entered both password fields correctly.",
+                            buttonText: "OK", viewController: self)
                     }
-                }else{
+                } else {
                     self.hideLoading()
-                    alert(title: "Invalid Name/Username", message: "Make sure you enter a first name, last name and username.", buttonText: "OK", viewController: self)
+                    alert(
+                        title: "Invalid Name/Username",
+                        message: "Make sure you enter a first name, last name and username.",
+                        buttonText: "OK", viewController: self)
                 }
-            }else{
+            } else {
                 self.hideLoading()
-                alert(title: "Invalid Phone", message: "Looks like your phone number is not valid.", buttonText: "OK", viewController: self)
+                alert(
+                    title: "Invalid Phone",
+                    message: "Looks like your phone number is not valid.",
+                    buttonText: "OK", viewController: self)
             }
-        }else{
+        } else {
             self.hideLoading()
-            alert(title: "Invalid Email", message: "Looks like your email address is not valid.", buttonText: "OK", viewController: self)
+            alert(
+                title: "Invalid Email",
+                message: "Looks like your email address is not valid.",
+                buttonText: "OK", viewController: self)
         }
     }
     
@@ -117,12 +146,19 @@ class SignupVC: UIViewController {
         return passwordField.text == confirmPasswordField.text
     }
 
+    /**
+        Changes signup button appearance to signify that
+        the user is in the process of being registered
+     */
     func showLoading() {
         submitButton.setTitle("Loading...", for: UIControlState())
         submitButton.isEnabled = false
         submitButton.backgroundColor = UIColor.lightGray
     }
 
+    /**
+        Restores signup button to original appearance
+     */
     func hideLoading() {
         self.submitButton.setTitle("Submit", for: UIControlState())
         self.submitButton.isEnabled = true
@@ -131,24 +167,27 @@ class SignupVC: UIViewController {
 }
 
 extension SignupVC: UITextFieldDelegate {
+
+    /*
+        This is called when the return button on
+        the keyboard is pressed.
+     */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
         if textField.placeholder! == "First Name" {
             lastNameField.becomeFirstResponder()
-        }else if textField.placeholder! == "Last Name" {
+        } else if textField.placeholder! == "Last Name" {
             usernameField.becomeFirstResponder()
-        }else if textField.placeholder! == "Username" {
+        } else if textField.placeholder! == "Username" {
             emailField.becomeFirstResponder()
-        }else if textField.placeholder! == "Email" {
+        } else if textField.placeholder! == "Email" {
             passwordField.becomeFirstResponder()
-        }else if textField.placeholder! == "Password" {
+        } else if textField.placeholder! == "Password" {
             confirmPasswordField.becomeFirstResponder()
-        }else if textField.placeholder! == "Confirm Password" {
+        } else if textField.placeholder! == "Confirm Password" {
             phoneField.becomeFirstResponder()
-        }else if textField.placeholder! == "Phone" {
+        } else if textField.placeholder! == "Phone" {
             firstNameField.becomeFirstResponder()
         }
-        
         return true
     }
 }
