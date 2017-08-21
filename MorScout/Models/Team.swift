@@ -9,6 +9,7 @@
 import Foundation
 
 class Team: NSObject, NSCoding {
+
     let number: Int
     let name: String
     let rank: Int?

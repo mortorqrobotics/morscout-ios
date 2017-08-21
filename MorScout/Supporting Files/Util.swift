@@ -351,7 +351,10 @@ extension String {
 }
 
 extension UIViewController {
-    //allow user to click on button (or swipe) to open side menu
+
+    /**
+        allow user to click on button (or swipe) to open side menu
+     */
     func setupMenu(_ button: UIBarButtonItem) {
         if self.revealViewController() != nil {
             button.target = self.revealViewController()
@@ -360,7 +363,9 @@ extension UIViewController {
         }
     }
     
-    //transition to any view controller using storyboard ID
+    /**
+        transition to any view controller using storyboard ID
+     */
     func goTo(viewController identifier: String) {
         DispatchQueue.main.async(execute: {
             let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: identifier)
