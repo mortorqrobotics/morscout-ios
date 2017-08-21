@@ -56,8 +56,7 @@ class MatchVC: UIViewController {
     var strategyIsLoaded = false
     
     var selectedTeam = 0
-    var myTeam = ""
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -84,8 +83,8 @@ class MatchVC: UIViewController {
         
         self.scrollView.addSubview(self.container)
         
-        getTeamNumber() {
-            if self.redTeams.contains(self.myTeam) || self.blueTeams.contains(self.myTeam) {
+        getMyTeamNumber() { teamNumber in
+            if self.redTeams.contains(teamNumber) || self.blueTeams.contains(teamNumber) {
                 self.modeTabs.insertSegment(withTitle: "Strategy", at: 2, animated: false)
             }
         }
@@ -97,9 +96,50 @@ class MatchVC: UIViewController {
     }
     
     override func didReceiveMemoryWarning() {
-        
+        super.didReceiveMemoryWarning()
     }
     
+    @IBAction func redTeam1Click(_ sender: UIButton) {
+        restoreAllButtonColors()
+        redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
+        displayAndResetModeTabs()
+    }
+    @IBAction func redTeam2Click(_ sender: UIButton) {
+        restoreAllButtonColors()
+        redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        selectedTeam = Int((redTeam2.titleLabel?.text)!)!
+        displayAndResetModeTabs()
+    }
+    @IBAction func redTeam3Click(_ sender: UIButton) {
+        restoreAllButtonColors()
+        redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
+        selectedTeam = Int((redTeam3.titleLabel?.text)!)!
+        displayAndResetModeTabs()
+    }
+    @IBAction func blueTeam1Click(_ sender: UIButton) {
+        restoreAllButtonColors()
+        blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        selectedTeam = Int((blueTeam1.titleLabel?.text)!)!
+        displayAndResetModeTabs()
+    }
+    @IBAction func blueTeam2Click(_ sender: UIButton) {
+        restoreAllButtonColors()
+        blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        selectedTeam = Int((blueTeam2.titleLabel?.text)!)!
+        displayAndResetModeTabs()
+    }
+    @IBAction func blueTeam3Click(_ sender: UIButton) {
+        restoreAllButtonColors()
+        blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
+        selectedTeam = Int((blueTeam3.titleLabel?.text)!)!
+        displayAndResetModeTabs()
+    }
+
+    /**
+        Restores all buttons to the original
+        appearance, as if they were never clicked.
+     */
     func restoreAllButtonColors() {
         redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 0.55)
         redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 0.55)
@@ -108,56 +148,30 @@ class MatchVC: UIViewController {
         blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 0.6)
         blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 0.6)
     }
-    
-    @IBAction func redTeam1Click(_ sender: UIButton) {
-        restoreAllButtonColors()
-        redTeam1.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        selectedTeam = Int((redTeam1.titleLabel?.text)!)!
+
+    /**
+        Displays modeTabs if it is hidden and sets it
+        to the first value.
+     */
+    func displayAndResetModeTabs() {
         modeTabs.isHidden = false
         modeTabs.selectedSegmentIndex = 0
+
+        // after setting the selectedSegmentIndex
+        // property of the modetabs, we call the
+        // changeModeTabs function in order to simulate
+        // a user clicking on one of the tabs so that
+        // the scout/view forms are hidden and
+        // shown appropriately
         changeModeTabs(modeTabs)
     }
-    @IBAction func redTeam2Click(_ sender: UIButton) {
-        restoreAllButtonColors()
-        redTeam2.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        selectedTeam = Int((redTeam2.titleLabel?.text)!)!
-        modeTabs.isHidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func redTeam3Click(_ sender: UIButton) {
-        restoreAllButtonColors()
-        redTeam3.backgroundColor = UIColorFromHex("FF0000", alpha: 1)
-        selectedTeam = Int((redTeam3.titleLabel?.text)!)!
-        modeTabs.isHidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func blueTeam1Click(_ sender: UIButton) {
-        restoreAllButtonColors()
-        blueTeam1.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        selectedTeam = Int((blueTeam1.titleLabel?.text)!)!
-        modeTabs.isHidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func blueTeam2Click(_ sender: UIButton) {
-        restoreAllButtonColors()
-        blueTeam2.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        selectedTeam = Int((blueTeam2.titleLabel?.text)!)!
-        modeTabs.isHidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    @IBAction func blueTeam3Click(_ sender: UIButton) {
-        restoreAllButtonColors()
-        blueTeam3.backgroundColor = UIColorFromHex("007AFF", alpha: 1)
-        selectedTeam = Int((blueTeam3.titleLabel?.text)!)!
-        modeTabs.isHidden = false
-        modeTabs.selectedSegmentIndex = 0
-        changeModeTabs(modeTabs)
-    }
-    
+
+    /**
+        This is called when the user selects
+        a tab from modeTabs. Then it hides
+        and shows the appropriate scout/view
+        forms.
+     */
     @IBAction func changeModeTabs(_ sender: UISegmentedControl) {
         switch modeTabs.selectedSegmentIndex {
         case 0:
@@ -174,18 +188,6 @@ class MatchVC: UIViewController {
             showStrategyForm()
         default:
             break
-        }
-    }
-    
-    func getCurrentRegionalKey() {
-        httpRequest(baseURL+"/getCurrentRegionalInfo", type: "POST"){
-            responseText in
-            
-            let regionalInfo = parseJSON(responseText)
-            if !regionalInfo["Errors"].exists() {
-                let currentRegionalKey = String(describing: regionalInfo["key"])
-                storage.setValue(currentRegionalKey, forKey: "currentRegional")
-            }
         }
     }
     
@@ -889,16 +891,18 @@ class MatchVC: UIViewController {
             textView.resignFirstResponder()
         }
     }
-    
-    func getTeamNumber(_ cb: @escaping () -> Void) {
+
+    /**
+        Gets the team number of the currently logged in
+        user and supplies it in a callback
+     */
+    func getMyTeamNumber(_ cb: @escaping (_ teamNumber: String) -> Void) {
         if let savedTeamNumber = storage.string(forKey: "team_number") {
-            self.myTeam = savedTeamNumber
-            cb()
+            cb(savedTeamNumber)
         }else{
             httpRequest(morTeamURL + "/teams/current/number", type: "GET") { responseText in
-                self.myTeam = responseText
-                storage.set(self.myTeam, forKey: "team_number")
-                cb()
+                storage.set(responseText, forKey: "team_number")
+                cb(responseText)
             }
         }
     }
