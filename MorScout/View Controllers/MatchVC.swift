@@ -27,7 +27,11 @@ class MatchVC: UIViewController {
     
     @IBOutlet weak var modeTabs: UISegmentedControl!
     @IBOutlet weak var scrollView: UIScrollView!
-    
+
+    /// This view "contains" all of the elements in
+    /// the scout form or view form and changes in size
+    /// based on the amount of information needed to be
+    /// displayed at the current time.
     var container = UIView()
     var scoutTopMargin: CGFloat = 5
     var viewTopMargin: CGFloat = 5
@@ -42,8 +46,12 @@ class MatchVC: UIViewController {
     var scoutFormIsVisible = false
     var viewFormIsVisible = false
     var strategyFormIsVisible = false
-    
+
+
     var scoutFormDataIsLoaded = false
+    /// This variable stores information about whether
+    /// view form data for each specific team in this match
+    /// has already been loaded.
     var viewFormDataIsLoaded = [String: Bool]()
     var strategyIsLoaded = false
     
