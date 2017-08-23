@@ -33,8 +33,8 @@ class MatchVC: UIViewController {
     /// based on the amount of information needed to be
     /// displayed at the current time.
     var container = UIView()
-    var scoutTopMargin: CGFloat = 5
-    var viewTopMargin: CGFloat = 5
+    var scoutFormHeight: CGFloat = 5
+    var viewFormHeight: CGFloat = 5
     let strategyBoxHeight: CGFloat = 100
     
     var picker: DropdownPicker = DropdownPicker()
@@ -208,7 +208,7 @@ class MatchVC: UIViewController {
                         view.isHidden = false
                     }
                 }
-                resizeContainer(self.scoutTopMargin)
+                resizeContainer(self.scoutFormHeight)
             }
         } else {
             if Reachability.isConnectedToNetwork() {
@@ -255,7 +255,7 @@ class MatchVC: UIViewController {
                 storage.set(dataPointsData, forKey: "matchDataPoints")
                 
                 self.scoutFormDataIsLoaded = true
-                self.resizeContainer(self.scoutTopMargin)
+                self.resizeContainer(self.scoutFormHeight)
                 
 
             })
@@ -283,7 +283,7 @@ class MatchVC: UIViewController {
                 }
                 createSubmitButton()
                 scoutFormDataIsLoaded = true
-                resizeContainer(self.scoutTopMargin)
+                resizeContainer(self.scoutFormHeight)
             }
         } else {
             alert(
@@ -312,11 +312,11 @@ class MatchVC: UIViewController {
                         view.isHidden = false
                     }
                 }
-                resizeContainer(self.viewTopMargin)
+                resizeContainer(self.viewFormHeight)
             }
         } else {
             if Reachability.isConnectedToNetwork() {
-                loadViewForm()
+                loadAndDisplayViewForm()
             } else {
                 alert(
                     title: "Cannot load scouted reports",
@@ -326,8 +326,13 @@ class MatchVC: UIViewController {
         }
         self.viewFormIsVisible = true
     }
-    
-    func loadViewForm() {
+
+    /**
+        Loads view form data of currently selected team
+        from MorScout servers and displays it in
+        the "container" view.
+     */
+    func loadAndDisplayViewForm() {
         httpRequest(baseURL+"/getMatchReports", type: "POST", data:[
             "match": String(matchNumber),
             "team": String(selectedTeam)
@@ -339,67 +344,43 @@ class MatchVC: UIViewController {
                 
             DispatchQueue.main.async(execute: {
                 
-                self.viewTopMargin = 5
+                self.viewFormHeight = 5
                 
                 if data["yourTeam"].count == 0 && data["otherTeams"].count == 0 {
-                    self.viewTopMargin += 25
-                    let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                    self.viewFormHeight += 25
+                    let label = UILabel(frame: CGRect(
+                            x: 10, y: self.viewFormHeight,
+                            width: self.view.frame.width - 20, height: 21))
                     label.text = "No Reports"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .center
                     label.tag = self.selectedTeam
                     self.container.addSubview(label)
-                    self.viewTopMargin += label.frame.height + 5
+                    self.viewFormHeight += label.frame.height + 5
                 }
     
                 if data["yourTeam"].count != 0 {
-                    let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
-                    label.text = "Your Team"
-                    label.font = UIFont(name: "Helvetica-Light", size: 22.0)
-                    label.textAlignment = .center
-                    label.tag = self.selectedTeam
-                    self.container.addSubview(label)
-                    self.viewTopMargin += label.frame.height + 5
-                    
-                    let line = UIView(frame: CGRect(x: 40, y: self.viewTopMargin, width: self.view.frame.width-80, height: 1))
-                    line.backgroundColor = UIColor.lightGray
-                    line.tag = self.selectedTeam
-                    self.container.addSubview(line)
-                    self.viewTopMargin += line.frame.height + 10
-                    
+
+                    self.addHeaderToViewForm(
+                        text: "Your Team", size: .large)
+
                     for(i, subJson):(String, JSON) in data["yourTeam"] {
+
                         let reportNumber = Int(i)!+1
-                        let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
-                        label.text = "Report \(reportNumber)"
-                        label.font = UIFont(name: "Helvetica-Light", size: 21.0)
-                        label.textAlignment = .center
-                        label.tag = self.selectedTeam
-                        self.container.addSubview(label)
-                        self.viewTopMargin += label.frame.height + 5
-                        
-                        let line = UIView(frame: CGRect(x: 60, y: self.viewTopMargin, width: self.view.frame.width-120, height: 1))
-                        line.backgroundColor = UIColor.lightGray
-                        line.tag = self.selectedTeam
-                        self.container.addSubview(line)
-                        self.viewTopMargin += line.frame.height + 10
+                        self.addHeaderToViewForm(
+                            text: "Report \(reportNumber)", size: .medium)
                         
                         for(_, subJson):(String, JSON) in subJson["data"] {
-                            if subJson["value"].stringValue == "null" {
-                                let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
-                                label.text = subJson["name"].stringValue
-                                label.font = UIFont(name: "Helvetica-Light", size: 20.0)
-                                label.textAlignment = .center
-                                label.tag = self.selectedTeam
-                                self.container.addSubview(label)
-                                self.viewTopMargin += label.frame.height + 5
-                                
-                                let line = UIView(frame: CGRect(x: 80, y: self.viewTopMargin, width: self.view.frame.width-160, height: 1))
-                                line.backgroundColor = UIColor.lightGray
-                                line.tag = self.selectedTeam
-                                self.container.addSubview(line)
-                                self.viewTopMargin += line.frame.height + 10
-                            }else{
-                                let key = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 160, height: 21))
+
+                            if !subJson["value"].exists() {
+
+                                self.addHeaderToViewForm(
+                                    text: subJson["name"].stringValue, size: .small)
+
+                            } else {
+                                let key = UILabel(frame: CGRect(
+                                    x: 10, y: self.viewFormHeight,
+                                    width: self.view.frame.width - 160, height: 21))
                                 key.text = subJson["name"].stringValue
                                 key.tag = self.selectedTeam
                                 self.container.addSubview(key)
@@ -407,17 +388,19 @@ class MatchVC: UIViewController {
                                 if height == 0 {
                                     height = 21
                                 }
-                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewTopMargin, width: 140 , height: height))
+                                let value = UILabel(frame: CGRect(
+                                    x: self.view.frame.width-150, y: self.viewFormHeight,
+                                    width: 140 , height: height))
                                 value.numberOfLines = 0
                                 if subJson["value"].stringValue == "" {
                                     value.text = "N/A"
-                                }else{
+                                } else {
                                     value.text = subJson["value"].stringValue
                                 }
                                 value.tag = self.selectedTeam
                                 self.container.addSubview(value)
                                 
-                                self.viewTopMargin += value.frame.height + 5
+                                self.viewFormHeight += value.frame.height + 5
                             }
                         }
                     }
@@ -425,54 +408,23 @@ class MatchVC: UIViewController {
                     
                 if data["otherTeams"].count != 0 {
                     
-                    let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
-                    label.text = "Other Teams"
-                    label.font = UIFont(name: "Helvetica-Light", size: 22.0)
-                    label.textAlignment = .center
-                    label.tag = self.selectedTeam
-                    self.container.addSubview(label)
-                    self.viewTopMargin += label.frame.height + 5
-                    
-                    let line = UIView(frame: CGRect(x: 40, y: self.viewTopMargin, width: self.view.frame.width-80, height: 1))
-                    line.backgroundColor = UIColor.lightGray
-                    line.tag = self.selectedTeam
-                    self.container.addSubview(line)
-                    self.viewTopMargin += line.frame.height + 10
-                    
+                    self.addHeaderToViewForm(
+                        text: "Other Teams", size: .large)
                     
                     for(i, subJson):(String, JSON) in data["otherTeams"] {
+
                         let reportNumber = Int(i)!+1
-                        let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
-                        label.text = "Report \(reportNumber)"
-                        label.font = UIFont(name: "Helvetica-Light", size: 21.0)
-                        label.textAlignment = .center
-                        label.tag = self.selectedTeam
-                        self.container.addSubview(label)
-                        self.viewTopMargin += label.frame.height + 5
-                        
-                        let line = UIView(frame: CGRect(x: 60, y: self.viewTopMargin, width: self.view.frame.width-120, height: 1))
-                        line.backgroundColor = UIColor.lightGray
-                        line.tag = self.selectedTeam
-                        self.container.addSubview(line)
-                        self.viewTopMargin += line.frame.height + 10
+                        self.addHeaderToViewForm(
+                            text: "Report \(reportNumber)", size: .medium)
                         
                         for(_, subJson):(String, JSON) in subJson["data"] {
-                            if subJson["value"].stringValue == "null" {
-                                let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
-                                label.text = subJson["name"].stringValue
-                                label.font = UIFont(name: "Helvetica-Light", size: 20.0)
-                                label.textAlignment = .center
-                                label.tag = self.selectedTeam
-                                self.container.addSubview(label)
-                                self.viewTopMargin += label.frame.height + 5
-                                
-                                let line = UIView(frame: CGRect(x: 80, y: self.viewTopMargin, width: self.view.frame.width-160, height: 1))
-                                line.backgroundColor = UIColor.lightGray
-                                line.tag = self.selectedTeam
-                                self.container.addSubview(line)
-                                self.viewTopMargin += line.frame.height + 10
-                            }else{
-                                let key = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 160, height: 21))
+                            if !subJson["value"].exists() {
+
+                                self.addHeaderToViewForm(
+                                    text: subJson["name"].stringValue, size: .small)
+
+                            } else {
+                                let key = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 160, height: 21))
                                 key.text = subJson["name"].stringValue
                                 key.tag = self.selectedTeam
                                 self.container.addSubview(key)
@@ -480,7 +432,7 @@ class MatchVC: UIViewController {
                                 if height == 0 {
                                     height = 21
                                 }
-                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewTopMargin, width: 140 , height: height))
+                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewFormHeight, width: 140 , height: height))
                                 value.numberOfLines = 0
                                 if subJson["value"].stringValue == "" {
                                     value.text = "N/A"
@@ -490,23 +442,65 @@ class MatchVC: UIViewController {
                                 value.tag = self.selectedTeam
                                 self.container.addSubview(value)
                                 
-                                self.viewTopMargin += value.frame.height + 5
+                                self.viewFormHeight += value.frame.height + 5
                             }
                         }
                     }
                 }
                 
-                self.resizeContainer(self.viewTopMargin)
-                
+                self.resizeContainer(self.viewFormHeight)
                 
             })
         }
     }
-    
-    func retrieveViewDataFromCache() {
-        
+
+    enum HeaderSize: Int {
+        case large = 1
+        case medium = 2
+        case small = 3
     }
+
+    /**
+        Creates a label with a line directly under it
+        and adds it to the view form.
+     */
+    func addHeaderToViewForm(text: String, size: HeaderSize) {
+        let fontSize: CGFloat
+        let lineHorizontalPadding: CGFloat
+
+        switch size {
+        case .large:
+            fontSize = 22.0
+            lineHorizontalPadding = 40
+        case .medium:
+            fontSize = 19.0
+            lineHorizontalPadding = 60
+        case .small:
+            fontSize = 17.0
+            lineHorizontalPadding = 80
+        }
+
+        let label = UILabel(frame: CGRect(
+            x: 10, y: self.viewFormHeight,
+            width: self.view.frame.width - 20, height: 21))
+        label.text = text
+        label.font = UIFont(name: "Helvetica-Light", size: fontSize)
+        label.textAlignment = .center
+        label.tag = self.selectedTeam
+        self.container.addSubview(label)
+        self.viewFormHeight += label.frame.height + 5
+
+        let line = UIView(frame: CGRect(
+            x: lineHorizontalPadding, y: self.viewFormHeight,
+            width: self.view.frame.width-(lineHorizontalPadding*2), height: 1))
+        line.backgroundColor = UIColor.lightGray
+        line.tag = self.selectedTeam
+        self.container.addSubview(line)
+        self.viewFormHeight += line.frame.height + 10
+    }
+
     
+
     func hideViewForm() {
         for view in self.container.subviews {
             if view.tag != 0 {
@@ -543,7 +537,7 @@ class MatchVC: UIViewController {
                             textView.backgroundColor = UIColorFromHex("E9E9E9")
                             textView.tag = -1
                             self.container.addSubview(textView)
-                            
+
                             let button = UIButton(frame: CGRect(x: 100, y: strategyBoxHeight + 20, width: self.view.frame.width-200, height: 30))
                             button.setTitle("Save", for: UIControlState())
                             button.backgroundColor = UIColor.lightGray
@@ -654,32 +648,32 @@ class MatchVC: UIViewController {
         if type == "Label" {
             let dataPoint = dataPoint as! Label
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 26))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 26))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 22.0)
             label.textAlignment = .center
             label.tag = 0
             self.container.addSubview(label)
-            self.scoutTopMargin += label.frame.height + 5
+            self.scoutFormHeight += label.frame.height + 5
             
-            let line = UIView(frame: CGRect(x: 80, y: self.scoutTopMargin, width: self.view.frame.width-160, height: 1))
+            let line = UIView(frame: CGRect(x: 80, y: self.scoutFormHeight, width: self.view.frame.width-160, height: 1))
             line.backgroundColor = UIColor.lightGray
             line.tag = 0
             self.container.addSubview(line)
-            self.scoutTopMargin += line.frame.height + 10
+            self.scoutFormHeight += line.frame.height + 10
             
         }else if type == "TextBox" {
             let dataPoint = dataPoint as! TextBox
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 21))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 21))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 17.0)
             label.textColor = UIColor.black
             label.tag = 0
             self.container.addSubview(label)
-            self.scoutTopMargin += label.frame.height + 5
+            self.scoutFormHeight += label.frame.height + 5
             
-            let textbox = UITextView(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 90))
+            let textbox = UITextView(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 90))
             textbox.font = UIFont.systemFont(ofSize: 15)
             textbox.autocorrectionType = UITextAutocorrectionType.no
             textbox.keyboardType = UIKeyboardType.default
@@ -693,7 +687,7 @@ class MatchVC: UIViewController {
             
             textbox.tag = 0
             self.container.addSubview(textbox)
-            self.scoutTopMargin += textbox.frame.height + 10
+            self.scoutFormHeight += textbox.frame.height + 10
             
         }else if type == "Dropdown" {
             let dataPoint = dataPoint as! Dropdown
@@ -702,12 +696,12 @@ class MatchVC: UIViewController {
             
             self.pickerLists[dataPoint.name] = options
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 21))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 21))
             label.text = dataPoint.name + ":"
             label.tag = 0
             self.container.addSubview(label)
             
-            let textField = DropdownTextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutTopMargin, width: self.view.frame.width-20-label.intrinsicContentSize.width-15, height: 21))
+            let textField = DropdownTextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutFormHeight, width: self.view.frame.width-20-label.intrinsicContentSize.width-15, height: 21))
             textField.dropdown = dataPoint.name
             //textField.placeholder = "Choose.."
             textField.text = options[0] + " ▾"
@@ -715,19 +709,19 @@ class MatchVC: UIViewController {
             textField.inputView = self.picker
             textField.tag = 0
             self.container.addSubview(textField)
-            self.scoutTopMargin += textField.frame.height + 15
+            self.scoutFormHeight += textField.frame.height + 15
 
         }else if type == "NumberBox" {
             let dataPoint = dataPoint as! NumberBox
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-94-45, height: 29))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-94-45, height: 29))
             label.text = dataPoint.name + ":"
-            let stepper = NumberStepper(frame: CGRect(x: self.view.frame.width - 105, y: self.scoutTopMargin, width: 0, height: 0))
+            let stepper = NumberStepper(frame: CGRect(x: self.view.frame.width - 105, y: self.scoutFormHeight, width: 0, height: 0))
             let numberField: UITextField
             if label.intrinsicContentSize.width > (self.view.frame.width-94-50) {
-                numberField = UITextField(frame: CGRect(x: self.view.frame.width-94-35, y: self.scoutTopMargin, width: 40, height: 29))
+                numberField = UITextField(frame: CGRect(x: self.view.frame.width-94-35, y: self.scoutFormHeight, width: 40, height: 29))
             }else{
-                numberField = UITextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutTopMargin, width: 40, height: 29))
+                numberField = UITextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutFormHeight, width: 40, height: 29))
             }
             
             stepper.numberField = numberField
@@ -749,23 +743,23 @@ class MatchVC: UIViewController {
             self.container.addSubview(label)
             self.container.addSubview(stepper.numberField!)
             self.container.addSubview(stepper)
-            self.scoutTopMargin += label.frame.height + 10
+            self.scoutFormHeight += label.frame.height + 10
             
         }else if type == "Checkbox" {
             let dataPoint = dataPoint as! Checkbox
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-54-20, height: 31))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-54-20, height: 31))
             label.text = dataPoint.name
             label.tag = 0
             self.container.addSubview(label)
             
-            let check = UISwitch(frame: CGRect(x: self.view.frame.width-65, y: self.scoutTopMargin, width: 0, height: 0))
+            let check = UISwitch(frame: CGRect(x: self.view.frame.width-65, y: self.scoutFormHeight, width: 0, height: 0))
             check.tintColor = UIColorFromHex("FF8900")
             check.onTintColor = UIColorFromHex("FF8900")
             check.tag = 0
             self.container.addSubview(check)
             
-            self.scoutTopMargin += label.frame.height + 10
+            self.scoutFormHeight += label.frame.height + 10
             
         }
     }
@@ -790,12 +784,12 @@ class MatchVC: UIViewController {
     }
     
     func createSubmitButton() {
-        self.scoutTopMargin += 10
-        let button = UIButton(frame: CGRect(x: 100, y: self.scoutTopMargin, width: self.view.frame.width-200, height: 30))
+        self.scoutFormHeight += 10
+        let button = UIButton(frame: CGRect(x: 100, y: self.scoutFormHeight, width: self.view.frame.width-200, height: 30))
         button.setTitle("Submit", for: UIControlState())
         button.backgroundColor = UIColor.orange
         button.addTarget(self, action: #selector(MatchVC.submitFormClick(_:)), for: .touchUpInside)
-        self.scoutTopMargin += button.frame.height + 5
+        self.scoutFormHeight += button.frame.height + 15
         self.container.addSubview(button)
     }
     
