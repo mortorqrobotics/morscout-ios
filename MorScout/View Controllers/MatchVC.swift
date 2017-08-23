@@ -197,48 +197,53 @@ class MatchVC: UIViewController {
         if scoutFormDataIsLoaded {
             if !scoutFormIsVisible {
                 for view in container.subviews {
+                    // the "tag" propery of the view determines what mode tab
+                    // the view belongs to. if the tag of a view in "container"
+                    // equal to 0, then it is scout form input field. However,
+                    // if it is equal to the currently selected team number,
+                    // the subview is a view form datapoint for said team.
+                    // This property is used for hiding/showing of information
+                    // based on which mode tab is selected.
                     if view.tag == 0 {
                         view.isHidden = false
                     }
                 }
                 resizeContainer(self.scoutTopMargin)
             }
-        }else{
+        } else {
             if Reachability.isConnectedToNetwork() {
-                loadScoutForm()
-            }else{
-                if let dataPointsData = storage.object(forKey: "matchDataPoints") {
-                    let cachedDataPoints = NSKeyedUnarchiver.unarchiveObject(with: dataPointsData as! Data) as? [DataPoint]
-                    
-                    if cachedDataPoints!.count == 0 {
-                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-                    }else{
-                        retrieveScoutFormFromCache()
-                    }
-                }else{
-                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-                }
+                loadAndDisplayScoutForm()
+            } else {
+                loadAndDisplayCachedScoutForm()
             }
         }
         scoutFormIsVisible = true
     }
-    
-    func loadScoutForm() {
-        httpRequest(baseURL+"/getScoutForm", type: "POST", data: ["context": "match"]) {responseText in
+
+    /**
+        Loads scout form from MorScout servers and displays
+        each input item in the "container" view. After loading
+        the scout form from the internet, this function caches
+        said form for later use.
+     */
+    func loadAndDisplayScoutForm() {
+        httpRequest(baseURL + "/getScoutForm", type: "POST", data: [
+            "context": "match"
+        ]) { responseText in
             let formData = parseJSON(responseText)
+
             DispatchQueue.main.async(execute: {
-                
                 for(i, subJson):(String, JSON) in formData {
                     let type = subJson["type"].stringValue
                     if type == "label" {
                         self.dataPoints.append(Label(json: subJson))
-                    }else if type == "text" {
+                    } else if type == "text" {
                         self.dataPoints.append(TextBox(json: subJson))
-                    }else if type == "dropdown" || type == "radio" {
+                    } else if type == "dropdown" || type == "radio" {
                         self.dataPoints.append(Dropdown(json: subJson))
-                    }else if type == "number" {
+                    } else if type == "number" {
                         self.dataPoints.append(NumberBox(json: subJson))
-                    }else if type == "checkbox" {
+                    } else if type == "checkbox" {
                         self.dataPoints.append(Checkbox(json: subJson))
                     }
                     self.createDataPoint(self.dataPoints[Int(i)!])
@@ -250,27 +255,41 @@ class MatchVC: UIViewController {
                 storage.set(dataPointsData, forKey: "matchDataPoints")
                 
                 self.scoutFormDataIsLoaded = true
-                
                 self.resizeContainer(self.scoutTopMargin)
                 
 
             })
         }
     }
-    
-    func retrieveScoutFormFromCache() {
+
+    /**
+        Loads scout form from local cache and displays
+        each input item in the "container" view. This
+        function takes care of informing the user if no
+        form has been cached previously.
+     */
+    func loadAndDisplayCachedScoutForm() {
         if let dataPointsData = storage.object(forKey: "matchDataPoints") {
             let cachedDataPoints = NSKeyedUnarchiver.unarchiveObject(with: dataPointsData as! Data) as? [DataPoint]
-            
-            for cachedDataPoint in cachedDataPoints! {
-                self.createDataPoint(cachedDataPoint)
+
+            if cachedDataPoints!.count == 0 {
+                alert(
+                    title: "No Data Found",
+                    message: "In order to load the data, you need to have connected to the internet at least once.",
+                    buttonText: "OK", viewController: self)
+            } else {
+                for cachedDataPoint in cachedDataPoints! {
+                    self.createDataPoint(cachedDataPoint)
+                }
+                createSubmitButton()
+                scoutFormDataIsLoaded = true
+                resizeContainer(self.scoutTopMargin)
             }
-            
-            createSubmitButton()
-            
-            scoutFormDataIsLoaded = true
-            
-            resizeContainer(self.scoutTopMargin)
+        } else {
+            alert(
+                title: "No Data Found",
+                message: "In order to load the data, you need to have connected to the internet at least once.",
+                buttonText: "OK", viewController: self)
         }
     }
     
@@ -295,22 +314,14 @@ class MatchVC: UIViewController {
                 }
                 resizeContainer(self.viewTopMargin)
             }
-        }else{
+        } else {
             if Reachability.isConnectedToNetwork() {
                 loadViewForm()
-            }else{
-                alert(title: "Cannot load scouted reports", message: "Unfortunately you need to be connected to the internet to view previous reports", buttonText: "OK", viewController: self)
-//                if let matchViewPoints = storage.objectForKey("matchViewPoints") {
-//                    let cachedViewPoints = NSKeyedUnarchiver.unarchiveObjectWithData(matchViewPoints as! NSData) as? [ViewPoint]
-//                    
-//                    if cachedViewPoints!.count == 0 {
-//                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-//                    }else{
-//                        retrieveViewDataFromCache()
-//                    }
-//                }else{
-//                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-//                }
+            } else {
+                alert(
+                    title: "Cannot load scouted reports",
+                    message: "Unfortunately you need to be connected to the internet to view previous reports",
+                    buttonText: "OK", viewController: self)
             }
         }
         self.viewFormIsVisible = true
@@ -323,32 +334,8 @@ class MatchVC: UIViewController {
         ]){ responseText in
                 
             let data = parseJSON(responseText)
-            
-//            var yourTeamReports = [Report]()
-//            var otherTeamsReports = [Report]()
-//            
-//            for(_, subJson):(String, JSON) in data["yourTeam"]{
-//                yourTeamReports.append(Report(json: subJson))
-//            }
-//        
-//            for(_, subJson):(String, JSON) in data["otherTeams"]{
-//                otherTeamsReports.append(Report(json: subJson))
-//            }
-//            
-//            if let currentRegional = storage.stringForKey("currentRegional") {
-//            
-//                MatchDataStorage.sharedInstance.data[currentRegional] = ["\(self.matchNumber)": ["\(self.selectedTeam)": ["yourTeam": yourTeamReports]]]
-//                
-//                MatchDataStorage.sharedInstance.data[currentRegional] = ["\(self.matchNumber)": ["\(self.selectedTeam)": ["otherTeams": otherTeamsReports]]]
-//                
-//            }
-//            
-//            print("ON LOAD MATCH DATA:")
-//            print(MatchDataStorage.sharedInstance.data)
-            
-            
-            self.viewFormDataIsLoaded[String(self.selectedTeam)] = true
 
+            self.viewFormDataIsLoaded[String(self.selectedTeam)] = true
                 
             DispatchQueue.main.async(execute: {
                 
