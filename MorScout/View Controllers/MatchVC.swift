@@ -347,105 +347,19 @@ class MatchVC: UIViewController {
                 self.viewFormHeight = 5
                 
                 if data["yourTeam"].count == 0 && data["otherTeams"].count == 0 {
-                    self.viewFormHeight += 25
-                    let label = UILabel(frame: CGRect(
-                            x: 10, y: self.viewFormHeight,
-                            width: self.view.frame.width - 20, height: 21))
-                    label.text = "No Reports"
-                    label.font = UIFont(name: "Helvetica-Light", size: 22.0)
-                    label.textAlignment = .center
-                    label.tag = self.selectedTeam
-                    self.container.addSubview(label)
-                    self.viewFormHeight += label.frame.height + 5
+                    self.displayNoReports()
                 }
-    
-                if data["yourTeam"].count != 0 {
 
+                if data["yourTeam"].count > 0 {
                     self.addHeaderToViewForm(
                         text: "Your Team", size: .large)
-
-                    for(i, subJson):(String, JSON) in data["yourTeam"] {
-
-                        let reportNumber = Int(i)!+1
-                        self.addHeaderToViewForm(
-                            text: "Report \(reportNumber)", size: .medium)
-                        
-                        for(_, subJson):(String, JSON) in subJson["data"] {
-
-                            if !subJson["value"].exists() {
-
-                                self.addHeaderToViewForm(
-                                    text: subJson["name"].stringValue, size: .small)
-
-                            } else {
-                                let key = UILabel(frame: CGRect(
-                                    x: 10, y: self.viewFormHeight,
-                                    width: self.view.frame.width - 160, height: 21))
-                                key.text = subJson["name"].stringValue
-                                key.tag = self.selectedTeam
-                                self.container.addSubview(key)
-                                var height = heightForView(subJson["value"].stringValue, width: 140)
-                                if height == 0 {
-                                    height = 21
-                                }
-                                let value = UILabel(frame: CGRect(
-                                    x: self.view.frame.width-150, y: self.viewFormHeight,
-                                    width: 140 , height: height))
-                                value.numberOfLines = 0
-                                if subJson["value"].stringValue == "" {
-                                    value.text = "N/A"
-                                } else {
-                                    value.text = subJson["value"].stringValue
-                                }
-                                value.tag = self.selectedTeam
-                                self.container.addSubview(value)
-                                
-                                self.viewFormHeight += value.frame.height + 5
-                            }
-                        }
-                    }
+                    self.displayReports(from: data["yourTeam"])
                 }
-                    
-                if data["otherTeams"].count != 0 {
-                    
+
+                if data["otherTeams"].count > 0 {
                     self.addHeaderToViewForm(
                         text: "Other Teams", size: .large)
-                    
-                    for(i, subJson):(String, JSON) in data["otherTeams"] {
-
-                        let reportNumber = Int(i)!+1
-                        self.addHeaderToViewForm(
-                            text: "Report \(reportNumber)", size: .medium)
-                        
-                        for(_, subJson):(String, JSON) in subJson["data"] {
-                            if !subJson["value"].exists() {
-
-                                self.addHeaderToViewForm(
-                                    text: subJson["name"].stringValue, size: .small)
-
-                            } else {
-                                let key = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 160, height: 21))
-                                key.text = subJson["name"].stringValue
-                                key.tag = self.selectedTeam
-                                self.container.addSubview(key)
-                                var height = heightForView(subJson["value"].stringValue, width: 140)
-                                if height == 0 {
-                                    height = 21
-                                }
-                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewFormHeight, width: 140 , height: height))
-                                value.numberOfLines = 0
-                                if subJson["value"].stringValue == "" {
-                                    value.text = "N/A"
-                                }else{
-                                    value.text = subJson["value"].stringValue
-                                }
-                                value.tag = self.selectedTeam
-                                self.container.addSubview(value)
-                                
-                                self.viewFormHeight += value.frame.height + 5
-                            }
-                        }
-                    }
+                    self.displayReports(from: data["otherTeams"])
                 }
                 
                 self.resizeContainer(self.viewFormHeight)
@@ -499,7 +413,70 @@ class MatchVC: UIViewController {
         self.viewFormHeight += line.frame.height + 10
     }
 
-    
+    /**
+        Displays a label in the view form that informs the user that
+        no reports were made for the currently selected team.
+     */
+    func displayNoReports() {
+        self.viewFormHeight += 25
+        let label = UILabel(frame: CGRect(
+            x: 10, y: self.viewFormHeight,
+            width: self.view.frame.width - 20, height: 21))
+        label.text = "No Reports"
+        label.font = UIFont(name: "Helvetica-Light", size: 22.0)
+        label.textAlignment = .center
+        label.tag = self.selectedTeam
+        self.container.addSubview(label)
+        self.viewFormHeight += label.frame.height + 5
+
+    }
+
+    /**
+        Loops through all the reports made and displays them
+        in the view form with a key: value format.
+     */
+    func displayReports(from teamData: JSON) {
+        for(i, subJson):(String, JSON) in teamData {
+
+            let reportNumber = Int(i)!+1
+            self.addHeaderToViewForm(
+                text: "Report \(reportNumber)", size: .medium)
+
+            for(_, subJson):(String, JSON) in subJson["data"] {
+
+                if !subJson["value"].exists() {
+
+                    self.addHeaderToViewForm(
+                        text: subJson["name"].stringValue, size: .small)
+
+                } else {
+                    let key = UILabel(frame: CGRect(
+                        x: 10, y: self.viewFormHeight,
+                        width: self.view.frame.width - 160, height: 21))
+                    key.text = subJson["name"].stringValue
+                    key.tag = self.selectedTeam
+                    self.container.addSubview(key)
+                    var height = heightForView(subJson["value"].stringValue, width: 140)
+                    if height == 0 {
+                        height = 21
+                    }
+                    let value = UILabel(frame: CGRect(
+                        x: self.view.frame.width-150, y: self.viewFormHeight,
+                        width: 140 , height: height))
+                    value.numberOfLines = 0
+                    if subJson["value"].stringValue == "" {
+                        value.text = "N/A"
+                    } else {
+                        value.text = subJson["value"].stringValue
+                    }
+                    value.tag = self.selectedTeam
+                    self.container.addSubview(value)
+
+                    self.viewFormHeight += value.frame.height + 5
+                }
+            }
+        }
+    }
 
     func hideViewForm() {
         for view in self.container.subviews {
@@ -509,9 +486,9 @@ class MatchVC: UIViewController {
         }
         viewFormIsVisible = false
     }
-    
+
     // MARK: - Strategy
-    
+
     func showStrategyForm() {
         if strategyIsLoaded {
             if !strategyFormIsVisible {
