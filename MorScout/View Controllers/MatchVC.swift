@@ -36,6 +36,7 @@ class MatchVC: UIViewController {
     var scoutFormHeight: CGFloat = 5
     var viewFormHeight: CGFloat = 5
     let strategyBoxHeight: CGFloat = 100
+    let strategySaveButtonHeight: CGFloat = 30
     
     var picker: DropdownPicker = DropdownPicker()
     var pickerLists = [String: Array<String>]()
@@ -204,6 +205,8 @@ class MatchVC: UIViewController {
                     // the subview is a view form datapoint for said team.
                     // This property is used for hiding/showing of information
                     // based on which mode tab is selected.
+                    // Additionally: a tag of -1 is used for elements of the
+                    // strategy form
                     if view.tag == 0 {
                         view.isHidden = false
                     }
@@ -428,7 +431,6 @@ class MatchVC: UIViewController {
         label.tag = self.selectedTeam
         self.container.addSubview(label)
         self.viewFormHeight += label.frame.height + 5
-
     }
 
     /**
@@ -493,16 +495,19 @@ class MatchVC: UIViewController {
         if strategyIsLoaded {
             if !strategyFormIsVisible {
                 for view in container.subviews {
+                    // A tag of -1 is used for elements of the
+                    // strategy form
                     if view.tag == -1  {
                         view.isHidden = false
                     }
                 }
-                resizeContainer(strategyBoxHeight + 20 + 30 + 10)
+                // the save button has an upper margin of 20 and a lower margin of 10
+                resizeContainer(strategyBoxHeight + 20 + strategySaveButtonHeight + 10)
             }
-        }else{
+        } else {
             if Reachability.isConnectedToNetwork() {
                 loadStrategy()
-            }else{
+            } else {
                 if let strategies = storage.object(forKey: "strategies") {
                     let strategies = strategies as! [String: [String: String]]
                     if let currentRegional = storage.string(forKey: "currentRegional") {
@@ -515,7 +520,7 @@ class MatchVC: UIViewController {
                             textView.tag = -1
                             self.container.addSubview(textView)
 
-                            let button = UIButton(frame: CGRect(x: 100, y: strategyBoxHeight + 20, width: self.view.frame.width-200, height: 30))
+                            let button = UIButton(frame: CGRect(x: 100, y: strategyBoxHeight + 20, width: self.view.frame.width-200, height: strategySaveButtonHeight))
                             button.setTitle("Save", for: UIControlState())
                             button.backgroundColor = UIColor.lightGray
                             button.tag = -1
@@ -526,8 +531,11 @@ class MatchVC: UIViewController {
                             strategyIsLoaded = true
                         }
                     }
-                }else{
-                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                } else {
+                    alert(
+                        title: "No Data Found",
+                        message: "In order to load the data, you need to have connected to the internet at least once.",
+                        buttonText: "OK", viewController: self)
                 }
             }
         }
@@ -535,7 +543,9 @@ class MatchVC: UIViewController {
     }
     
     func loadStrategy() {
-        httpRequest(baseURL+"/getMatchStrategy", type: "POST", data: ["match": String(matchNumber)]) {responseText in
+        httpRequest(baseURL + "/getMatchStrategy", type: "POST", data: [
+            "match": String(matchNumber)
+        ]) { responseText in
             let strategy = parseJSON(responseText)
             var strategyText = strategy["strategy"].stringValue
             
@@ -548,11 +558,11 @@ class MatchVC: UIViewController {
                     var strategies = strategies as! [String: [String: String]]
                     if let _ = strategies[currentRegional] {
                         strategies[currentRegional]![String(self.matchNumber)] = strategyText
-                    }else{
+                    } else {
                         strategies[currentRegional] = [String(self.matchNumber): strategyText]
                     }
                     storage.set(strategies, forKey: "strategies")
-                }else{
+                } else {
                     var strategies = [String: [String: String]]()
                     strategies[currentRegional] = [String(self.matchNumber): strategyText]
                     storage.set(strategies, forKey: "strategies")
@@ -600,18 +610,27 @@ class MatchVC: UIViewController {
                 }
             }
             
-            httpRequest(baseURL+"/setMatchStrategy", type: "POST", data: ["match": String(self.matchNumber), "strategy": textViewText]) { responseText in
+            httpRequest(baseURL + "/setMatchStrategy", type: "POST", data: [
+                "match": String(self.matchNumber),
+                "strategy": textViewText
+            ]) { responseText in
                 if responseText == "success" {
-                    alert(title: "Success", message: "The match strategy was successfully updated", buttonText: "OK", viewController: self)
+                    alert(
+                        title: "Success",
+                        message: "The match strategy was successfully updated",
+                        buttonText: "OK", viewController: self)
                 }
             }
-        }else{
+        } else {
             alert(title: "No Internet", message: "Cannot edit strategy when internet connection is not available.", buttonText: "OK", viewController: self)
         }
     }
     
     func saveStrategyClickDisabled(_ sender: UIButton) {
-        alert(title: "No Internet", message: "Cannot edit strategy when internet connection is not available.", buttonText: "OK", viewController: self)
+        alert(
+            title: "No Internet",
+            message: "Cannot edit strategy when internet connection is not available.",
+            buttonText: "OK", viewController: self)
     }
     
     // MARK: - Misc
