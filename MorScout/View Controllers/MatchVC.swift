@@ -512,7 +512,9 @@ class MatchVC: UIViewController {
                     let strategies = strategies as! [String: [String: String]]
                     if let currentRegional = storage.string(forKey: "currentRegional") {
                         if let strategyText = strategies[currentRegional]![String(matchNumber)] {
-                            let textView = UITextView(frame: CGRect(x: 10, y: 5, width: self.view.frame.width-20, height: strategyBoxHeight))
+                            let textView = UITextView(frame: CGRect(
+                                x: 10, y: 5,
+                                width: self.view.frame.width-20, height: strategyBoxHeight))
                             textView.text = strategyText
                             textView.font = UIFont(name: "Helvetica", size: 14.0)
                             textView.isEditable = false
@@ -520,7 +522,9 @@ class MatchVC: UIViewController {
                             textView.tag = -1
                             self.container.addSubview(textView)
 
-                            let button = UIButton(frame: CGRect(x: 100, y: strategyBoxHeight + 20, width: self.view.frame.width-200, height: strategySaveButtonHeight))
+                            let button = UIButton(frame: CGRect(
+                                x: 100, y: strategyBoxHeight + 20,
+                                width: self.view.frame.width-200, height: strategySaveButtonHeight))
                             button.setTitle("Save", for: UIControlState())
                             button.backgroundColor = UIColor.lightGray
                             button.tag = -1
@@ -622,7 +626,10 @@ class MatchVC: UIViewController {
                 }
             }
         } else {
-            alert(title: "No Internet", message: "Cannot edit strategy when internet connection is not available.", buttonText: "OK", viewController: self)
+            alert(
+                title: "No Internet",
+                message: "Cannot edit strategy when internet connection is not available.",
+                buttonText: "OK", viewController: self)
         }
     }
     
