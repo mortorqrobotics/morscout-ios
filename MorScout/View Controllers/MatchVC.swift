@@ -641,16 +641,22 @@ class MatchVC: UIViewController {
     }
     
     // MARK: - Misc
-    
+
+    /**
+        Creates the UI element that corresponds with the type of
+        data point provided to the function, and then appends it
+        to the "container".
+     */
     func createDataPoint(_ dataPoint: DataPoint) {
         
         //the tags for scout form elements are being set to 0
-        
+
         let type = String(describing: Mirror(reflecting: dataPoint).subjectType)
-        
-        if type == "Label" {
+
+        switch type {
+        case "Label":
             let dataPoint = dataPoint as! Label
-            
+
             let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 26))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 22.0)
@@ -658,16 +664,16 @@ class MatchVC: UIViewController {
             label.tag = 0
             self.container.addSubview(label)
             self.scoutFormHeight += label.frame.height + 5
-            
+
             let line = UIView(frame: CGRect(x: 80, y: self.scoutFormHeight, width: self.view.frame.width-160, height: 1))
             line.backgroundColor = UIColor.lightGray
             line.tag = 0
             self.container.addSubview(line)
             self.scoutFormHeight += line.frame.height + 10
-            
-        }else if type == "TextBox" {
+
+        case "TextBox":
             let dataPoint = dataPoint as! TextBox
-            
+
             let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 21))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 17.0)
@@ -675,35 +681,35 @@ class MatchVC: UIViewController {
             label.tag = 0
             self.container.addSubview(label)
             self.scoutFormHeight += label.frame.height + 5
-            
+
             let textbox = UITextView(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 90))
             textbox.font = UIFont.systemFont(ofSize: 15)
             textbox.autocorrectionType = UITextAutocorrectionType.no
             textbox.keyboardType = UIKeyboardType.default
             textbox.returnKeyType = UIReturnKeyType.done
-            
+
             let toolbarAndButton = createToolbar()
             let doneButton = toolbarAndButton.1
             let toolbar = toolbarAndButton.0
             doneButton.textView = textbox
             textbox.inputAccessoryView = toolbar
-            
+
             textbox.tag = 0
             self.container.addSubview(textbox)
             self.scoutFormHeight += textbox.frame.height + 10
-            
-        }else if type == "Dropdown" {
+
+        case "Dropdown":
             let dataPoint = dataPoint as! Dropdown
-            
+
             let options = dataPoint.options
-            
+
             self.pickerLists[dataPoint.name] = options
-            
+
             let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 21))
             label.text = dataPoint.name + ":"
             label.tag = 0
             self.container.addSubview(label)
-            
+
             let textField = DropdownTextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutFormHeight, width: self.view.frame.width-20-label.intrinsicContentSize.width-15, height: 21))
             textField.dropdown = dataPoint.name
             //textField.placeholder = "Choose.."
@@ -714,9 +720,9 @@ class MatchVC: UIViewController {
             self.container.addSubview(textField)
             self.scoutFormHeight += textField.frame.height + 15
 
-        }else if type == "NumberBox" {
+        case "NumberBox":
             let dataPoint = dataPoint as! NumberBox
-            
+
             let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-94-45, height: 29))
             label.text = dataPoint.name + ":"
             let stepper = NumberStepper(frame: CGRect(x: self.view.frame.width - 105, y: self.scoutFormHeight, width: 0, height: 0))
@@ -726,20 +732,20 @@ class MatchVC: UIViewController {
             }else{
                 numberField = UITextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutFormHeight, width: 40, height: 29))
             }
-            
+
             stepper.numberField = numberField
             stepper.numberField?.text = String(dataPoint.start)
             stepper.numberField?.keyboardType = .numberPad
             stepper.maximumValue = Double(dataPoint.max)
             stepper.minimumValue = Double(dataPoint.min)
             stepper.addTarget(self, action: #selector(MatchVC.stepperValueChanged(_:)), for: .valueChanged)
-            
+
             let toolbarAndButton = createToolbar()
             let doneButton = toolbarAndButton.1
             let toolbar = toolbarAndButton.0
             doneButton.textField = stepper.numberField
             stepper.numberField!.inputAccessoryView = toolbar
-            
+
             label.tag = 0
             stepper.tag = 0
             stepper.numberField?.tag = 0
@@ -747,23 +753,25 @@ class MatchVC: UIViewController {
             self.container.addSubview(stepper.numberField!)
             self.container.addSubview(stepper)
             self.scoutFormHeight += label.frame.height + 10
-            
-        }else if type == "Checkbox" {
+
+        case "Checkbox":
             let dataPoint = dataPoint as! Checkbox
-            
+
             let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-54-20, height: 31))
             label.text = dataPoint.name
             label.tag = 0
             self.container.addSubview(label)
-            
+
             let check = UISwitch(frame: CGRect(x: self.view.frame.width-65, y: self.scoutFormHeight, width: 0, height: 0))
             check.tintColor = UIColorFromHex("FF8900")
             check.onTintColor = UIColorFromHex("FF8900")
             check.tag = 0
             self.container.addSubview(check)
-            
+
             self.scoutFormHeight += label.frame.height + 10
             
+        default:
+            break
         }
     }
     
