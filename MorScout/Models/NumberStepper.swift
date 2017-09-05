@@ -9,6 +9,8 @@
 import Foundation
 
 class NumberStepper: UIStepper {
-    //the text field that the stepper is associated with
+    /// The text field that the stepper is associated with.
+    /// This text field stores the current value (0-n) of the
+    /// stepper as a string
     var numberField: UITextField?
 }

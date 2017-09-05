@@ -32,6 +32,8 @@ class MatchVC: UIViewController {
     /// the scout form or view form and changes in size
     /// based on the amount of information needed to be
     /// displayed at the current time.
+    /// This UIView element will be referred to as
+    /// the "container" in most documentation in this file.
     var container = UIView()
     var scoutFormHeight: CGFloat = 5
     var viewFormHeight: CGFloat = 5
@@ -211,7 +213,7 @@ class MatchVC: UIViewController {
                         view.isHidden = false
                     }
                 }
-                resizeContainer(self.scoutFormHeight)
+                resizeContainerHeight(self.scoutFormHeight)
             }
         } else {
             if Reachability.isConnectedToNetwork() {
@@ -252,13 +254,13 @@ class MatchVC: UIViewController {
                     self.createDataPoint(self.dataPoints[Int(i)!])
                 }
                 
-                self.createSubmitButton()
+                self.createAndDisplaySubmitButton()
                 
                 let dataPointsData = NSKeyedArchiver.archivedData(withRootObject: self.dataPoints)
                 storage.set(dataPointsData, forKey: "matchDataPoints")
                 
                 self.scoutFormDataIsLoaded = true
-                self.resizeContainer(self.scoutFormHeight)
+                self.resizeContainerHeight(self.scoutFormHeight)
                 
 
             })
@@ -284,9 +286,9 @@ class MatchVC: UIViewController {
                 for cachedDataPoint in cachedDataPoints! {
                     self.createDataPoint(cachedDataPoint)
                 }
-                createSubmitButton()
+                createAndDisplaySubmitButton()
                 scoutFormDataIsLoaded = true
-                resizeContainer(self.scoutFormHeight)
+                resizeContainerHeight(self.scoutFormHeight)
             }
         } else {
             alert(
@@ -315,7 +317,7 @@ class MatchVC: UIViewController {
                         view.isHidden = false
                     }
                 }
-                resizeContainer(self.viewFormHeight)
+                resizeContainerHeight(self.viewFormHeight)
             }
         } else {
             if Reachability.isConnectedToNetwork() {
@@ -365,7 +367,7 @@ class MatchVC: UIViewController {
                     self.displayReports(from: data["otherTeams"])
                 }
                 
-                self.resizeContainer(self.viewFormHeight)
+                self.resizeContainerHeight(self.viewFormHeight)
                 
             })
         }
@@ -502,7 +504,7 @@ class MatchVC: UIViewController {
                     }
                 }
                 // the save button has an upper margin of 20 and a lower margin of 10
-                resizeContainer(strategyBoxHeight + 20 + strategySaveButtonHeight + 10)
+                resizeContainerHeight(strategyBoxHeight + 20 + strategySaveButtonHeight + 10)
             }
         } else {
             if Reachability.isConnectedToNetwork() {
@@ -531,7 +533,7 @@ class MatchVC: UIViewController {
                             button.addTarget(self, action: #selector(MatchVC.saveStrategyClickDisabled(_:)), for: .touchUpInside)
                             self.container.addSubview(button)
 
-                            resizeContainer(strategyBoxHeight + 20 + button.frame.height + 10)
+                            resizeContainerHeight(strategyBoxHeight + 20 + button.frame.height + 10)
                             strategyIsLoaded = true
                         }
                     }
@@ -587,7 +589,7 @@ class MatchVC: UIViewController {
                 button.addTarget(self, action: #selector(MatchVC.saveStrategyClick(_:)), for: .touchUpInside)
                 self.container.addSubview(button)
                 
-                self.resizeContainer(self.strategyBoxHeight + 20 + button.frame.height + 10)
+                self.resizeContainerHeight(self.strategyBoxHeight + 20 + button.frame.height + 10)
                 self.strategyIsLoaded = true
             })
         }
@@ -774,12 +776,22 @@ class MatchVC: UIViewController {
             break
         }
     }
-    
+
+    /**
+        This function is called when the user increases
+        or decreases the value of a number stepper and
+        then updates the textfield that displays the
+        stepper's value.
+     */
     func stepperValueChanged(_ sender: UIStepper) {
         let sender = sender as! NumberStepper
         sender.numberField?.text = Int(sender.value).description
     }
-    
+
+    /**
+        Creates a UIToolbar and its done button
+        and returns them as a tuple.
+     */
     func createToolbar() -> (UIToolbar, DoneButton) {
         let toolBar = UIToolbar(frame: CGRect(x: 0, y: self.view.frame.size.height/6, width: self.view.frame.size.width, height: 40.0))
         toolBar.layer.position = CGPoint(x: self.view.frame.size.width/2, y: self.view.frame.size.height-20.0)
@@ -788,13 +800,17 @@ class MatchVC: UIViewController {
         toolBar.setItems([flexSpace, doneButton], animated: true)
         return (toolBar, doneButton)
     }
-    
-    func resizeContainer(_ margin: CGFloat) {
-        self.container.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: margin)
+
+    func resizeContainerHeight(_ height: CGFloat) {
+        self.container.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: height)
         self.scrollView.contentSize = self.container.bounds.size
     }
-    
-    func createSubmitButton() {
+
+    /**
+        Creates a submit button and appends it to
+        the "container".
+     */
+    func createAndDisplaySubmitButton() {
         self.scoutFormHeight += 10
         let button = UIButton(frame: CGRect(x: 100, y: self.scoutFormHeight, width: self.view.frame.width-200, height: 30))
         button.setTitle("Submit", for: UIControlState())
@@ -803,7 +819,11 @@ class MatchVC: UIViewController {
         self.scoutFormHeight += button.frame.height + 15
         self.container.addSubview(button)
     }
-    
+
+    /**
+        This function is called when the "submit" button
+        has been clicked.
+     */
     func submitFormClick(_ sender: UIButton) {
         if scoutFormIsVisible {
             var jsonStringDataArray = "["
@@ -818,21 +838,21 @@ class MatchVC: UIViewController {
                                 jsonStringDataArray += "{\"name\": \"\(escape(label.text!))\"},"
                             }
                         }
-                    }else if type == "UITextView" {
+                    } else if type == "UITextView" {
                         let textViewLabel = views[i-1] as! UILabel
                         let textView = views[i] as! UITextView
                         jsonStringDataArray += "{\"name\": \"\(escape(textViewLabel.text!))\", \"value\": \"\(escape(textView.text!))\"},"
-                    }else if type == "DropdownTextField" {
+                    } else if type == "DropdownTextField" {
                         let textField = views[i] as! DropdownTextField
                         if textField.text?.contains("▾") == true {
                             textField.text = String(describing: textField.text?.characters.dropLast(2))
                         }
                         jsonStringDataArray += "{\"name\": \"\(escape(textField.dropdown!))\", \"value\": \"\(escape(textField.text!))\"},"
-                    }else if type == "NumberStepper" {
+                    } else if type == "NumberStepper" {
                         let stepperLabel = views[i-2] as! UILabel
                         let stepperTextField = views[i-1] as! UITextField
                         jsonStringDataArray += "{\"name\": \"\(escape(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
-                    }else if type == "UISwitch" {
+                    } else if type == "UISwitch" {
                         let checkLabel = views[i-1] as! UILabel
                         let check = views[i] as! UISwitch
                         jsonStringDataArray += "{\"name\": \"\(escape(checkLabel.text!))\", \"value\": \"\(check.isOn)\"},"
@@ -842,20 +862,29 @@ class MatchVC: UIViewController {
             jsonStringDataArray = String(jsonStringDataArray.characters.dropLast())
             jsonStringDataArray += "]"
             
-            let data = ["data": jsonStringDataArray, "team": String(selectedTeam), "context": "match", "match": String(matchNumber), "regional": storage.string(forKey: "currentRegional")!]
+            let data = [
+                "data": jsonStringDataArray,
+                "team": String(selectedTeam),
+                "context": "match",
+                "match": String(matchNumber),
+                "regional": storage.string(forKey: "currentRegional")!
+            ]
             
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
-            }else{
+            } else {
                 if let savedReports = storage.array(forKey: "savedReports") {
                     var newSavedReports = savedReports
                     newSavedReports.append(data)
                     storage.set(newSavedReports, forKey: "savedReports")
-                }else{
+                } else {
                     let newSavedReports = [data]
                     storage.set(newSavedReports, forKey: "savedReports")
                 }
-                alert(title: "Submission saved ", message: "You are currently not connected to the internet so we saved your submission locally. It will be sent to the server once an internet connection is established.", buttonText: "OK", viewController: self)
+                alert(
+                    title: "Submission saved ",
+                    message: "You are currently not connected to the internet so we saved your submission locally. It will be sent to the server once an internet connection is established.",
+                    buttonText: "OK", viewController: self)
             }
             
             
@@ -863,15 +892,25 @@ class MatchVC: UIViewController {
     }
     
     func sendSubmission(_ data: [String: String]) {
-        httpRequest(baseURL+"/submitReport", type: "POST", data: data) { responseText in
+        httpRequest(baseURL + "/submitReport", type: "POST", data: data) { responseText in
             if responseText != "fail" {
-                alert(title: "Success", message: "You have successfully submitted the report.", buttonText: "OK", viewController: self)
-            }else{
-                alert(title: "Oops", message: "Something went wrong :(", buttonText: "OK", viewController: self)
+                alert(
+                    title: "Success",
+                    message: "You have successfully submitted the report.",
+                    buttonText: "OK", viewController: self)
+            } else {
+                alert(
+                    title: "Oops",
+                    message: "Something went wrong :(",
+                    buttonText: "OK", viewController: self)
             }
         }
     }
-    
+
+    /**
+        This function is called when the "done" button
+        is pressed on the dropdown toolbar.
+     */
     func clickedDoneButton(_ sender: UIBarButtonItem) {
         let sender = sender as! DoneButton
         
