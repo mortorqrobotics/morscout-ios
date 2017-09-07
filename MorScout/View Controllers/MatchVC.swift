@@ -41,6 +41,8 @@ class MatchVC: UIViewController {
     let strategySaveButtonHeight: CGFloat = 30
     
     var picker: DropdownPicker = DropdownPicker()
+    /// The array of options for each DropdownPicker
+    /// with a String name.
     var pickerLists = [String: Array<String>]()
     
     var dataPoints = [DataPoint]()

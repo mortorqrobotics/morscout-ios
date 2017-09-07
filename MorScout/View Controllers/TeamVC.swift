@@ -20,12 +20,20 @@ class TeamVC: UIViewController {
     @IBOutlet weak var teamLocation: UILabel!
     @IBOutlet weak var modeTabs: UISegmentedControl!
     @IBOutlet weak var scrollView: UIScrollView!
-    
+
+    /// This view "contains" all of the elements in
+    /// the scout form or view form and changes in size
+    /// based on the amount of information needed to be
+    /// displayed at the current time.
+    /// This UIView element will be referred to as
+    /// the "container" in most documentation in this file.
     var container = UIView()
-    var scoutTopMargin: CGFloat = 5
-    var viewTopMargin: CGFloat = 5
+    var scoutFormHeight: CGFloat = 5
+    var viewFormHeight: CGFloat = 5
     
     var picker: DropdownPicker = DropdownPicker()
+    /// The array of options for each DropdownPicker
+    /// with a String name.
     var pickerLists = [String: Array<String>]()
     
     var dataPoints = [DataPoint]()
@@ -45,7 +53,9 @@ class TeamVC: UIViewController {
         teamNameLabel.text = teamName
         
         if Reachability.isConnectedToNetwork() {
-            httpRequest(baseURL+"/getTeamInfo", type: "POST", data: ["teamNumber": String(teamNumber)]){responseText in
+            httpRequest(baseURL + "/getTeamInfo", type: "POST", data: [
+                "teamNumber": String(teamNumber)
+            ]){ responseText in
                 let teamInfo = parseJSON(responseText)
                 DispatchQueue.main.async(execute: {
                     self.teamWebLink.text = teamInfo["website"].stringValue
@@ -53,6 +63,7 @@ class TeamVC: UIViewController {
                 })
             }
         }
+
         modeTabs.selectedSegmentIndex = -1
         
         picker.delegate = self
@@ -65,9 +76,9 @@ class TeamVC: UIViewController {
         }
         
     }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
     
     @IBAction func changeModeTabs(_ sender: UISegmentedControl) {
@@ -91,31 +102,38 @@ class TeamVC: UIViewController {
                         view.isHidden = false
                     }
                 }
-                resizeContainer(self.scoutTopMargin)
+                resizeContainerHeight(self.scoutFormHeight)
             }
-        }else{
+        } else {
             if Reachability.isConnectedToNetwork() {
                 loadScoutForm()
-            }else{
+            } else {
                 if let dataPointsData = storage.object(forKey: "teamDataPoints") {
                     let cachedDataPoints = NSKeyedUnarchiver.unarchiveObject(with: dataPointsData as! Data) as? [DataPoint]
                     
                     if cachedDataPoints!.count == 0 {
-                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-                    }else{
+                        alert(
+                            title: "No Data Found",
+                            message: "In order to load the data, you need to have connected to the internet at least once.",
+                            buttonText: "OK", viewController: self)
+                    } else {
                         retrieveScoutFormFromCache()
                     }
-                }else{
-                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
+                } else {
+                    alert(
+                        title: "No Data Found",
+                        message: "In order to load the data, you need to have connected to the internet at least once.",
+                        buttonText: "OK", viewController: self)
                 }
             }
         }
         self.scoutFormIsVisible = true
-        
     }
     
     func loadScoutForm() {
-        httpRequest(baseURL+"/getScoutForm", type: "POST", data: ["context": "pit"]) {responseText in
+        httpRequest(baseURL + "/getScoutForm", type: "POST", data: [
+            "context": "pit"
+        ]) { responseText in
             let formData = parseJSON(responseText)
             DispatchQueue.main.async(execute: {
                 
@@ -123,13 +141,13 @@ class TeamVC: UIViewController {
                     let type = subJson["type"].stringValue
                     if type == "label" {
                         self.dataPoints.append(Label(json: subJson))
-                    }else if type == "text" {
+                    } else if type == "text" {
                         self.dataPoints.append(TextBox(json: subJson))
-                    }else if type == "dropdown" || type == "radio" {
+                    } else if type == "dropdown" || type == "radio" {
                         self.dataPoints.append(Dropdown(json: subJson))
-                    }else if type == "number" {
+                    } else if type == "number" {
                         self.dataPoints.append(NumberBox(json: subJson))
-                    }else if type == "checkbox" {
+                    } else if type == "checkbox" {
                         self.dataPoints.append(Checkbox(json: subJson))
                     }
                     self.createDataPoint(self.dataPoints[Int(i)!])
@@ -142,7 +160,7 @@ class TeamVC: UIViewController {
                 
                 self.scoutFormDataIsLoaded = true
                 
-                self.resizeContainer(self.scoutTopMargin)
+                self.resizeContainerHeight(self.scoutFormHeight)
                 
             })
         }
@@ -160,7 +178,7 @@ class TeamVC: UIViewController {
             
             scoutFormDataIsLoaded = true
             
-            self.resizeContainer(self.scoutTopMargin)
+            self.resizeContainerHeight(self.scoutFormHeight)
 
         }
     }
@@ -183,24 +201,15 @@ class TeamVC: UIViewController {
                     }
                 }
             }
-            self.resizeContainer(self.viewTopMargin)
-        }else{
+            self.resizeContainerHeight(self.viewFormHeight)
+        } else {
             if Reachability.isConnectedToNetwork() {
                 loadViewForm()
-            }else{
-                alert(title: "Cannot load scouted reports", message: "Unfortunately you need to be connected to the internet to view previous reports", buttonText: "OK", viewController: self)
-                
-//                if let teamViewData = storage.objectForKey("teamViewData") {
-//                    let cachedViewPoints = NSKeyedUnarchiver.unarchiveObjectWithData(teamViewData as! NSData) as? [ViewPoint]
-//                    
-//                    if cachedViewPoints!.count == 0 {
-//                        alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-//                    }else{
-//                        retrieveViewDataFromCache()
-//                    }
-//                }else{
-//                    alert(title: "No Data Found", message: "In order to load the data, you need to have connected to the internet at least once.", buttonText: "OK", viewController: self)
-//                }
+            } else {
+                alert(
+                    title: "Cannot load scouted reports",
+                    message: "Unfortunately you need to be connected to the internet to view previous reports",
+                    buttonText: "OK", viewController: self)
             }
         }
         self.viewFormIsVisible = true
@@ -208,7 +217,10 @@ class TeamVC: UIViewController {
     }
     
     func loadViewForm() {
-        httpRequest(baseURL+"/getTeamReports", type: "POST", data: ["reportContext": "pit", "teamNumber": String(teamNumber)]) { responseText in
+        httpRequest(baseURL + "/getTeamReports", type: "POST", data: [
+            "reportContext": "pit",
+            "teamNumber": String(teamNumber)
+        ]) { responseText in
             
             let data = parseJSON(responseText)
             
@@ -216,67 +228,67 @@ class TeamVC: UIViewController {
             
             DispatchQueue.main.async(execute: {
                 
-                self.viewTopMargin = 5
+                self.viewFormHeight = 5
                 
                 if data["yourTeam"].count == 0 && data["otherTeams"].count == 0 {
-                    self.viewTopMargin += 25
-                    let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                    self.viewFormHeight += 25
+                    let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                     label.text = "No Reports"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .center
                     label.tag = self.teamNumber
                     self.container.addSubview(label)
-                    self.viewTopMargin += label.frame.height + 5
+                    self.viewFormHeight += label.frame.height + 5
                 }
                 
                 if data["yourTeam"].count != 0 {
-                    let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                    let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                     label.text = "Your Team"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .center
                     label.tag = self.teamNumber
                     self.container.addSubview(label)
-                    self.viewTopMargin += label.frame.height + 5
+                    self.viewFormHeight += label.frame.height + 5
                     
-                    let line = UIView(frame: CGRect(x: 40, y: self.viewTopMargin, width: self.view.frame.width-80, height: 1))
+                    let line = UIView(frame: CGRect(x: 40, y: self.viewFormHeight, width: self.view.frame.width-80, height: 1))
                     line.backgroundColor = UIColor.lightGray
                     line.tag = self.teamNumber
                     self.container.addSubview(line)
-                    self.viewTopMargin += line.frame.height + 10
+                    self.viewFormHeight += line.frame.height + 10
                     
                     for(i, subJson):(String, JSON) in data["yourTeam"] {
                         let reportNumber = Int(i)!+1
-                        let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                        let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                         label.text = "Report \(reportNumber)"
                         label.font = UIFont(name: "Helvetica-Light", size: 21.0)
                         label.textAlignment = .center
                         label.tag = self.teamNumber
                         self.container.addSubview(label)
-                        self.viewTopMargin += label.frame.height + 5
+                        self.viewFormHeight += label.frame.height + 5
                         
-                        let line = UIView(frame: CGRect(x: 60, y: self.viewTopMargin, width: self.view.frame.width-120, height: 1))
+                        let line = UIView(frame: CGRect(x: 60, y: self.viewFormHeight, width: self.view.frame.width-120, height: 1))
                         line.backgroundColor = UIColor.lightGray
                         line.tag = self.teamNumber
                         self.container.addSubview(line)
-                        self.viewTopMargin += line.frame.height + 10
+                        self.viewFormHeight += line.frame.height + 10
                         
                         for(_, subJson):(String, JSON) in subJson["data"] {
                             if subJson["value"].stringValue == "null" {
-                                let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                                let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                                 label.text = subJson["name"].stringValue
                                 label.font = UIFont(name: "Helvetica-Light", size: 20.0)
                                 label.textAlignment = .center
                                 label.tag = self.teamNumber
                                 self.container.addSubview(label)
-                                self.viewTopMargin += label.frame.height + 5
+                                self.viewFormHeight += label.frame.height + 5
                                 
-                                let line = UIView(frame: CGRect(x: 80, y: self.viewTopMargin, width: self.view.frame.width-160, height: 1))
+                                let line = UIView(frame: CGRect(x: 80, y: self.viewFormHeight, width: self.view.frame.width-160, height: 1))
                                 line.backgroundColor = UIColor.lightGray
                                 line.tag = self.teamNumber
                                 self.container.addSubview(line)
-                                self.viewTopMargin += line.frame.height + 10
-                            }else{
-                                let key = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 160, height: 21))
+                                self.viewFormHeight += line.frame.height + 10
+                            } else {
+                                let key = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 160, height: 21))
                                 key.text = subJson["name"].stringValue
                                 key.tag = self.teamNumber
                                 self.container.addSubview(key)
@@ -284,18 +296,18 @@ class TeamVC: UIViewController {
                                 if height == 0 {
                                     height = 21
                                 }
-                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewTopMargin, width: 140 , height: height))
+                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewFormHeight, width: 140 , height: height))
                                 value.numberOfLines = 0
                                 if subJson["value"].stringValue == "" {
                                     value.text = "N/A"
-                                }else{
+                                } else {
                                     value.text = subJson["value"].stringValue
                                 }
 
                                 value.tag = self.teamNumber
                                 self.container.addSubview(value)
                                 
-                                self.viewTopMargin += value.frame.height + 5
+                                self.viewFormHeight += value.frame.height + 5
                             }
                         }
                     }
@@ -303,54 +315,54 @@ class TeamVC: UIViewController {
                 
                 if data["otherTeams"].count != 0 {
                     
-                    let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                    let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                     label.text = "Other Teams"
                     label.font = UIFont(name: "Helvetica-Light", size: 22.0)
                     label.textAlignment = .center
                     label.tag = self.teamNumber
                     self.container.addSubview(label)
-                    self.viewTopMargin += label.frame.height + 5
+                    self.viewFormHeight += label.frame.height + 5
                     
-                    let line = UIView(frame: CGRect(x: 40, y: self.viewTopMargin, width: self.view.frame.width-80, height: 1))
+                    let line = UIView(frame: CGRect(x: 40, y: self.viewFormHeight, width: self.view.frame.width-80, height: 1))
                     line.backgroundColor = UIColor.lightGray
                     line.tag = self.teamNumber
                     self.container.addSubview(line)
-                    self.viewTopMargin += line.frame.height + 10
+                    self.viewFormHeight += line.frame.height + 10
                     
                     
                     for(i, subJson):(String, JSON) in data["otherTeams"] {
                         let reportNumber = Int(i)!+1
-                        let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                        let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                         label.text = "Report \(reportNumber)"
                         label.font = UIFont(name: "Helvetica-Light", size: 21.0)
                         label.textAlignment = .center
                         label.tag = self.teamNumber
                         self.container.addSubview(label)
-                        self.viewTopMargin += label.frame.height + 5
+                        self.viewFormHeight += label.frame.height + 5
                         
-                        let line = UIView(frame: CGRect(x: 60, y: self.viewTopMargin, width: self.view.frame.width-120, height: 1))
+                        let line = UIView(frame: CGRect(x: 60, y: self.viewFormHeight, width: self.view.frame.width-120, height: 1))
                         line.backgroundColor = UIColor.lightGray
                         line.tag = self.teamNumber
                         self.container.addSubview(line)
-                        self.viewTopMargin += line.frame.height + 10
+                        self.viewFormHeight += line.frame.height + 10
                         
                         for(_, subJson):(String, JSON) in subJson["data"] {
                             if subJson["value"].stringValue == "null" {
-                                let label = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 20, height: 21))
+                                let label = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 20, height: 21))
                                 label.text = subJson["name"].stringValue
                                 label.font = UIFont(name: "Helvetica-Light", size: 20.0)
                                 label.textAlignment = .center
                                 label.tag = self.teamNumber
                                 self.container.addSubview(label)
-                                self.viewTopMargin += label.frame.height + 5
+                                self.viewFormHeight += label.frame.height + 5
                                 
-                                let line = UIView(frame: CGRect(x: 80, y: self.viewTopMargin, width: self.view.frame.width-160, height: 1))
+                                let line = UIView(frame: CGRect(x: 80, y: self.viewFormHeight, width: self.view.frame.width-160, height: 1))
                                 line.backgroundColor = UIColor.lightGray
                                 line.tag = self.teamNumber
                                 self.container.addSubview(line)
-                                self.viewTopMargin += line.frame.height + 10
-                            }else{
-                                let key = UILabel(frame: CGRect(x: 10, y: self.viewTopMargin, width: self.view.frame.width - 160, height: 21))
+                                self.viewFormHeight += line.frame.height + 10
+                            } else {
+                                let key = UILabel(frame: CGRect(x: 10, y: self.viewFormHeight, width: self.view.frame.width - 160, height: 21))
                                 key.text = subJson["name"].stringValue
                                 key.tag = self.teamNumber
                                 self.container.addSubview(key)
@@ -358,33 +370,29 @@ class TeamVC: UIViewController {
                                 if height == 0 {
                                     height = 21
                                 }
-                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewTopMargin, width: 140 , height: height))
+                                let value = UILabel(frame: CGRect(x: self.view.frame.width-150, y: self.viewFormHeight, width: 140 , height: height))
                                 value.numberOfLines = 0
                                 if subJson["value"].stringValue == "" {
                                     value.text = "N/A"
-                                }else{
+                                } else {
                                     value.text = subJson["value"].stringValue
                                 }
 
                                 value.tag = self.teamNumber
                                 self.container.addSubview(value)
                                 
-                                self.viewTopMargin += value.frame.height + 5
+                                self.viewFormHeight += value.frame.height + 5
                             }
                         }
                     }
                 }
                 
-                self.resizeContainer(self.viewTopMargin)
+                self.resizeContainerHeight(self.viewFormHeight)
                 
             })
         }
     }
-    
-    func retrieveViewDataFromCache() {
-        
-    }
-    
+
     func hideViewFormElements() {
         for view in self.container.subviews {
             if view.tag != 0 {
@@ -400,35 +408,36 @@ class TeamVC: UIViewController {
         
         let type = String(describing: Mirror(reflecting: dataPoint).subjectType)
         
-        if type == "Label" {
+        switch type {
+        case "Label":
             let dataPoint = dataPoint as! Label
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 26))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 26))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 22.0)
             label.textAlignment = .center
             label.tag = 0
             self.container.addSubview(label)
-            self.scoutTopMargin += label.frame.height + 5
+            self.scoutFormHeight += label.frame.height + 5
             
-            let line = UIView(frame: CGRect(x: 80, y: self.scoutTopMargin, width: self.view.frame.width-160, height: 1))
+            let line = UIView(frame: CGRect(x: 80, y: self.scoutFormHeight, width: self.view.frame.width-160, height: 1))
             line.backgroundColor = UIColor.lightGray
             line.tag = 0
             self.container.addSubview(line)
-            self.scoutTopMargin += line.frame.height + 10
+            self.scoutFormHeight += line.frame.height + 10
             
-        }else if type == "TextBox" {
+        case "TextBox":
             let dataPoint = dataPoint as! TextBox
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 21))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 21))
             label.text = dataPoint.name
             label.font = UIFont(name: "Helvetica-Light", size: 17.0)
             label.textColor = UIColor.black
             label.tag = 0
             self.container.addSubview(label)
-            self.scoutTopMargin += label.frame.height + 5
+            self.scoutFormHeight += label.frame.height + 5
             
-            let textbox = UITextView(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 90))
+            let textbox = UITextView(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 90))
             textbox.font = UIFont.systemFont(ofSize: 15)
             textbox.autocorrectionType = UITextAutocorrectionType.no
             textbox.keyboardType = UIKeyboardType.default
@@ -442,21 +451,21 @@ class TeamVC: UIViewController {
             
             textbox.tag = 0
             self.container.addSubview(textbox)
-            self.scoutTopMargin += textbox.frame.height + 10
+            self.scoutFormHeight += textbox.frame.height + 10
             
-        }else if type == "Dropdown" {
+        case "Dropdown":
             let dataPoint = dataPoint as! Dropdown
             
             let options = dataPoint.options
             
             self.pickerLists[dataPoint.name] = options
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-20, height: 21))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-20, height: 21))
             label.text = dataPoint.name + ":"
             label.tag = 0
             self.container.addSubview(label)
             
-            let textField = DropdownTextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutTopMargin, width: self.view.frame.width-20-label.intrinsicContentSize.width-15, height: 21))
+            let textField = DropdownTextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutFormHeight, width: self.view.frame.width-20-label.intrinsicContentSize.width-15, height: 21))
             textField.dropdown = dataPoint.name
             //textField.placeholder = "Choose.."
             textField.text = options[0] + " ▾"
@@ -464,19 +473,19 @@ class TeamVC: UIViewController {
             textField.inputView = self.picker
             textField.tag = 0
             self.container.addSubview(textField)
-            self.scoutTopMargin += textField.frame.height + 15
+            self.scoutFormHeight += textField.frame.height + 15
             
-        }else if type == "NumberBox" {
+        case "NumberBox":
             let dataPoint = dataPoint as! NumberBox
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-94-45, height: 29))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-94-45, height: 29))
             label.text = dataPoint.name + ":"
-            let stepper = NumberStepper(frame: CGRect(x: self.view.frame.width - 105, y: self.scoutTopMargin, width: 0, height: 0))
+            let stepper = NumberStepper(frame: CGRect(x: self.view.frame.width - 105, y: self.scoutFormHeight, width: 0, height: 0))
             let numberField: UITextField
             if label.intrinsicContentSize.width > (self.view.frame.width-94-50) {
-                numberField = UITextField(frame: CGRect(x: self.view.frame.width-94-35, y: self.scoutTopMargin, width: 40, height: 29))
-            }else{
-                numberField = UITextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutTopMargin, width: 40, height: 29))
+                numberField = UITextField(frame: CGRect(x: self.view.frame.width-94-35, y: self.scoutFormHeight, width: 40, height: 29))
+            } else {
+                numberField = UITextField(frame: CGRect(x: label.intrinsicContentSize.width+15, y: self.scoutFormHeight, width: 40, height: 29))
             }
             stepper.numberField = numberField
             stepper.numberField?.text = String(dataPoint.start)
@@ -497,24 +506,27 @@ class TeamVC: UIViewController {
             self.container.addSubview(label)
             self.container.addSubview(stepper.numberField!)
             self.container.addSubview(stepper)
-            self.scoutTopMargin += label.frame.height + 10
+            self.scoutFormHeight += label.frame.height + 10
             
-        }else if type == "Checkbox" {
+        case "Checkbox":
             let dataPoint = dataPoint as! Checkbox
             
-            let label = UILabel(frame: CGRect(x: 10, y: self.scoutTopMargin, width: self.view.frame.width-54-20, height: 31))
+            let label = UILabel(frame: CGRect(x: 10, y: self.scoutFormHeight, width: self.view.frame.width-54-20, height: 31))
             label.text = dataPoint.name
             label.tag = 0
             self.container.addSubview(label)
             
-            let check = UISwitch(frame: CGRect(x: self.view.frame.width-65, y: self.scoutTopMargin, width: 0, height: 0))
+            let check = UISwitch(frame: CGRect(x: self.view.frame.width-65, y: self.scoutFormHeight, width: 0, height: 0))
             check.tintColor = UIColorFromHex("FF8900")
             check.onTintColor = UIColorFromHex("FF8900")
             check.tag = 0
             self.container.addSubview(check)
             
-            self.scoutTopMargin += label.frame.height + 10
-            
+            self.scoutFormHeight += label.frame.height + 10
+
+        default:
+            break
+
         }
     }
     
@@ -532,18 +544,18 @@ class TeamVC: UIViewController {
         return (toolBar, doneButton)
     }
     
-    func resizeContainer(_ margin: CGFloat) {
+    func resizeContainerHeight(_ margin: CGFloat) {
         self.container.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: margin)
         self.scrollView.contentSize = self.container.bounds.size
     }
     
     func createSubmitButton() {
-        self.scoutTopMargin += 10
-        let button = UIButton(frame: CGRect(x: 100, y: self.scoutTopMargin, width: self.view.frame.width-200, height: 30))
+        self.scoutFormHeight += 10
+        let button = UIButton(frame: CGRect(x: 100, y: self.scoutFormHeight, width: self.view.frame.width-200, height: 30))
         button.setTitle("Submit", for: UIControlState())
         button.backgroundColor = UIColor.orange
         button.addTarget(self, action: #selector(TeamVC.submitFormClick(_:)), for: .touchUpInside)
-        self.scoutTopMargin += button.frame.height + 5
+        self.scoutFormHeight += button.frame.height + 5
         self.container.addSubview(button)
     }
     
@@ -561,23 +573,23 @@ class TeamVC: UIViewController {
                                 jsonStringDataArray += "{\"name\": \"\(escape(label.text!))\"},"
                             }
                         }
-                    }else if type == "UITextView" {
+                    } else if type == "UITextView" {
                         let textViewLabel = views[i-1] as! UILabel
                         let textView = views[i] as! UITextView
                         jsonStringDataArray += "{\"name\": \"\(escape(textViewLabel.text!))\", \"value\": \"\(escape(textView.text!))\"},"
                         
-                    }else if type == "DropdownTextField" {
+                    } else if type == "DropdownTextField" {
                         let textField = views[i] as! DropdownTextField
                         if textField.text?.contains("▾") == true {
 //                            textField.text = textField.text![0...(textField.text?.characters.count)!-3]
                             textField.text = String(describing: textField.text?.characters.dropLast(2))
                         }
                         jsonStringDataArray += "{\"name\": \"\(escape(textField.dropdown!))\", \"value\": \"\(escape(textField.text!))\"},"
-                    }else if type == "NumberStepper" {
+                    } else if type == "NumberStepper" {
                         let stepperLabel = views[i-2] as! UILabel
                         let stepperTextField = views[i-1] as! UITextField
                         jsonStringDataArray += "{\"name\": \"\(escape(String(stepperLabel.text!.characters.dropLast())))\", \"value\": \"\(stepperTextField.text!)\"},"
-                    }else if type == "UISwitch" {
+                    } else if type == "UISwitch" {
                         let checkLabel = views[i-1] as! UILabel
                         let check = views[i] as! UISwitch
                         jsonStringDataArray += "{\"name\": \"\(escape(checkLabel.text!))\", \"value\": \"\(check.isOn)\"},"
@@ -591,12 +603,12 @@ class TeamVC: UIViewController {
 
             if Reachability.isConnectedToNetwork() {
                 sendSubmission(data)
-            }else{
+            } else {
                 if let savedReports = storage.array(forKey: "savedReports") {
                     var newSavedReports = savedReports
                     newSavedReports.append(data)
                     storage.set(newSavedReports, forKey: "savedReports")
-                }else{
+                } else {
                     let newSavedReports = [data]
                     storage.set(newSavedReports, forKey: "savedReports")
                 }
@@ -611,7 +623,7 @@ class TeamVC: UIViewController {
         httpRequest(baseURL+"/submitReport", type: "POST", data: data) { responseText in
             if responseText != "fail" {
                 alert(title: "Success", message: "You have successfully submitted the report.", buttonText: "OK", viewController: self)
-            }else{
+            } else {
                 alert(title: "Oops", message: "Something went wrong :(", buttonText: "OK", viewController: self)
             }
         }
