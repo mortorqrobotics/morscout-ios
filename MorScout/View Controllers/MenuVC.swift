@@ -44,7 +44,7 @@ class MenuVC: UITableViewController {
         }
         if let savedProfPicPath = storage.string(forKey: "profpicpath") {
             menuProfilePic.kf.setImage(
-                with: URL(string: "http://www.morteam.com" + savedProfPicPath + "-60")!,
+                with: URL(string: "https://www.morteam.com" + savedProfPicPath + "-60")!,
                 options: [.requestModifier(modifier)])
         }
         

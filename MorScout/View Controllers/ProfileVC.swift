@@ -48,7 +48,7 @@ class ProfileVC: UIViewController {
         
         if let savedProfPicPath = storage.string(forKey: "profpicpath") {
             profileImageView.kf.setImage(
-                with: URL(string: "http://www.morteam.com" + savedProfPicPath)!,
+                with: URL(string: "https://www.morteam.com" + savedProfPicPath)!,
                 options: [.requestModifier(modifier)])
         }
         
@@ -88,7 +88,7 @@ class ProfileVC: UIViewController {
                 DispatchQueue.main.async(execute: {
                     self.profileName.text = self.firstName + " " + self.lastName
                     self.profileImageView.kf.setImage(
-                        with: URL(string: "http://www.morteam.com" + self.profilePicturePath + "-300")!,
+                        with: URL(string: "https://www.morteam.com" + self.profilePicturePath + "-300")!,
                         options: [.requestModifier(modifier)])
                     self.scoutCaptainSwitch.setOn(self.isScoutCaptain, animated: false)
                     self.scoutCaptainSwitch.isEnabled = self.isScoutCaptain || self.position == "admin" || self.position == "leader"

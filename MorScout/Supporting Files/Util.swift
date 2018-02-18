@@ -15,11 +15,11 @@ import Kingfisher
 let storage = UserDefaults.standard
 
 /// base MorScout URL for requests to the MorScout server
-let baseURL = "http://www.scout.morteam.com"
+let baseURL = "https://www.scout.morteam.com"
 
 /// base MorTeam URL for requests to the MorTeam server
 /// (typically for account/team related requests)
-let morTeamURL = "http://www.morteam.com/api"
+let morTeamURL = "https://www.morteam.com/api"
 
 // modifies all kingfisher requests to send session cookie
 let modifier = AnyModifier { request in
