@@ -580,11 +580,13 @@ class TeamVC: UIViewController {
                         
                     } else if type == "DropdownTextField" {
                         let textField = views[i] as! DropdownTextField
-                        if textField.text?.contains("▾") == true {
+                        var text = String(describing: textField.text!)
+                        if text.contains("▾") == true {
 //                            textField.text = textField.text![0...(textField.text?.characters.count)!-3]
-                            textField.text = String(describing: textField.text?.characters.dropLast(2))
+                            text = text.substring(to: text.index(before: text.endIndex))
+                            text = text.substring(to: text.index(before: text.endIndex))
                         }
-                        jsonStringDataArray += "{\"name\": \"\(escape(textField.dropdown!))\", \"value\": \"\(escape(textField.text!))\"},"
+                        jsonStringDataArray += "{\"name\": \"\(escape(textField.dropdown!))\", \"value\": \"\(escape(text))\"},"
                     } else if type == "NumberStepper" {
                         let stepperLabel = views[i-2] as! UILabel
                         let stepperTextField = views[i-1] as! UITextField
